@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Middin Innovatie</string>
+    <string name="brand_title">Middin Innovatie</string>
+    <string name="brand_subtitle">Den Haag</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_memory">Collectief geheugen</string>
+    <string name="nav_chat">Chat</string>
+    <string name="nav_products">Producten</string>
+    <string name="nav_more">Meer</string>
+    <string name="nav_changelog">Changelog</string>
+    <string name="nav_updates">Updates</string>
+    <string name="nav_info">Info</string>
+    <string name="nav_about">Over ons</string>
+    <string name="nav_credits">Credits</string>
+    <string name="nav_gemini">Gemini-assistent</string>
+    <string name="nav_bluetooth">Bluetooth</string>
+    <string name="nav_settings">Instellingen</string>
+
+    <string name="more_title">Meer</string>
+    <string name="more_settings">Instellingen</string>
+
+    <string name="login_title">Inloggen</string>
+    <string name="login_username">Gebruikersnaam</string>
+    <string name="login_password">Wachtwoord</string>
+    <string name="login_button">Doorgaan</string>
+    <string name="login_error_empty_fields">Vul gebruikersnaam en wachtwoord in.</string>
+    <string name="login_api_hint">API-server: Meer → Instellingen. Gradle: API_BASE_URL, API_PATH_PREFIX, API_LOGIN_FIELD.</string>
+    <string name="logout">Uitloggen</string>
+
+    <string name="home_tagline">Innovatie uit Den Haag</string>
+    <string name="home_intro">Welkom bij de Middin Innovatie-app: collectief geheugen, teamchat, productideeën met camera en koppeling met jullie eigen API.</string>
+    <string name="home_top_products">Nieuwste producten (top 3)</string>
+    <string name="home_no_products_yet">Nog geen producten. Open Producten en voeg er een toe met de camera.</string>
+
+    <string name="memory_hint">Voeg een notitie toe aan het gedeelde geheugen…</string>
+    <string name="memory_add">Opslaan</string>
+    <string name="memory_empty">Nog geen items.</string>
+
+    <string name="changelog_title">App-versies</string>
+
+    <string name="products_title">Producten</string>
+    <string name="products_empty">Geen producten. Tik op + voor foto en gegevens.</string>
+    <string name="products_add_cd">Product toevoegen</string>
+    <string name="product_add_title">Product toevoegen</string>
+    <string name="product_camera_permission">Cameratoestemming is nodig voor foto’s.</string>
+    <string name="product_capture_photo">Foto maken</string>
+    <string name="product_photo_saved">Foto opgeslagen. Je kunt het product hieronder bewaren.</string>
+    <string name="product_name_label">Naam</string>
+    <string name="product_desc_label">Omschrijving</string>
+    <string name="product_save">Product opslaan</string>
+    <string name="product_cancel">Annuleren</string>
+    <string name="product_name_required">Vul een productnaam in.</string>
+    <string name="product_labels_prefix">Voorgestelde labels:</string>
+
+    <string name="updates_intro">Geplande uitrol en release-opmerkingen voor het team.</string>
+
+    <string name="info_body">Deze app verbindt met jullie eigen backend voor login en chat.\n\nBeveiliging: gebruik HTTPS in productie. Gemini API-sleutels staan op het apparaat voor gemak—gebruik liever server-side AI voor vertrouwelijke data.\n\nFuncties: collectief geheugen (lokale database), REST-chat, producten met CameraX, ML Kit-labels als hint, gekoppelde Bluetooth-apparaten, Google Gemini (optioneel), testmeldingen, EN/NL UI.</string>
+
+    <string name="about_body">Middin Innovatie is gevestigd in Den Haag. We werken aan innovatie, digitale producten en samenwerking met partners en collega’s.\n\nDeze applicatie bundelt interne tools: gedeeld geheugen, communicatie, productvastlegging en koppelingen (API, Gemini, Bluetooth) op één plek.\n\nVoor huisstijl, logo’s en officiële teksten: volg jullie interne brandrichtlijnen.</string>
+
+    <string name="credits_intro">Mensen en teams achter deze build. Pas de lijst in code aan (CreditsRepository) naar jullie organisatie.</string>
+
+    <string name="gemini_hint">Gebruikt Google Gemini (gemini-1.5-flash). Plak een API-sleutel van Google AI Studio onder Meer → Instellingen. Sleutels blijven op dit apparaat.</string>
+    <string name="gemini_prompt_label">Prompt</string>
+    <string name="gemini_run">Uitvoeren</string>
+
+    <string name="bt_intro">Toont klassieke Bluetooth-apparaten die al met deze telefoon zijn gekoppeld. Voor scannen of BLE: breid dit scherm uit.</string>
+    <string name="bt_no_adapter">Bluetooth is niet beschikbaar op dit apparaat.</string>
+    <string name="bt_permission_needed">Geef Bluetooth-verbindingsrechten om gekoppelde apparaten te tonen.</string>
+    <string name="bt_paired_title">Gekoppelde apparaten</string>
+    <string name="bt_none_paired">Geen gekoppelde apparaten.</string>
+
+    <string name="chat_title">Chat</string>
+    <string name="chat_refresh">Vernieuwen</string>
+    <string name="chat_message_hint">Bericht</string>
+
+    <string name="settings_theme_title">Thema</string>
+    <string name="settings_theme_system">Zelfde als telefoon</string>
+    <string name="settings_theme_light">Licht</string>
+    <string name="settings_theme_dark">Donker</string>
+    <string name="settings_gemini_title">Gemini API-sleutel</string>
+    <string name="settings_gemini_hint">Van Google AI Studio. Opgeslagen in app-voorkeuren op alleen dit apparaat.</string>
+    <string name="settings_gemini_key_label">API-sleutel</string>
+    <string name="settings_gemini_save">Sleutel opslaan</string>
+    <string name="settings_notifications_title">Meldingen</string>
+    <string name="settings_test_notification">Testmelding versturen</string>
+
+    <string name="settings_api_server_title">API-server</string>
+    <string name="settings_api_build_default">Build-standaard: %1$s</string>
+    <string name="settings_api_server_label">Server-URL (optioneel)</string>
+    <string name="settings_api_server_placeholder">bijv. http://192.168.1.10:8080 of https://api.example.com</string>
+    <string name="settings_api_effective">Actief: %1$s</string>
+    <string name="settings_api_save">Server-URL opslaan</string>
+    <string name="settings_api_use_default">Build-standaard gebruiken</string>
+    <string name="settings_api_help">Laat leeg en tik op Build-standaard gebruiken, of vul schema, host en poort in (geen pad). Padvoorvoegsel blijft uit Gradle (API_PATH_PREFIX).</string>
+    <string name="settings_language">Taal</string>
+    <string name="language_en">English</string>
+    <string name="language_nl">Nederlands</string>
+    <string name="settings_security_note">Release-builds gebruiken minificatie. Geen productiegeheimen in de client; gebruik HTTPS en sleutels op de server.</string>
+
+    <string name="notification_channel_name">Middin algemeen</string>
+    <string name="notification_channel_desc">Team- en app-meldingen</string>
+    <string name="notification_test_title">Middin Innovatie</string>
+    <string name="notification_test_body">Testmelding — kanaal werkt.</string>
+</resources>

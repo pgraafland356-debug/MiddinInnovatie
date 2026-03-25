@@ -1,0 +1,110 @@
+package com.middin.innovatie.app.ui.login
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.middin.innovatie.app.BuildConfig
+import com.middin.innovatie.app.R
+import com.middin.innovatie.app.ui.rememberAppContainer
+
+@Composable
+fun LoginScreen(
+    viewModel: LoginViewModel = viewModel(
+        factory = LoginViewModel.factory(rememberAppContainer().authRepository),
+    ),
+) {
+    var user by rememberSaveable { mutableStateOf(BuildConfig.PRESET_LOGIN_USER) }
+    var pass by rememberSaveable { mutableStateOf(BuildConfig.PRESET_LOGIN_PASS) }
+    val state by viewModel.ui.collectAsStateWithLifecycle()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Text(stringResource(R.string.login_title), style = MaterialTheme.typography.titleLarge)
+        Spacer(Modifier.height(24.dp))
+        OutlinedTextField(
+            value = user,
+            onValueChange = { user = it },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(R.string.login_username)) },
+            singleLine = true,
+            enabled = !state.isLoading,
+        )
+        Spacer(Modifier.height(12.dp))
+        OutlinedTextField(
+            value = pass,
+            onValueChange = { pass = it },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(stringResource(R.string.login_password)) },
+            visualTransformation = PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            singleLine = true,
+            enabled = !state.isLoading,
+        )
+        if (state.emptyFields) {
+            Spacer(Modifier.height(8.dp))
+            Text(
+                stringResource(R.string.login_error_empty_fields),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        state.errorMessage?.let { msg ->
+            Spacer(Modifier.height(8.dp))
+            Text(
+                msg,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        Spacer(Modifier.height(24.dp))
+        Button(
+            onClick = { viewModel.login(user, pass) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.isLoading,
+        ) {
+            if (state.isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(22.dp),
+                    strokeWidth = 2.dp,
+                )
+            } else {
+                Text(stringResource(R.string.login_button))
+            }
+        }
+        Spacer(Modifier.height(12.dp))
+        Text(
+            stringResource(R.string.login_api_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}

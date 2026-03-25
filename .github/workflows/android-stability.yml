@@ -1,0 +1,30 @@
+# Runs on every push/PR: debug build + JVM unit tests (no emulator).
+# Instrumented tests: run locally with stability-check.ps1 when a device/emulator is available.
+name: Android stability
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Gradle build and unit tests
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug testDebugUnitTest --no-daemon --stacktrace
+
+      - name: Upload debug APK (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: warn

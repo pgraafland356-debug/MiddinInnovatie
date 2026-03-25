@@ -26,7 +26,14 @@
     <string name="login_password">Wachtwoord</string>
     <string name="login_button">Doorgaan</string>
     <string name="login_error_empty_fields">Vul gebruikersnaam en wachtwoord in.</string>
-    <string name="login_api_hint">API-server: Meer → Instellingen. Gradle: API_BASE_URL, API_PATH_PREFIX, API_LOGIN_FIELD.</string>
+    <string name="login_error_local_password">Gebruik een wachtwoord van minimaal 4 tekens.</string>
+    <string name="login_failed">Inloggen mislukt.</string>
+    <string name="login_local_mode_hint">Lokaal inloggen staat aan: geen server. Zet uit onder Meer → Instellingen om je API te gebruiken. Chat heeft nog steeds een bereikbare server nodig.</string>
+    <string name="login_server_mode_hint">Server-inloggen: de app roept je API aan (URL onder Meer → Instellingen). Op een telefoon: LAN-IP van je pc, niet 10.0.2.2.</string>
+    <string name="login_api_hint">API-server: Meer → Instellingen. Release-builds gebruiken altijd je server.</string>
+    <string name="settings_dev_signin_title">Ontwikkelaar</string>
+    <string name="settings_dev_signin_hint">Alleen debug-builds. Zet uit om echte login tegen je backend te testen.</string>
+    <string name="settings_dev_signin_local">Inloggen zonder server (lokaal)</string>
     <string name="logout">Uitloggen</string>
 
     <string name="home_tagline">Innovatie uit Den Haag</string>
@@ -43,6 +50,7 @@
     <string name="products_title">Producten</string>
     <string name="products_empty">Geen producten. Tik op + voor foto en gegevens.</string>
     <string name="products_add_cd">Product toevoegen</string>
+    <string name="products_remove_cd">Product verwijderen</string>
     <string name="product_add_title">Product toevoegen</string>
     <string name="product_camera_permission">Cameratoestemming is nodig voor foto’s.</string>
     <string name="product_capture_photo">Foto maken</string>

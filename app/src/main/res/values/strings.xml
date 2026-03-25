@@ -26,7 +26,14 @@
     <string name="login_password">Password</string>
     <string name="login_button">Continue</string>
     <string name="login_error_empty_fields">Enter username and password.</string>
-    <string name="login_api_hint">API server: More → Settings. Gradle: API_BASE_URL, API_PATH_PREFIX, API_LOGIN_FIELD.</string>
+    <string name="login_error_local_password">Use a password of at least 4 characters.</string>
+    <string name="login_failed">Login failed.</string>
+    <string name="login_local_mode_hint">Local sign-in is on: no server call. Turn it off under More → Settings to use your API. Chat still needs a reachable server.</string>
+    <string name="login_server_mode_hint">Server sign-in: the app calls your API (More → Settings for the URL). On a phone, use your PC\'s LAN IP, not 10.0.2.2.</string>
+    <string name="login_api_hint">API server: More → Settings. Release builds always use your server.</string>
+    <string name="settings_dev_signin_title">Developer</string>
+    <string name="settings_dev_signin_hint">Debug builds only. Turn off to test real login against your backend.</string>
+    <string name="settings_dev_signin_local">Sign in without server (local)</string>
     <string name="logout">Sign out</string>
 
     <string name="home_tagline">Innovation from Den Haag</string>
@@ -43,6 +50,7 @@
     <string name="products_title">Products</string>
     <string name="products_empty">No products. Tap + to add a photo and details.</string>
     <string name="products_add_cd">Add product</string>
+    <string name="products_remove_cd">Remove product</string>
     <string name="product_add_title">Add product</string>
     <string name="product_camera_permission">Camera permission is required for photos.</string>
     <string name="product_capture_photo">Capture photo</string>

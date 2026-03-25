@@ -50,6 +50,12 @@ class SettingsViewModel(
         }
     }
 
+    fun setUseLocalSignIn(enabled: Boolean) {
+        viewModelScope.launch {
+            userPreferences.setUseLocalSignIn(enabled)
+        }
+    }
+
     companion object {
         fun factory(prefs: UserPreferencesRepository) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")

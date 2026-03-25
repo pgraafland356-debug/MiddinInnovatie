@@ -18,11 +18,13 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -35,6 +37,7 @@ import com.middin.innovatie.app.ui.login.LoginScreen
 import com.middin.innovatie.app.ui.memory.MemoryScreen
 import com.middin.innovatie.app.ui.more.MoreNavHost
 import com.middin.innovatie.app.ui.products.ProductsNavHost
+import kotlinx.coroutines.launch
 
 private enum class RootTab(
     val labelRes: Int,
@@ -66,6 +69,8 @@ fun MiddinApp() {
 @Composable
 private fun MainShell() {
     var selected by rememberSaveable { mutableStateOf(RootTab.Home) }
+    val container = rememberAppContainer()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -75,6 +80,17 @@ private fun MainShell() {
                         title = stringResource(R.string.brand_title),
                         subtitle = stringResource(R.string.brand_subtitle),
                     )
+                },
+                actions = {
+                    TextButton(
+                        onClick = {
+                            scope.launch {
+                                container.userPreferences.setSession(loggedIn = false)
+                            }
+                        },
+                    ) {
+                        Text(stringResource(R.string.logout))
+                    }
                 },
             )
         },

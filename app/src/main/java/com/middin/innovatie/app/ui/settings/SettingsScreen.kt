@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -58,6 +59,9 @@ fun SettingsScreen(
         initialValue = BuildConfig.API_BASE_URL.trimEnd('/'),
     )
     val geminiStored by container.userPreferences.geminiApiKey.collectAsStateWithLifecycle(initialValue = null)
+    val useLocalSignIn by container.userPreferences.useLocalSignIn.collectAsStateWithLifecycle(
+        initialValue = BuildConfig.DEBUG && BuildConfig.USE_LOCAL_SIGN_IN,
+    )
 
     var serverDraft by remember(overrideRaw) { mutableStateOf(overrideRaw.orEmpty()) }
     var geminiDraft by remember(geminiStored) { mutableStateOf(geminiStored.orEmpty()) }
@@ -72,6 +76,34 @@ fun SettingsScreen(
         modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
+        item {
+            if (BuildConfig.DEBUG) {
+                Text(
+                    stringResource(R.string.settings_dev_signin_title),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    stringResource(R.string.settings_dev_signin_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        stringResource(R.string.settings_dev_signin_local),
+                        modifier = Modifier.weight(1f),
+                    )
+                    Switch(
+                        checked = useLocalSignIn,
+                        onCheckedChange = { viewModel.setUseLocalSignIn(it) },
+                    )
+                }
+            }
+        }
         item {
             Text(stringResource(R.string.settings_theme_title), style = MaterialTheme.typography.titleMedium)
             Column(Modifier.selectableGroup()) {

@@ -26,6 +26,8 @@ android {
         buildConfigField("String", "API_LOGIN_FIELD", "\"username\"")
         buildConfigField("String", "PRESET_LOGIN_USER", "\"\"")
         buildConfigField("String", "PRESET_LOGIN_PASS", "\"\"")
+        // Release always uses your API. Debug defaults to local sign-in (no network).
+        buildConfigField("boolean", "USE_LOCAL_SIGN_IN", "false")
     }
 
     buildTypes {
@@ -39,11 +41,13 @@ android {
         }
         debug {
             isMinifyEnabled = false
+            // Emulator → host PC. Physical devices cannot use 10.0.2.2; use local sign-in or set your PC LAN IP in Settings.
             buildConfigField(
                 "String",
                 "API_BASE_URL",
                 "\"http://10.0.2.2:8080\"",
             )
+            buildConfigField("boolean", "USE_LOCAL_SIGN_IN", "true")
             buildConfigField("String", "PRESET_LOGIN_USER", "\"test\"")
             buildConfigField("String", "PRESET_LOGIN_PASS", "\"test\"")
             // Example: buildConfigField("String", "API_PATH_PREFIX", "\"api/v1\"")

@@ -8,12 +8,19 @@ import com.middin.innovatie.app.data.local.ProductDao
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class ProductsViewModel(
     private val dao: ProductDao,
 ) : ViewModel() {
     val products: StateFlow<List<Product>> = dao.observeAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    fun removeProduct(id: String) {
+        viewModelScope.launch {
+            dao.deleteById(id)
+        }
+    }
 
     companion object {
         fun factory(dao: ProductDao) = object : ViewModelProvider.Factory {

@@ -26,6 +26,8 @@ class UserPreferencesRepository(
         val apiBaseUrlOverride = stringPreferencesKey("api_base_url_override")
         val themeMode = stringPreferencesKey("theme_preference")
         val geminiApiKey = stringPreferencesKey("gemini_api_key")
+        /** Debug only: prefer offline/local login. Ignored in release builds. */
+        val useLocalSignIn = booleanPreferencesKey("use_local_sign_in")
     }
 
     val session: Flow<Boolean> = context.dataStore.data.map { it[Keys.loggedIn] == true }
@@ -38,6 +40,30 @@ class UserPreferencesRepository(
     }
 
     val geminiApiKey: Flow<String?> = context.dataStore.data.map { it[Keys.geminiApiKey] }
+
+    /**
+     * Debug only: when true, login skips the API. Release builds always see false.
+     * Default when unset follows [BuildConfig.USE_LOCAL_SIGN_IN] (typically true in debug).
+     */
+    val useLocalSignIn: Flow<Boolean> = context.dataStore.data.map { prefs ->
+        effectiveLocalSignIn(prefs)
+    }
+
+    private fun effectiveLocalSignIn(prefs: Preferences): Boolean {
+        if (!BuildConfig.DEBUG) return false
+        return prefs[Keys.useLocalSignIn] ?: BuildConfig.USE_LOCAL_SIGN_IN
+    }
+
+    suspend fun isLocalSignInEnabled(): Boolean {
+        val prefs = context.dataStore.data.first()
+        return effectiveLocalSignIn(prefs)
+    }
+
+    suspend fun setUseLocalSignIn(enabled: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.useLocalSignIn] = enabled
+        }
+    }
 
     /** Raw override from storage; null or blank means “use build default”. */
     val apiBaseUrlOverride: Flow<String?> = context.dataStore.data.map { it[Keys.apiBaseUrlOverride] }

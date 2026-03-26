@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Minimal local API for Middin Innovatie debug builds.
-Endpoints match the Android app (AuthRepository / ChatRepository).
+Endpoints match the Android app (AuthRepository). Chat in the app is local (Room + product knowledge); this server still exposes /chat/messages for testing RemoteChatRepository if wired again.
 
 Listen on 0.0.0.0:8080 so a physical phone can use http://<PC_LAN_IP>:8080
 (Emulator: http://10.0.2.2:8080)

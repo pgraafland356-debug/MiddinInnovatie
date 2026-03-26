@@ -1,3 +1,5 @@
+import java.time.Instant
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -14,10 +16,13 @@ android {
         applicationId = "com.middin.innovatie.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.0"
+        versionCode = 3
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Refreshes when Gradle configures this module — each APK build gets a new stamp in the changelog.
+        buildConfigField("String", "BUILD_TIME_ISO", "\"${Instant.now()}\"")
 
         buildConfigField("String", "API_BASE_URL", "\"https://api.example.com\"")
         // No leading slash; e.g. "api/v1" → …/api/v1/auth/login. Leave "" for flat paths.

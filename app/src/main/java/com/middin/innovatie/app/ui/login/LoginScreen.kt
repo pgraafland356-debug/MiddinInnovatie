@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import android.app.Application
 import com.middin.innovatie.app.BuildConfig
 import com.middin.innovatie.app.R
+import com.middin.innovatie.app.ui.components.MiddinLogoMark
 import com.middin.innovatie.app.ui.rememberAppContainer
 
 @Composable
@@ -60,6 +61,8 @@ fun LoginScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        MiddinLogoMark(size = 88.dp)
+        Spacer(Modifier.height(20.dp))
         Text(stringResource(R.string.login_title), style = MaterialTheme.typography.titleLarge)
         if (BuildConfig.DEBUG) {
             Spacer(Modifier.height(16.dp))

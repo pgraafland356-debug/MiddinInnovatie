@@ -1,6 +1,7 @@
 package com.middin.innovatie.app.data.remote
 
 import com.middin.innovatie.app.UserPreferencesRepository
+import com.middin.innovatie.app.data.ChatRepository
 import com.middin.innovatie.app.data.remote.dto.ChatMessageDto
 import com.middin.innovatie.app.data.remote.dto.PostChatMessageRequest
 import io.ktor.client.HttpClient
@@ -16,13 +17,14 @@ import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.coroutines.flow.first
 
-class ChatRepository(
+/** REST chat against `{base}/chat/messages` (e.g. local-api mock server). */
+class RemoteChatRepository(
     private val client: HttpClient,
     private val baseUrlProvider: suspend () -> String,
     private val pathPrefix: String,
     private val userPreferences: UserPreferencesRepository,
-) {
-    suspend fun listMessages(): Result<List<ChatMessageDto>> =
+) : ChatRepository {
+    override suspend fun listMessages(): Result<List<ChatMessageDto>> =
         runNetworkResult {
             val token = userPreferences.authToken.first() ?: error("Not signed in.")
             val baseUrl = baseUrlProvider()
@@ -37,7 +39,7 @@ class ChatRepository(
             response.body()
         }
 
-    suspend fun sendMessage(text: String): Result<Unit> =
+    override suspend fun sendMessage(text: String): Result<Unit> =
         runNetworkResult {
             val token = userPreferences.authToken.first() ?: error("Not signed in.")
             val trimmed = text.trim()

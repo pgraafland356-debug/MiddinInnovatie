@@ -20,4 +20,20 @@ object DatabaseMigrations {
             )
         }
     }
+
+    val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `local_chat_messages` (
+                    `id` TEXT NOT NULL,
+                    `text` TEXT NOT NULL,
+                    `authorName` TEXT NOT NULL,
+                    `createdAtEpochMs` INTEGER NOT NULL,
+                    PRIMARY KEY(`id`)
+                )
+                """.trimIndent(),
+            )
+        }
+    }
 }

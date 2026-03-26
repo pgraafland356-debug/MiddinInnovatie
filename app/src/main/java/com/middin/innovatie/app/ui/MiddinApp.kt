@@ -2,8 +2,11 @@ package com.middin.innovatie.app.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Chat
 import androidx.compose.material.icons.filled.Home
@@ -30,6 +33,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.middin.innovatie.app.ui.components.MiddinLogoMark
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.chat.ChatScreen
 import com.middin.innovatie.app.ui.home.HomeScreen
@@ -76,10 +81,14 @@ private fun MainShell() {
         topBar = {
             TopAppBar(
                 title = {
-                    ColumnTitle(
-                        title = stringResource(R.string.brand_title),
-                        subtitle = stringResource(R.string.brand_subtitle),
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        MiddinLogoMark(size = 40.dp)
+                        Spacer(Modifier.width(12.dp))
+                        ColumnTitle(
+                            title = stringResource(R.string.brand_title),
+                            subtitle = stringResource(R.string.brand_subtitle),
+                        )
+                    }
                 },
                 actions = {
                     TextButton(

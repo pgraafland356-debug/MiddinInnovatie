@@ -8,14 +8,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,9 +35,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.middin.innovatie.app.R
+import com.middin.innovatie.app.data.local.LocalProductChatRepository
+import com.middin.innovatie.app.data.remote.dto.ChatMessageDto
+import com.middin.innovatie.app.ui.components.MiddinLogoMark
 import com.middin.innovatie.app.ui.rememberAppContainer
 
 @Composable
@@ -48,6 +56,8 @@ fun ChatScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            // Keep type field above the software keyboard (edge-to-edge + Scaffold).
+            .imePadding()
             .padding(16.dp),
     ) {
         Row(
@@ -72,17 +82,7 @@ fun ChatScreen(
                     contentPadding = PaddingValues(bottom = 8.dp),
                 ) {
                     itemsIndexed(state.messages, key = { index, m -> m.id ?: "msg_$index" }) { _, msg ->
-                        Card(modifier = Modifier.fillMaxWidth()) {
-                            Column(Modifier.padding(12.dp)) {
-                                Text(msg.displayText(), style = MaterialTheme.typography.bodyLarge)
-                                Spacer(Modifier.height(4.dp))
-                                Text(
-                                    "${msg.displayAuthor()} · ${msg.displayTime()}",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                )
-                            }
-                        }
+                        ChatMessageRow(msg = msg)
                     }
                 }
             }
@@ -125,6 +125,61 @@ fun ChatScreen(
                     Icon(Icons.AutoMirrored.Outlined.Send, contentDescription = null)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ChatMessageRow(msg: ChatMessageDto) {
+    val isAssistant = msg.displayAuthor() == LocalProductChatRepository.AUTHOR_BOT
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Top,
+    ) {
+        if (isAssistant) {
+            MiddinLogoMark(size = 40.dp)
+            Spacer(Modifier.width(8.dp))
+            ChatMessageCard(msg = msg, isAssistant = true)
+        } else {
+            Spacer(Modifier.weight(1f))
+            ChatMessageCard(msg = msg, isAssistant = false)
+        }
+    }
+}
+
+@Composable
+private fun ChatMessageCard(msg: ChatMessageDto, isAssistant: Boolean) {
+    val colors = CardDefaults.cardColors(
+        containerColor = if (isAssistant) {
+            MaterialTheme.colorScheme.surfaceVariant
+        } else {
+            MaterialTheme.colorScheme.primaryContainer
+        },
+    )
+    Card(
+        modifier = Modifier.widthIn(max = 320.dp),
+        colors = colors,
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Text(
+                msg.displayText(),
+                style = MaterialTheme.typography.bodyLarge.copy(lineHeight = 24.sp),
+                color = if (isAssistant) {
+                    MaterialTheme.colorScheme.onSurfaceVariant
+                } else {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                },
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                "${msg.displayAuthor()} · ${msg.displayTime()}",
+                style = MaterialTheme.typography.bodySmall,
+                color = if (isAssistant) {
+                    MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.85f)
+                } else {
+                    MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+                },
+            )
         }
     }
 }

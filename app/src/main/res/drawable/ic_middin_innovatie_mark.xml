@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- In-app brand mark for Middin Innovatie (app); not the external Middin zorg corporate logo. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M20,12h80c6,0 12,6 12,12v72c0,6 -6,12 -12,12h-80c-6,0 -12,-6 -12,-12v-72c0,-6 6,-12 12,-12z" />
+    <path
+        android:fillColor="#00838F"
+        android:pathData="M20,12h80v18h-80z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M42,90L42,34L54,34L60,52L66,34L78,34L78,90L68,90L68,50L60,60L52,60L44,50L44,90z" />
+</vector>

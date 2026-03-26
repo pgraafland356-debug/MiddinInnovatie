@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import com.middin.innovatie.app.data.local.AppDatabase
 import com.middin.innovatie.app.data.local.DatabaseMigrations
+import com.middin.innovatie.app.data.InnovationNewsRepository
+import com.middin.innovatie.app.data.ChatRepository
+import com.middin.innovatie.app.data.local.LocalProductChatRepository
 import com.middin.innovatie.app.data.remote.AuthRepository
-import com.middin.innovatie.app.data.remote.ChatRepository
 import com.middin.innovatie.app.data.remote.GeminiRepository
 import com.middin.innovatie.app.data.remote.createHttpClient
 
@@ -17,7 +19,7 @@ class AppContainer(context: Context) {
         AppDatabase::class.java,
         "middin.db",
     )
-        .addMigrations(DatabaseMigrations.MIGRATION_1_2)
+        .addMigrations(DatabaseMigrations.MIGRATION_1_2, DatabaseMigrations.MIGRATION_2_3)
         .fallbackToDestructiveMigrationOnDowngrade()
         .build()
 
@@ -26,6 +28,7 @@ class AppContainer(context: Context) {
         defaultApiBaseUrl = BuildConfig.API_BASE_URL,
     )
     val changelogRepository = ChangelogRepository()
+    val innovationNewsRepository = InnovationNewsRepository()
     val updatesRepository = UpdatesRepository()
     val geminiRepository = GeminiRepository()
 
@@ -39,10 +42,8 @@ class AppContainer(context: Context) {
         userPreferences = userPreferences,
     )
 
-    val chatRepository = ChatRepository(
-        client = httpClient,
-        baseUrlProvider = { userPreferences.resolvedApiBaseUrl() },
-        pathPrefix = BuildConfig.API_PATH_PREFIX,
-        userPreferences = userPreferences,
+    val chatRepository: ChatRepository = LocalProductChatRepository(
+        chatDao = database.localChatMessageDao(),
+        productDao = database.productDao(),
     )
 }

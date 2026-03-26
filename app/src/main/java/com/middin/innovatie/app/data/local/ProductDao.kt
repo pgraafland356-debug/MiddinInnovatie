@@ -10,6 +10,9 @@ interface ProductDao {
     @Query("SELECT * FROM products ORDER BY createdAtEpochMs DESC")
     fun observeAll(): Flow<List<Product>>
 
+    @Query("SELECT * FROM products ORDER BY createdAtEpochMs DESC")
+    suspend fun getAllOnce(): List<Product>
+
     @Query("SELECT COUNT(*) FROM products")
     suspend fun count(): Long
 

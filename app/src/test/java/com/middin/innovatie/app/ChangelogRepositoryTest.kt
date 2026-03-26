@@ -5,7 +5,7 @@ import org.junit.Test
 
 class ChangelogRepositoryTest {
     @Test
-    fun changelog_lists_phase1() {
-        assertTrue(ChangelogRepository().items.isNotEmpty())
+    fun changelog_static_history_not_empty() {
+        assertTrue(ChangelogData.staticItems.isNotEmpty())
     }
 }

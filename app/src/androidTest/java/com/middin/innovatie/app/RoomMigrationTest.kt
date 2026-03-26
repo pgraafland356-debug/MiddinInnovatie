@@ -54,4 +54,46 @@ class RoomMigrationTest {
         }
         db.close()
     }
+
+    @Test
+    @Throws(IOException::class)
+    fun migrate2To3_addsLocalChatMessages() {
+        helper.createDatabase(dbName, 2).apply {
+            execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `collective_memory` (
+                    `id` TEXT NOT NULL,
+                    `content` TEXT NOT NULL,
+                    `authorName` TEXT NOT NULL,
+                    `createdAtEpochMs` INTEGER NOT NULL,
+                    PRIMARY KEY(`id`)
+                )
+                """.trimIndent(),
+            )
+            execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `products` (
+                    `id` TEXT NOT NULL,
+                    `name` TEXT NOT NULL,
+                    `description` TEXT NOT NULL,
+                    `imageUri` TEXT,
+                    `createdAtEpochMs` INTEGER NOT NULL,
+                    PRIMARY KEY(`id`)
+                )
+                """.trimIndent(),
+            )
+            close()
+        }
+        val db = helper.runMigrationsAndValidate(
+            dbName,
+            3,
+            true,
+            DatabaseMigrations.MIGRATION_2_3,
+        )
+        db.query("SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name='local_chat_messages'").use { c ->
+            assertTrue(c.moveToFirst())
+            assertEquals(1, c.getInt(0))
+        }
+        db.close()
+    }
 }

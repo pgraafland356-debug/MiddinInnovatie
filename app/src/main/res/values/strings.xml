@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Middin Innovatie</string>
+    <string name="logo_content_description">Middin Innovatie logo</string>
     <string name="brand_title">Middin Innovatie</string>
     <string name="brand_subtitle">Den Haag</string>
 
@@ -40,6 +41,10 @@
     <string name="home_intro">Welcome to the Middin Innovatie app: collective memory, team chat, product ideas with camera capture, and tools for your custom API.</string>
     <string name="home_top_products">Newest products (top 3)</string>
     <string name="home_no_products_yet">No products yet. Open Products and add one with the camera.</string>
+    <string name="home_news_title">Care innovation news</string>
+    <string name="home_news_intro">Curated links to regulators, knowledge institutes and example products. Always check each website for the latest information.</string>
+    <string name="home_news_meta">%1$s · %2$s</string>
+    <string name="home_news_open_hint">Tap to open in browser</string>
 
     <string name="memory_hint">Add a note for the shared memory…</string>
     <string name="memory_add">Save</string>
@@ -80,7 +85,7 @@
     <string name="bt_paired_title">Paired devices</string>
     <string name="bt_none_paired">No paired devices.</string>
 
-    <string name="chat_title">Chat</string>
+    <string name="chat_title">Product assistant</string>
     <string name="chat_refresh">Refresh</string>
     <string name="chat_message_hint">Message</string>
 

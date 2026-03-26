@@ -3,7 +3,7 @@ package com.middin.innovatie.app.ui.chat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.middin.innovatie.app.data.remote.ChatRepository
+import com.middin.innovatie.app.data.ChatRepository
 import com.middin.innovatie.app.data.remote.dto.ChatMessageDto
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,7 +39,7 @@ class ChatViewModel(
                     _ui.update {
                         it.copy(
                             isLoading = false,
-                            error = e.message?.ifBlank { null } ?: "Could not load messages.",
+                            error = e.message?.ifBlank { null } ?: "Kon berichten niet laden.",
                         )
                     }
                 }
@@ -58,7 +58,7 @@ class ChatViewModel(
                     _ui.update {
                         it.copy(
                             isSending = false,
-                            error = e.message?.ifBlank { null } ?: "Send failed.",
+                            error = e.message?.ifBlank { null } ?: "Versturen is mislukt.",
                         )
                     }
                 }

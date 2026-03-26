@@ -2,9 +2,9 @@ package com.middin.innovatie.app.data.local
 
 /**
  * Default catalog: names + korte beschrijvingen (publieke productinformatie).
- * De Muse, Speciale muis/balmuis en digitaal chat app bewust zonder tekst.
+ * Speciale muis/balmuis en digitaal chat app nog zonder vaste catalogustekst.
  *
- * Bronnen o.a.: fabrikanten (Somnox, Luvion, MOWOOT, OrCam, handSteady, CRDL, Tinybots),
+ * Bronnen o.a.: fabrikanten (Somnox, Luvion, MOWOOT, OrCam, handSteady, CRDL, Tinybots, Muse),
  * medische/registratiesites, Inclusive Inc. (OnPoint), MijnEigenPlan.nl, algemene actigrafie-info MotionWatch.
  */
 object ProductCatalogSeed {
@@ -84,7 +84,13 @@ object ProductCatalogSeed {
                 "voor fijne aansturing bij beperkte motoriek. Apart bestaan trillende pennen voor o.a. Parkinson; " +
                 "dit product is vooral joystick/pointerfunctionaliteit.",
         ),
-        Entry(name = "De Muse", description = ""),
+        Entry(
+            name = "De Muse",
+            description = "Muse is een draagbare hoofdband met EEG-sensoren die hersenactiviteit meet tijdens " +
+                "meditatie en ontspanning. De bijbehorende app geeft biofeedback (geluid of beeld) zodat je merkt " +
+                "wanneer je geest rustiger of juist actiever is. Bedoeld voor welzijn en training van aandacht, " +
+                "geen medische diagnose van hersenaandoeningen (bron: Muse / Choose Muse).",
+        ),
         Entry(name = "De Speciale muis / bal muis", description = ""),
         Entry(name = "De digitaal chat app", description = ""),
     )

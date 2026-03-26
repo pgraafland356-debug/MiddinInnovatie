@@ -9,6 +9,9 @@ object CreditsRepository {
     val entries: List<CreditEntry> = listOf(
         CreditEntry("Middin Innovatie team", "Product & innovation — Den Haag"),
         CreditEntry("Platform engineering", "Android, API integration, security"),
-        CreditEntry("You", "Add names in CreditsRepository.kt"),
+        CreditEntry(
+            "You",
+            "Pieter - Bas Graafland\nAndé de Winter\nSafeer Khan",
+        ),
     )
 }

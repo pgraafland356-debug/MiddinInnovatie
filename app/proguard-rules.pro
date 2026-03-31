@@ -10,6 +10,10 @@
 -keep class io.ktor.** { *; }
 -keep class kotlinx.coroutines.** { *; }
 
+# RSS (kxml2 / XmlPull)
+-keep class org.kxml2.** { *; }
+-dontwarn org.xmlpull.v1.**
+
 # Google Generative AI
 -keep class com.google.ai.** { *; }
 

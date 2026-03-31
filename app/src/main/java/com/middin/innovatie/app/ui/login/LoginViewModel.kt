@@ -44,8 +44,8 @@ class LoginViewModel(
             if (userPreferences.isLocalSignInEnabled()) {
                 runCatching {
                     val u = username.trim()
-                    check(password.length >= 4) {
-                        getApplication<Application>().getString(R.string.login_error_local_password)
+                    check(LocalDevAccounts.matches(u, password)) {
+                        getApplication<Application>().getString(R.string.login_error_local_credentials)
                     }
                     userPreferences.setAuthenticatedSession(
                         username = u,
@@ -77,6 +77,19 @@ class LoginViewModel(
                     }
             }
         }
+    }
+
+    /** Debug / offline sign-in: fixed accounts only (see [LocalDevAccounts]). */
+    private object LocalDevAccounts {
+        private val accounts: List<Pair<String, String>> = listOf(
+            "pieter-bas" to "admin",
+            "wesley" to "work",
+        )
+
+        fun matches(username: String, password: String): Boolean =
+            accounts.any { (u, p) ->
+                u.equals(username, ignoreCase = true) && p == password
+            }
     }
 
     companion object {

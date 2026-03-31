@@ -27,12 +27,12 @@ class AppContainer(context: Context) {
         context = appContext,
         defaultApiBaseUrl = BuildConfig.API_BASE_URL,
     )
+    private val httpClient = createHttpClient(enableLogging = BuildConfig.DEBUG)
+
     val changelogRepository = ChangelogRepository()
-    val innovationNewsRepository = InnovationNewsRepository()
+    val innovationNewsRepository = InnovationNewsRepository(httpClient = httpClient)
     val updatesRepository = UpdatesRepository()
     val geminiRepository = GeminiRepository()
-
-    private val httpClient = createHttpClient(enableLogging = BuildConfig.DEBUG)
 
     val authRepository = AuthRepository(
         client = httpClient,

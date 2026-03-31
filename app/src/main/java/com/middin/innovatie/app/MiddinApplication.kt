@@ -6,12 +6,26 @@ import androidx.core.os.LocaleListCompat
 import com.middin.innovatie.app.notifications.NotificationHelper
 import com.middin.innovatie.app.data.local.ProductCatalogSeed
 import com.middin.innovatie.app.ui.theme.ThemePreference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class MiddinApplication : Application() {
     lateinit var container: AppContainer
         private set
+
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    /** Clears login session asynchronously (e.g. device screen off / lock). */
+    fun clearSessionAsync() {
+        if (!::container.isInitialized) return
+        appScope.launch {
+            container.userPreferences.setSession(loggedIn = false)
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()

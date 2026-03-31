@@ -5,8 +5,13 @@
 /.idea/
 *.iml
 local.properties
+# Contains dev passwords — keep out of git
+local-dev-login-accounts.txt
 .DS_Store
 captures/
 *.apk
 *.ap_
 *.dex
+# JVM crash logs from local Gradle builds
+hs_err_pid*.log
+replay_pid*.log

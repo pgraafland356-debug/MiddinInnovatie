@@ -53,8 +53,8 @@ android {
                 "\"http://10.0.2.2:8080\"",
             )
             buildConfigField("boolean", "USE_LOCAL_SIGN_IN", "true")
-            buildConfigField("String", "PRESET_LOGIN_USER", "\"test\"")
-            buildConfigField("String", "PRESET_LOGIN_PASS", "\"test\"")
+            buildConfigField("String", "PRESET_LOGIN_USER", "\"pieter-bas\"")
+            buildConfigField("String", "PRESET_LOGIN_PASS", "\"admin\"")
             // Example: buildConfigField("String", "API_PATH_PREFIX", "\"api/v1\"")
             // Example: buildConfigField("String", "API_LOGIN_FIELD", "\"email\"")
         }
@@ -115,8 +115,10 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+    implementation("net.sf.kxml:kxml2:2.3.0")
 
     testImplementation(libs.junit)
+    testImplementation("io.ktor:ktor-client-mock:2.3.12")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

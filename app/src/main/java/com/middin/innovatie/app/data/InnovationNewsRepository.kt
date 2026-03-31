@@ -1,20 +1,111 @@
 package com.middin.innovatie.app.data
 
-import java.time.LocalDate
+import com.middin.innovatie.app.data.rss.InnovationNewsKeywordFilter
+import com.middin.innovatie.app.data.rss.InnovationRssSources
+import com.middin.innovatie.app.data.rss.RssParser
+import com.middin.innovatie.app.data.rss.RssPubDateParser
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpHeaders
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
+import java.time.Duration
+import java.time.Instant
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Dispatchers
 
 /**
- * Static feed of recent care-innovation pointers. Updates ship with app releases.
- * Summaries are editorial; always verify on the source site (CE, MDR, procurement).
+ * Loads care-innovation headlines from curated RSS feeds (with keyword filtering where needed).
+ * Falls back to a static list when the network fails or all feeds are empty.
  */
-class InnovationNewsRepository {
+class InnovationNewsRepository(
+    private val httpClient: HttpClient,
+    private val ioContext: CoroutineContext = Dispatchers.IO,
+) {
 
     private val zone: ZoneId = ZoneId.of("Europe/Amsterdam")
+    private val dateDisplayNl: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("d MMM yyyy", Locale.forLanguageTag("nl-NL")).withZone(zone)
+    private val dateDisplayEn: DateTimeFormatter =
+        DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH).withZone(zone)
 
-    private fun epoch(year: Int, month: Int, day: Int): Long =
-        LocalDate.of(year, month, day).atStartOfDay(zone).toInstant().toEpochMilli()
+    /**
+     * Shown until RSS finishes loading; also used when RSS cannot be loaded.
+     */
+    fun fallbackFeed(): List<InnovationNewsItem> = staticFallbackItems()
 
-    fun getFeed(): List<InnovationNewsItem> {
+    suspend fun loadFeed(localeForDates: Locale = Locale.getDefault()): List<InnovationNewsItem> =
+        withContext(ioContext) {
+            val fromRss = fetchMergedRss(localeForDates)
+            if (fromRss.isNotEmpty()) fromRss else staticFallbackItems()
+        }
+
+    private suspend fun fetchMergedRss(localeForDates: Locale): List<InnovationNewsItem> = coroutineScope {
+        val now = System.currentTimeMillis()
+        InnovationRssSources.feeds
+            .map { source ->
+                async {
+                    runCatching { fetchAndMap(source.url, source.sourceLabel, localeForDates, now) }
+                        .getOrElse { emptyList() }
+                }
+            }
+            .awaitAll()
+            .flatten()
+            .distinctBy { normalizeUrl(it.articleUrl) }
+            .filter { it.sortEpochMs >= now - maxItemAgeMs }
+            .sortedByDescending { it.sortEpochMs }
+            .take(MAX_ITEMS)
+    }
+
+    private suspend fun fetchAndMap(
+        url: String,
+        sourceLabel: String,
+        localeForDates: Locale,
+        now: Long,
+    ): List<InnovationNewsItem> {
+        val xml = httpClient.get(url) {
+            header(HttpHeaders.UserAgent, USER_AGENT)
+        }.bodyAsText()
+        val items = RssParser.parseItems(xml)
+        val formatter = if (localeForDates.language.startsWith("nl")) dateDisplayNl else dateDisplayEn
+        return items.mapNotNull { parsed ->
+            val title = parsed.title
+            val link = parsed.link
+            if (title.isBlank() || !link.startsWith("https://")) return@mapNotNull null
+            val summaryRaw = parsed.descriptionPlain
+            val summaryShort = summaryRaw.take(SUMMARY_MAX).let { if (summaryRaw.length > SUMMARY_MAX) "$it…" else it }
+            if (!InnovationNewsKeywordFilter.matchesTitleAndSummary(title, summaryRaw)) {
+                return@mapNotNull null
+            }
+            val sortMs = RssPubDateParser.parseToEpochMillisOrNull(parsed.pubDateRaw) ?: return@mapNotNull null
+            if (sortMs > now + ALLOW_FUTURE_SKEW_MS) return@mapNotNull null
+            val dateLabel = formatter.format(Instant.ofEpochMilli(sortMs))
+            InnovationNewsItem(
+                id = "${sourceLabel}-${link.hashCode()}",
+                title = title,
+                summary = summaryShort.ifBlank { title },
+                dateLabel = dateLabel,
+                sortEpochMs = sortMs,
+                articleUrl = link,
+                sourceLabel = sourceLabel,
+            )
+        }
+    }
+
+    private fun normalizeUrl(url: String): String =
+        url.substringBefore("#").trimEnd('/').lowercase()
+
+    private fun staticFallbackItems(): List<InnovationNewsItem> {
+        fun epoch(year: Int, month: Int, day: Int): Long =
+            java.time.LocalDate.of(year, month, day).atStartOfDay(zone).toInstant().toEpochMilli()
+
         return listOf(
             InnovationNewsItem(
                 id = "nl-ehealth",
@@ -125,5 +216,15 @@ class InnovationNewsRepository {
                 sourceLabel = "European Commission",
             ),
         ).sortedByDescending { it.sortEpochMs }
+    }
+
+    private val maxItemAgeMs: Long = Duration.ofDays(MAX_ITEM_AGE_DAYS).toMillis()
+
+    companion object {
+        private const val MAX_ITEMS = 24
+        private const val MAX_ITEM_AGE_DAYS = 45L
+        private const val ALLOW_FUTURE_SKEW_MS = 86_400_000L
+        private const val SUMMARY_MAX = 420
+        private const val USER_AGENT = "MiddinInnovatie/1.0 (Android; zorginnovatie RSS)"
     }
 }

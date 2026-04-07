@@ -26,6 +26,12 @@ object ProductChatKnowledge {
         if (q.isEmpty()) return friendlyNoMatch(products)
 
         val lower = normalize(q)
+        if (isWhoAreYouQuestion(lower)) {
+            return whoAreYouReply(products)
+        }
+        if (isHowCanYouHelpQuestion(lower)) {
+            return howCanYouHelpReply(products)
+        }
         if (isGreeting(lower)) {
             return greetingReply(products)
         }
@@ -66,6 +72,71 @@ object ProductChatKnowledge {
             .replace('’', '\'')
             .replace(Regex("\\s+"), " ")
             .trim()
+
+    private fun isWhoAreYouQuestion(lower: String): Boolean {
+        if ("wie ben jij" in lower || "wie ben je" in lower) return true
+        if ("wie zij jij" in lower || "wie zij je" in lower) return true
+        if ("who are you" in lower) return true
+        return false
+    }
+
+    private fun isHowCanYouHelpQuestion(lower: String): Boolean {
+        if ("waarmee kan je mij helpen" in lower) return true
+        if ("waarmee kun je mij helpen" in lower) return true
+        if ("waarmee kan je me helpen" in lower) return true
+        if ("waarmee kun je me helpen" in lower) return true
+        if ("waarmee help je mij" in lower || "waarmee help je me" in lower) return true
+        if ("hoe kan je mij helpen" in lower || "hoe kun je mij helpen" in lower) return true
+        if ("hoe kan je me helpen" in lower || "hoe kun je me helpen" in lower) return true
+        if ("met wat kan je mij helpen" in lower || "met wat kun je mij helpen" in lower) return true
+        if ("what can you help" in lower && ("me" in lower || "with" in lower)) return true
+        return false
+    }
+
+    private fun whoAreYouReply(products: List<Product>): String {
+        val hint = if (products.isEmpty()) {
+            "Als er producten in de app staan, kan ik je daar uitleg over geven. Voeg ze toe via het tabblad Producten."
+        } else {
+            "Vraag gerust over een product uit de lijst, of tik: «Welke producten hebben jullie?»."
+        }
+        return buildString {
+            appendLine("Ik ben de Productassistent van deze Middin Innovatie-app.")
+            appendLine()
+            appendLine(
+                "Ik ben geen mens, maar een hulp in de app. Ik gebruik de teksten bij de producten " +
+                    "die hier staan en probeer je vragen daarop te beantwoorden — in rustig, " +
+                    "begrijpelijk Nederlands en zonder internet.",
+            )
+            appendLine()
+            append(hint)
+        }.trim()
+    }
+
+    private fun howCanYouHelpReply(products: List<Product>): String {
+        return buildString {
+            appendLine("Ik kan je helpen met vragen over de producten in deze app.")
+            appendLine()
+            appendLine("Zo kun je me gebruiken:")
+            appendLine("• Uitleg over wat een product doet of waarvoor het bedoeld is")
+            appendLine("• De informatie in makkelijke stukjes en heldere taal")
+            appendLine("• Een overzicht als je vraagt welke producten er zijn")
+            appendLine()
+            appendLine(
+                "Ik gebruik alleen wat er bij elk product in de app staat. " +
+                    "Voor medisch advies, vergoedingen of jouw persoonlijke situatie moet je " +
+                    "altijd naar je begeleider, arts of de leverancier van het hulpmiddel.",
+            )
+            if (products.isEmpty()) {
+                appendLine()
+                appendLine(
+                    "Er staan nog geen producten in de app. Voeg eerst producten toe; " +
+                        "daarna kan ik je er meer over vertellen.",
+                )
+            }
+            appendLine()
+            appendLine("Typ gerust de naam van een product of stel een concrete vraag.")
+        }.trim()
+    }
 
     private fun isGreeting(lower: String): Boolean {
         val greetings = listOf(

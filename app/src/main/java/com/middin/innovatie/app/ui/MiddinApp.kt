@@ -39,6 +39,7 @@ import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.chat.ChatScreen
 import com.middin.innovatie.app.ui.home.HomeScreen
 import com.middin.innovatie.app.ui.login.LoginScreen
+import com.middin.innovatie.app.ui.welcome.WelcomeScreen
 import com.middin.innovatie.app.ui.memory.MemoryScreen
 import com.middin.innovatie.app.ui.more.MoreNavHost
 import com.middin.innovatie.app.ui.products.ProductsNavHost
@@ -57,15 +58,31 @@ private enum class RootTab(
 @Composable
 fun MiddinApp() {
     val container = rememberAppContainer()
+    val scope = rememberCoroutineScope()
     val loggedIn by produceState<Boolean?>(initialValue = null, container) {
         container.userPreferences.session.collect { value = it }
+    }
+    val welcomeSeen by produceState<Boolean?>(initialValue = null, container) {
+        container.userPreferences.brandWelcomeSeen.collect { value = it }
     }
 
     when (loggedIn) {
         null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
-        false -> LoginScreen()
+        false -> when (welcomeSeen) {
+            null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+            false -> WelcomeScreen(
+                onContinue = {
+                    scope.launch {
+                        container.userPreferences.setBrandWelcomeSeen()
+                    }
+                },
+            )
+            true -> LoginScreen()
+        }
         true -> MainShell()
     }
 }

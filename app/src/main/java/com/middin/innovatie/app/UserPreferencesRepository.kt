@@ -28,9 +28,13 @@ class UserPreferencesRepository(
         val geminiApiKey = stringPreferencesKey("gemini_api_key")
         /** Debug only: prefer offline/local login. Ignored in release builds. */
         val useLocalSignIn = booleanPreferencesKey("use_local_sign_in")
+        /** One-time brand welcome before first visit to the login screen. */
+        val brandWelcomeSeen = booleanPreferencesKey("brand_welcome_seen")
     }
 
     val session: Flow<Boolean> = context.dataStore.data.map { it[Keys.loggedIn] == true }
+
+    val brandWelcomeSeen: Flow<Boolean> = context.dataStore.data.map { it[Keys.brandWelcomeSeen] == true }
     val username: Flow<String?> = context.dataStore.data.map { it[Keys.username] }
     val authToken: Flow<String?> = context.dataStore.data.map { it[Keys.authToken] }
     val localeTag: Flow<String> = context.dataStore.data.map { it[Keys.localeTag] ?: "en" }
@@ -126,5 +130,9 @@ class UserPreferencesRepository(
             val t = key?.trim().orEmpty()
             if (t.isEmpty()) prefs.remove(Keys.geminiApiKey) else prefs[Keys.geminiApiKey] = t
         }
+    }
+
+    suspend fun setBrandWelcomeSeen() {
+        context.dataStore.edit { it[Keys.brandWelcomeSeen] = true }
     }
 }

@@ -1,9 +1,11 @@
 package com.middin.innovatie.app.ui.home
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,12 +18,22 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -73,12 +85,68 @@ fun HomeScreen(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Spacer(Modifier.height(12.dp))
-        news.forEach { item ->
-            InnovationNewsCard(
-                item = item,
-                onOpen = { uriHandler.openUri(item.articleUrl) },
+
+        val allLabel = stringResource(R.string.home_news_tab_all)
+        val tabLabels = remember(news, allLabel) {
+            listOf(allLabel) + news.map { it.sourceLabel }.distinct().sorted()
+        }
+        var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+        LaunchedEffect(tabLabels.size) {
+            if (selectedTabIndex >= tabLabels.size) selectedTabIndex = 0
+        }
+        val filteredNews = remember(news, selectedTabIndex, tabLabels) {
+            if (tabLabels.isEmpty()) emptyList()
+            else if (selectedTabIndex == 0) news.sortedByDescending { it.sortEpochMs }
+            else {
+                val label = tabLabels[selectedTabIndex]
+                news.filter { it.sourceLabel == label }.sortedByDescending { it.sortEpochMs }
+            }
+        }
+        val showSourceInCard = selectedTabIndex == 0
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            tabLabels.forEachIndexed { index, label ->
+                FilterChip(
+                    selected = selectedTabIndex == index,
+                    onClick = { selectedTabIndex = index },
+                    label = {
+                        Text(
+                            label,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    ),
+                )
+            }
+        }
+        HorizontalDivider(Modifier.padding(vertical = 12.dp))
+
+        if (filteredNews.isEmpty()) {
+            Text(
+                stringResource(R.string.home_news_empty_tab),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Spacer(Modifier.height(10.dp))
+        } else {
+            filteredNews.forEach { item ->
+                InnovationNewsCard(
+                    item = item,
+                    showSourceInMeta = showSourceInCard,
+                    onOpen = { uriHandler.openUri(item.articleUrl) },
+                )
+                Spacer(Modifier.height(10.dp))
+            }
         }
 
         Text(
@@ -104,9 +172,14 @@ fun HomeScreen(
 @Composable
 private fun InnovationNewsCard(
     item: InnovationNewsItem,
+    showSourceInMeta: Boolean,
     onOpen: () -> Unit,
 ) {
-    val meta = stringResource(R.string.home_news_meta, item.sourceLabel, item.dateLabel)
+    val meta = if (showSourceInMeta) {
+        stringResource(R.string.home_news_meta, item.sourceLabel, item.dateLabel)
+    } else {
+        item.dateLabel
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()

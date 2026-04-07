@@ -4,6 +4,8 @@
     <string name="logo_content_description">Middin Innovatie-logo</string>
     <string name="brand_title">Middin Innovatie</string>
     <string name="brand_subtitle">Den Haag</string>
+    <string name="welcome_tagline">Even stilstaan voor je inlogt — innovatie en collectief geheugen uit Den Haag.</string>
+    <string name="welcome_cta">Doorgaan naar inloggen</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_memory">Collectief geheugen</string>
@@ -41,6 +43,8 @@
     <string name="home_intro">Welkom bij de Middin Innovatie-app: collectief geheugen, teamchat, productideeën met camera en koppeling met jullie eigen API.</string>
     <string name="home_top_products">Nieuwste producten (top 3)</string>
     <string name="home_no_products_yet">Nog geen producten. Open Producten en voeg er een toe met de camera.</string>
+    <string name="home_news_tab_all">Alles</string>
+    <string name="home_news_empty_tab">Geen artikelen voor deze bron.</string>
     <string name="home_news_title">Nieuws: zorginnovatie</string>
     <string name="home_news_intro">Recente koppen (ongeveer de laatste 45 dagen) uit RSS-feeds over digitale gezondheid en medische technologie. Alleen berichten die zowel over zorg/gezondheid als over innovatie of technologie gaan, worden getoond. Zonder internet verschijnt een korte offline-lijst. Tik om het volledige artikel in de browser te openen.</string>
     <string name="home_news_meta">%1$s · %2$s</string>

@@ -6,10 +6,10 @@
     android:viewportWidth="120"
     android:viewportHeight="120">
     <path
-        android:fillColor="#1565C0"
+        android:fillColor="@color/middin_primary"
         android:pathData="M20,12h80c6,0 12,6 12,12v72c0,6 -6,12 -12,12h-80c-6,0 -12,-6 -12,-12v-72c0,-6 6,-12 12,-12z" />
     <path
-        android:fillColor="#00838F"
+        android:fillColor="@color/middin_green"
         android:pathData="M20,12h80v18h-80z" />
     <path
         android:fillColor="#FFFFFF"

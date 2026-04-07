@@ -37,4 +37,19 @@ class ProductChatKnowledgeTest {
         val a = ProductChatKnowledge.answer("Hallo!", listOf(somnox))
         assertTrue(a.contains("productassistent", ignoreCase = true))
     }
+
+    @Test
+    fun answersWhoAreYouInDutch() {
+        val a = ProductChatKnowledge.answer("Wie ben jij?", listOf(somnox))
+        assertTrue(a.contains("Productassistent", ignoreCase = true))
+        assertTrue(a.contains("Middin", ignoreCase = true))
+        assertTrue(a.contains("geen mens", ignoreCase = true) || a.contains("geen persoon", ignoreCase = true))
+    }
+
+    @Test
+    fun answersHowCanYouHelpInDutch() {
+        val a = ProductChatKnowledge.answer("Waarmee kan je mij helpen?", listOf(somnox))
+        assertTrue(a.contains("producten", ignoreCase = true))
+        assertTrue(a.contains("begeleider", ignoreCase = true) || a.contains("arts", ignoreCase = true))
+    }
 }

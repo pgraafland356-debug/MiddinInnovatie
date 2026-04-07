@@ -4,6 +4,8 @@
     <string name="logo_content_description">Middin Innovatie logo</string>
     <string name="brand_title">Middin Innovatie</string>
     <string name="brand_subtitle">Den Haag</string>
+    <string name="welcome_tagline">A quiet moment before you sign in — innovation and collective memory from The Hague.</string>
+    <string name="welcome_cta">Continue to sign in</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_memory">Collective memory</string>
@@ -41,6 +43,8 @@
     <string name="home_intro">Welcome to the Middin Innovatie app: collective memory, team chat, product ideas with camera capture, and tools for your custom API.</string>
     <string name="home_top_products">Newest products (top 3)</string>
     <string name="home_no_products_yet">No products yet. Open Products and add one with the camera.</string>
+    <string name="home_news_tab_all">All</string>
+    <string name="home_news_empty_tab">No articles for this source.</string>
     <string name="home_news_title">Care innovation news</string>
     <string name="home_news_intro">Recent headlines (about the last 45 days) from digital health and medtech RSS feeds. Only items that look both health-related and innovation or technology focused are shown. Without internet, a short offline list appears. Open in the browser for the full article.</string>
     <string name="home_news_meta">%1$s · %2$s</string>

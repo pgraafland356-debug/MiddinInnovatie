@@ -53,6 +53,7 @@
     <string name="memory_hint">Add a note for the shared memory…</string>
     <string name="memory_add">Save</string>
     <string name="memory_empty">No entries yet.</string>
+    <string name="memory_remove_cd">Remove memory entry</string>
 
     <string name="changelog_title">App versions</string>
 

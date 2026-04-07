@@ -12,4 +12,7 @@ interface MemoryDao {
 
     @Insert
     suspend fun insert(entry: MemoryEntry)
+
+    @Query("DELETE FROM collective_memory WHERE id = :id")
+    suspend fun deleteById(id: String)
 }

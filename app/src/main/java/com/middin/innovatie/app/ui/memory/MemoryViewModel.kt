@@ -29,6 +29,12 @@ class MemoryViewModel(
         }
     }
 
+    fun remove(id: String) {
+        viewModelScope.launch {
+            dao.deleteById(id)
+        }
+    }
+
     companion object {
         fun factory(dao: MemoryDao) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")

@@ -15,3 +15,5 @@ captures/
 # JVM crash logs from local Gradle builds
 hs_err_pid*.log
 replay_pid*.log
+# Microsoft Office lock files (never commit)
+~$*

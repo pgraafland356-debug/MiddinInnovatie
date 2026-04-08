@@ -38,6 +38,12 @@ class SettingsViewModel(
         }
     }
 
+    fun saveUpdateFeedUrl(url: String) {
+        viewModelScope.launch {
+            userPreferences.setUpdateFeedUrlOverride(url)
+        }
+    }
+
     fun saveGeminiApiKey(key: String) {
         viewModelScope.launch {
             userPreferences.setGeminiApiKey(key)

@@ -24,6 +24,7 @@ class UserPreferencesRepository(
         val authToken = stringPreferencesKey("auth_token")
         val localeTag = stringPreferencesKey("locale_tag")
         val apiBaseUrlOverride = stringPreferencesKey("api_base_url_override")
+        val updateFeedUrlOverride = stringPreferencesKey("update_feed_url_override")
         val themeMode = stringPreferencesKey("theme_preference")
         val geminiApiKey = stringPreferencesKey("gemini_api_key")
         /** Debug only: prefer offline/local login. Ignored in release builds. */
@@ -82,6 +83,23 @@ class UserPreferencesRepository(
         return resolveWithDefault(prefs[Keys.apiBaseUrlOverride])
     }
 
+    /** Raw update feed override from storage; null or blank means build default. */
+    val updateFeedUrlOverride: Flow<String?> = context.dataStore.data.map { it[Keys.updateFeedUrlOverride] }
+
+    val effectiveUpdateFeedUrl: Flow<String> = context.dataStore.data.map { prefs ->
+        resolveUpdateFeedWithDefault(prefs[Keys.updateFeedUrlOverride])
+    }
+
+    suspend fun resolvedUpdateFeedUrl(): String {
+        val prefs = context.dataStore.data.first()
+        return resolveUpdateFeedWithDefault(prefs[Keys.updateFeedUrlOverride])
+    }
+
+    private fun resolveUpdateFeedWithDefault(override: String?): String {
+        val o = override?.trim().orEmpty()
+        return if (o.isNotEmpty()) o else BuildConfig.UPDATE_FEED_URL.trim()
+    }
+
     private fun resolveWithDefault(override: String?): String {
         val o = override?.trim().orEmpty()
         return if (o.isNotEmpty()) o.trimEnd('/') else defaultApiBaseUrl.trimEnd('/')
@@ -94,6 +112,17 @@ class UserPreferencesRepository(
                 prefs.remove(Keys.apiBaseUrlOverride)
             } else {
                 prefs[Keys.apiBaseUrlOverride] = trimmed.trimEnd('/')
+            }
+        }
+    }
+
+    suspend fun setUpdateFeedUrlOverride(url: String?) {
+        context.dataStore.edit { prefs ->
+            val trimmed = url?.trim().orEmpty()
+            if (trimmed.isEmpty()) {
+                prefs.remove(Keys.updateFeedUrlOverride)
+            } else {
+                prefs[Keys.updateFeedUrlOverride] = trimmed
             }
         }
     }

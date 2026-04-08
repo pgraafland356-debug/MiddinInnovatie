@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,8 +39,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.middin.innovatie.app.BuildConfig
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.notifications.NotificationHelper
+import com.middin.innovatie.app.update.MinimalRelease
+import com.middin.innovatie.app.update.PrivateAppUpdater
 import com.middin.innovatie.app.ui.rememberAppContainer
 import com.middin.innovatie.app.ui.theme.ThemePreference
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
@@ -59,12 +63,20 @@ fun SettingsScreen(
         initialValue = BuildConfig.API_BASE_URL.trimEnd('/'),
     )
     val geminiStored by container.userPreferences.geminiApiKey.collectAsStateWithLifecycle(initialValue = null)
+    val updateFeedRaw by container.userPreferences.updateFeedUrlOverride.collectAsStateWithLifecycle(initialValue = null)
+    val effectiveUpdateFeed by container.userPreferences.effectiveUpdateFeedUrl.collectAsStateWithLifecycle(initialValue = BuildConfig.UPDATE_FEED_URL)
     val useLocalSignIn by container.userPreferences.useLocalSignIn.collectAsStateWithLifecycle(
         initialValue = BuildConfig.DEBUG && BuildConfig.USE_LOCAL_SIGN_IN,
     )
 
     var serverDraft by remember(overrideRaw) { mutableStateOf(overrideRaw.orEmpty()) }
     var geminiDraft by remember(geminiStored) { mutableStateOf(geminiStored.orEmpty()) }
+    var updateFeedDraft by remember(updateFeedRaw) { mutableStateOf(updateFeedRaw.orEmpty()) }
+    var updateStatus by remember { mutableStateOf("") }
+    var pendingRelease by remember { mutableStateOf<MinimalRelease?>(null) }
+    var updateBusy by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val updater = remember(ctx) { PrivateAppUpdater(ctx.applicationContext) }
 
     val notifPermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -235,6 +247,142 @@ fun SettingsScreen(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        }
+        item {
+            Text(
+                stringResource(R.string.settings_update_title),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 16.dp),
+            )
+            Text(
+                stringResource(R.string.settings_update_current, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            OutlinedTextField(
+                value = updateFeedDraft,
+                onValueChange = { updateFeedDraft = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                label = { Text(stringResource(R.string.settings_update_feed_label)) },
+                placeholder = { Text(stringResource(R.string.settings_update_feed_placeholder)) },
+                singleLine = false,
+                minLines = 2,
+            )
+            Text(
+                stringResource(R.string.settings_update_feed_effective, effectiveUpdateFeed.ifBlank { "-" }),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(top = 6.dp),
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Button(
+                    onClick = { viewModel.saveUpdateFeedUrl(updateFeedDraft) },
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(stringResource(R.string.settings_update_feed_save))
+                }
+                TextButton(
+                    onClick = {
+                        updateFeedDraft = ""
+                        viewModel.saveUpdateFeedUrl("")
+                    },
+                ) {
+                    Text(stringResource(R.string.settings_api_use_default))
+                }
+            }
+            Button(
+                onClick = {
+                    val endpoint = effectiveUpdateFeed.trim()
+                    if (endpoint.isBlank()) {
+                        updateStatus = ctx.getString(R.string.settings_update_missing_url)
+                        return@Button
+                    }
+                    updateBusy = true
+                    updateStatus = ctx.getString(R.string.settings_update_checking)
+                    pendingRelease = null
+                    scope.launch {
+                        try {
+                            val release = updater.fetchLatestRelease(endpoint)
+                            if (release == null) {
+                                updateStatus = ctx.getString(R.string.settings_update_none)
+                            } else {
+                                pendingRelease = release
+                                updateStatus = ctx.getString(
+                                    R.string.settings_update_found,
+                                    release.versionName,
+                                    release.versionCode,
+                                )
+                            }
+                        } catch (_: Exception) {
+                            updateStatus = ctx.getString(R.string.settings_update_failed_check)
+                        } finally {
+                            updateBusy = false
+                        }
+                    }
+                },
+                enabled = !updateBusy,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+            ) {
+                Text(stringResource(R.string.settings_update_check_button))
+            }
+            if (pendingRelease != null) {
+                Button(
+                    onClick = {
+                        val release = pendingRelease ?: return@Button
+                        updateBusy = true
+                        updateStatus = ctx.getString(R.string.settings_update_downloading)
+                        scope.launch {
+                            try {
+                                val apk = updater.downloadApk(release)
+                                val ok = updater.verifySha256(apk, release.sha256)
+                                if (!ok) {
+                                    apk.delete()
+                                    updateStatus = ctx.getString(R.string.settings_update_checksum_failed)
+                                    return@launch
+                                }
+                                if (!updater.canInstallUnknownApps()) {
+                                    updater.openUnknownAppsSettings()
+                                    updateStatus = ctx.getString(R.string.settings_update_enable_unknown)
+                                    return@launch
+                                }
+                                val launched = updater.promptInstall(apk)
+                                updateStatus = if (launched) {
+                                    ctx.getString(R.string.settings_update_install_prompted)
+                                } else {
+                                    ctx.getString(R.string.settings_update_install_failed)
+                                }
+                            } catch (_: Exception) {
+                                updateStatus = ctx.getString(R.string.settings_update_download_failed)
+                            } finally {
+                                updateBusy = false
+                            }
+                        }
+                    },
+                    enabled = !updateBusy,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                ) {
+                    Text(stringResource(R.string.settings_update_install_button))
+                }
+            }
+            if (updateStatus.isNotBlank()) {
+                Text(
+                    updateStatus,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 6.dp),
+                )
+            }
         }
         item {
             Text(

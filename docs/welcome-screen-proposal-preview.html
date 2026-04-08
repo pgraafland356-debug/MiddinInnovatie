@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welkomstscherm — voorbeeld (Middin innovatie)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,400&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #001a9e;
+      --primary-light: #f2f3fa;
+      --white: #ffffff;
+      --cream: rgba(249, 242, 200, 0.45);
+      --text-light: #777777;
+      --mint: #76e1ca;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: #1a1a24;
+    }
+    .phone {
+      width: min(100%, 360px);
+      min-height: 640px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 24px 80px rgba(0,0,0,.45);
+      position: relative;
+      background: linear-gradient(180deg, var(--primary-light) 0%, var(--white) 52%, var(--cream) 100%);
+    }
+    /* Mint glow — zelfde hoek als Compose */
+    .phone::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      width: 140px; height: 140px;
+      background: radial-gradient(circle, rgba(118,225,202,0.22) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .content {
+      position: relative;
+      z-index: 1;
+      padding: 40px 28px;
+      min-height: 640px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    /* Logo-placeholder: zelfde verhouding als vector (blauw + mint-streep + wit M) — geen echte asset */
+    .logo-mock {
+      width: 112px;
+      height: 112px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, var(--mint) 0%, var(--mint) 15%, var(--primary) 15%, var(--primary) 100%);
+      position: relative;
+      box-shadow: 0 8px 24px rgba(0,26,158,.12);
+    }
+    .logo-mock::after {
+      content: "M";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 52px;
+      font-weight: 500;
+      color: var(--white);
+      padding-top: 8px;
+    }
+    .spacer-lg { height: 28px; }
+    .spacer-md { height: 20px; }
+    .spacer-btn { height: 40px; }
+
+    /* ——— NIEUW: voorstel “Middin innovatie” ——— */
+    .brand-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      max-width: 100%;
+      margin-top: 4px;
+    }
+    .brand-line__bar {
+      width: 4px;
+      height: 1.35em;
+      border-radius: 2px;
+      background: var(--mint);
+      flex-shrink: 0;
+    }
+    .brand-line__text {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.35rem;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--primary);
+      letter-spacing: 0.02em;
+      line-height: 1.25;
+      text-align: left;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .subtitle {
+      margin: 4px 0 0;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+    .tagline {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: rgba(0,26,158,0.92);
+      max-width: 280px;
+    }
+    .btn {
+      width: 100%;
+      max-width: 304px;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 24px;
+      background: var(--primary);
+      color: var(--white);
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: default;
+    }
+    .note {
+      margin-top: 32px;
+      padding: 16px;
+      background: rgba(255,255,255,.06);
+      border-radius: 12px;
+      color: #c8c8d4;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      max-width: 420px;
+    }
+    .note code { color: #9ed6ff; }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="phone">
+      <div class="content">
+        <div class="logo-mock" aria-hidden="true"></div>
+        <div class="spacer-lg"></div>
+
+        <!-- Nieuw element: mint accent + handgeschreven-achtige regel (alleen typografie, zelfde kleuren) -->
+        <div class="brand-line">
+          <span class="brand-line__bar" aria-hidden="true"></span>
+          <span class="brand-line__text">Middin innovatie</span>
+        </div>
+
+        <div class="spacer-md"></div>
+        <h1>Middin Innovatie</h1>
+        <p class="subtitle">Den Haag</p>
+        <div class="spacer-md"></div>
+        <p class="tagline">Even stilstaan voor je inlogt — innovatie en collectief geheugen uit Den Haag.</p>
+        <div class="spacer-btn"></div>
+        <button type="button" class="btn" disabled>Doorgaan naar inloggen</button>
+      </div>
+    </div>
+    <p class="note">
+      <strong>Voorbeeld (nog niet in de app).</strong> Boven de bestaande titel komt één regel
+      <code>Middin innovatie</code> met een smalle <strong>mint</strong> balk (bestaand accentkleur).
+      Logo, gradient, knop en blauw/crème blijven zoals nu. Fonts in de app blijven Material/Sans — dit HTML gebruikt Fraunces alleen om het idee te tonen; in Compose kan het zonder extra font (gewicht cursief + zelfde kleuren).
+      Open dit bestand in je browser om het scherm te zien.
+    </p>
+  </div>
+</body>
+</html>

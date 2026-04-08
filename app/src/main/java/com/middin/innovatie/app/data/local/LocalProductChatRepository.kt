@@ -50,6 +50,10 @@ class LocalProductChatRepository(
         )
     }
 
+    override suspend fun clearHistory(): Result<Unit> = runCatching {
+        chatDao.deleteAll()
+    }
+
     private fun welcomeRow(): LocalChatMessage {
         val text = buildString {
             appendLine("Hallo! Ik ben je productassistent.")

@@ -2,14 +2,18 @@ package com.middin.innovatie.app.data.local
 
 /**
  * Default catalog: names + korte beschrijvingen (publieke productinformatie).
- * Speciale muis/balmuis en digitaal chat app nog zonder vaste catalogustekst.
+ * Speciale muis/balmuis nog zonder vaste catalogustekst.
  *
  * Bronnen o.a.: fabrikanten (Somnox, Luvion, MOWOOT, OrCam, handSteady, CRDL, Tinybots, Muse),
- * medische/registratiesites, Inclusive Inc. (OnPoint), MijnEigenPlan.nl, algemene actigrafie-info MotionWatch.
+ * medische/registratiesites, Inclusive Inc. (OnPoint), MijnEigenPlan.nl, actigrafie MotionWatch,
+ * Stichting Visitaal / visitaal.nl, Kennisplein Gehandicaptenzorg (Visitaal Chat), BIG Launcher (biglauncher.com, o.a. Visio kennisportaal).
  */
 object ProductCatalogSeed {
 
     data class Entry(val name: String, val description: String)
+
+    /** Oude seed-naam; vervangen door Visitaal Chat + BIG Launcher. */
+    private val obsoleteProductNames: List<String> = listOf("De digitaal chat app")
 
     val catalog: List<Entry> = listOf(
         Entry(
@@ -49,9 +53,9 @@ object ProductCatalogSeed {
         ),
         Entry(
             name = "De launcher app",
-            description = "Vereenvoudigde Android-start Scherm: grote pictogrammen, weinig gebaren, vaak SOS of " +
-                "contacten op één tik. Voorbeelden: BIG Launcher, Elder Launcher, Senior Home—handig bij " +
-                "cognitieve of visuele beperking.",
+            description = "Vereenvoudigde Android-startschermen: grote pictogrammen, weinig gebaren, vaak SOS of " +
+                "contacten op één tik (los van de aparte vermelding BIG Launcher). Voorbeelden: Elder Launcher, " +
+                "Senior Home, Simple Launcher — handig bij cognitieve of visuele beperking.",
         ),
         Entry(
             name = "De VR-bril",
@@ -92,7 +96,24 @@ object ProductCatalogSeed {
                 "geen medische diagnose van hersenaandoeningen (bron: Muse / Choose Muse).",
         ),
         Entry(name = "De Speciale muis / bal muis", description = ""),
-        Entry(name = "De digitaal chat app", description = ""),
+        Entry(
+            name = "Visitaal Chat",
+            description = "Gratis Nederlandse chat-app met duidelijke pictogrammen in plaats van veel tekst — " +
+                "begrijpelijk voor wie moeite heeft met lezen en schrijven, vergelijkbaar in doel met een toegankelijk " +
+                "alternatief voor standaard chatapps. Ruim 350 pictogrammen; ook foto's, emoji's, GIF's en spraakberichten; " +
+                "berichten kunnen hardop worden voorgelezen. Bedoeld o.a. voor mensen met een (lichte) verstandelijke of " +
+                "communicatieve beperking, auditieve beperking, dementie, anderstaligen en laaggeletterden. " +
+                "Beschikbaar voor Android en iOS (telefoon en tablet); in de praktijk vaak via wifi. " +
+                "(Stichting Visitaal — visitaal.nl; o.a. beschreven op Kennisplein Gehandicaptenzorg.)",
+        ),
+        Entry(
+            name = "BIG Launcher",
+            description = "Android-app die het standaard startscherm vervangt door een eenvoudige interface met " +
+                "zeer grote knoppen en tekst: minder fouten en overzicht voor senioren, slechtzienden en mensen met " +
+                "motorische beperkingen. Aanpasbare tekstgroottes en kleurenthema's; vaak een SOS-functie " +
+                "(waaronder locatie delen). Basis gratis, uitbreidingen optioneel betaald — zie biglauncher.com en " +
+                "Google Play (o.a. toegelicht door Koninklijke Visio in het kennisportaal).",
+        ),
     )
 
     /** Volgorde zoals in de UI gewenst (boven = eerst in lijst bij sorteerdatum). */
@@ -118,6 +139,31 @@ object ProductCatalogSeed {
         catalog.forEach { entry ->
             if (entry.description.isNotBlank()) {
                 dao.updateDescriptionIfEmpty(entry.name, entry.description)
+            }
+        }
+    }
+
+    /** Verwijdert verouderde seed-producten (na hernoemen/splitsen in de catalogus). */
+    suspend fun removeObsoleteProducts(dao: ProductDao) {
+        obsoleteProductNames.forEach { dao.deleteByName(it) }
+    }
+
+    /**
+     * Voegt ontbrekende catalogusproducten toe (bestaande installaties na uitbreiding van [catalog]).
+     * [seedIfEmpty] draait alleen bij lege DB; deze functie vult bij iedere app-start het verschil aan.
+     */
+    suspend fun syncMissingCatalogEntries(dao: ProductDao) {
+        val base = System.currentTimeMillis()
+        catalog.forEachIndexed { index, entry ->
+            if (dao.countByName(entry.name) == 0L) {
+                dao.insert(
+                    Product(
+                        name = entry.name,
+                        description = entry.description,
+                        imageUri = null,
+                        createdAtEpochMs = base + index,
+                    ),
+                )
             }
         }
     }

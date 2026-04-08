@@ -6,4 +6,6 @@ import com.middin.innovatie.app.data.remote.dto.ChatMessageDto
 interface ChatRepository {
     suspend fun listMessages(): Result<List<ChatMessageDto>>
     suspend fun sendMessage(text: String): Result<Unit>
+    /** Remove all messages locally (or on server if supported). */
+    suspend fun clearHistory(): Result<Unit>
 }

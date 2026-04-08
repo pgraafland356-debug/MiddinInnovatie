@@ -65,6 +65,21 @@ class ChatViewModel(
         }
     }
 
+    fun clearHistory() {
+        viewModelScope.launch {
+            chatRepository.clearHistory()
+                .onSuccess { refresh() }
+                .onFailure { e ->
+                    _ui.update {
+                        it.copy(
+                            error = e.message?.ifBlank { null }
+                                ?: "Geschiedenis wissen is mislukt.",
+                        )
+                    }
+                }
+        }
+    }
+
     companion object {
         fun factory(chatRepository: ChatRepository) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")

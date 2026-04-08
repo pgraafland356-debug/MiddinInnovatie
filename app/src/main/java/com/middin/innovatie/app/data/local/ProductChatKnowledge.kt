@@ -195,6 +195,10 @@ object ProductChatKnowledge {
                 listOf("luvion", "witte", "ruis", "white", "noise", "geluid", "slaap", "slapen")
             name.contains("Mowoot", ignoreCase = true) -> listOf("mowoot", "buik", "obstipatie", "darm")
             name.contains("Mijn eigen plan", ignoreCase = true) -> listOf("mijneigenplan", "eigen", "plan")
+            name.contains("Visitaal", ignoreCase = true) ->
+                listOf("visitaal", "chat", "pictogrammen", "whatsapp", "bericht", "praten", "communicatie", "voorlezen")
+            name.contains("BIG Launcher", ignoreCase = true) ->
+                listOf("big", "launcher", "grote", "letters", "iconen", "start", "android", "senior", "sos")
             name.contains("launcher", ignoreCase = true) -> listOf("launcher", "grote", "iconen", "start")
             name.contains("VR", ignoreCase = true) || name.contains("vr-", ignoreCase = true) ->
                 listOf("vr", "virtual", "bril")
@@ -207,7 +211,6 @@ object ProductChatKnowledge {
             name.contains("Muse", ignoreCase = true) -> listOf("muse", "eeg", "meditatie", "hoofdband", "hersenen")
             name.contains("Speciale muis", ignoreCase = true) || name.contains("bal muis", ignoreCase = true) ->
                 listOf("muis", "bal", "trackball")
-            name.contains("digitaal chat", ignoreCase = true) -> listOf("chat", "app", "praten")
             else -> emptyList()
         }
     }

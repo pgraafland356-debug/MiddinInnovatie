@@ -56,4 +56,7 @@ class RemoteChatRepository(
                 error("HTTP ${response.status.value}: $snippet")
             }
         }
+
+    override suspend fun clearHistory(): Result<Unit> =
+        Result.failure(UnsupportedOperationException("Clearing history is not implemented for server chat in this build."))
 }

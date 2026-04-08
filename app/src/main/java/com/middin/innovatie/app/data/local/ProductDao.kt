@@ -27,4 +27,10 @@ interface ProductDao {
 
     @Query("UPDATE products SET description = :description WHERE name = :name AND description = ''")
     suspend fun updateDescriptionIfEmpty(name: String, description: String)
+
+    @Query("SELECT COUNT(*) FROM products WHERE name = :name")
+    suspend fun countByName(name: String): Long
+
+    @Query("DELETE FROM products WHERE name = :name")
+    suspend fun deleteByName(name: String)
 }

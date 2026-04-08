@@ -14,4 +14,7 @@ interface LocalChatMessageDao {
 
     @Query("SELECT COUNT(*) FROM local_chat_messages")
     suspend fun count(): Long
+
+    @Query("DELETE FROM local_chat_messages")
+    suspend fun deleteAll()
 }

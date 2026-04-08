@@ -4,6 +4,7 @@
     <string name="logo_content_description">Middin Innovatie logo</string>
     <string name="brand_title">Middin Innovatie</string>
     <string name="brand_subtitle">Den Haag</string>
+    <string name="welcome_brand_line">Middin innovation</string>
     <string name="welcome_tagline">A quiet moment before you sign in — innovation and collective memory from The Hague.</string>
     <string name="welcome_cta">Continue to sign in</string>
 
@@ -92,6 +93,10 @@
 
     <string name="chat_title">Product assistant</string>
     <string name="chat_refresh">Refresh</string>
+    <string name="chat_clear_history">Clear history</string>
+    <string name="chat_clear_confirm_title">Clear all chat messages?</string>
+    <string name="chat_clear_confirm_body">All messages are removed on this device. After refreshing, the welcome message appears again.</string>
+    <string name="chat_clear_confirm">Clear</string>
     <string name="chat_message_hint">Message</string>
 
     <string name="settings_theme_title">Theme</string>

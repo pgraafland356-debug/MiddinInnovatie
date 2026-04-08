@@ -35,6 +35,8 @@ class MiddinApplication : Application() {
             val productDao = container.database.productDao()
             ProductCatalogSeed.seedIfEmpty(productDao)
             ProductCatalogSeed.fillEmptyDescriptions(productDao)
+            ProductCatalogSeed.removeObsoleteProducts(productDao)
+            ProductCatalogSeed.syncMissingCatalogEntries(productDao)
             val tag = container.userPreferences.localeTag.first()
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
             val theme = container.userPreferences.themePreference.first()

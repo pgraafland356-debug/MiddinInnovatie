@@ -4,6 +4,7 @@
     <string name="logo_content_description">Middin Innovatie-logo</string>
     <string name="brand_title">Middin Innovatie</string>
     <string name="brand_subtitle">Den Haag</string>
+    <string name="welcome_brand_line">Middin innovatie</string>
     <string name="welcome_tagline">Even stilstaan voor je inlogt — innovatie en collectief geheugen uit Den Haag.</string>
     <string name="welcome_cta">Doorgaan naar inloggen</string>
 
@@ -92,6 +93,10 @@
 
     <string name="chat_title">Productassistent</string>
     <string name="chat_refresh">Vernieuwen</string>
+    <string name="chat_clear_history">Geschiedenis wissen</string>
+    <string name="chat_clear_confirm_title">Alle chatberichten wissen?</string>
+    <string name="chat_clear_confirm_body">Alle berichten worden van dit apparaat verwijderd. Na vernieuwen verschijnt het welkomstbericht opnieuw.</string>
+    <string name="chat_clear_confirm">Wissen</string>
     <string name="chat_message_hint">Bericht</string>
 
     <string name="settings_theme_title">Thema</string>

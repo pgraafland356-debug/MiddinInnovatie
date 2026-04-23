@@ -3,10 +3,9 @@ package com.middin.innovatie.app.update
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import com.middin.innovatie.app.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -76,22 +75,14 @@ class PrivateAppUpdater(
         actual.equals(expectedSha.trim(), ignoreCase = true)
     }
 
-    fun canInstallUnknownApps(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.packageManager.canRequestPackageInstalls()
-        } else {
-            true
-        }
-    }
+    fun canInstallUnknownApps(): Boolean = context.packageManager.canRequestPackageInstalls()
 
     fun openUnknownAppsSettings() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val intent = Intent(
-                Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
-                Uri.parse("package:${context.packageName}"),
-            ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(intent)
-        }
+        val intent = Intent(
+            Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+            "package:${context.packageName}".toUri(),
+        ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
     }
 
     fun promptInstall(apkFile: File): Boolean {

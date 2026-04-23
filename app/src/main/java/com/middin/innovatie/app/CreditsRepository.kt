@@ -11,7 +11,7 @@ object CreditsRepository {
         CreditEntry("Platform engineering", "Android, API integration, security"),
         CreditEntry(
             "You",
-            "Pieter - Bas Graafland\nAndé de Winter\nSafeer Khan",
+            "Pieter - Bas Graafland\nAndré de Winter\nSafeer Khan",
         ),
     )
 }

@@ -23,7 +23,6 @@
     <string name="nav_settings">Instellingen</string>
 
     <string name="more_title">Meer</string>
-    <string name="more_settings">Instellingen</string>
 
     <string name="login_title">Inloggen</string>
     <string name="login_username">Gebruikersnaam</string>
@@ -47,6 +46,7 @@
     <string name="home_news_tab_all">Alles</string>
     <string name="home_news_empty_tab">Geen artikelen voor deze bron.</string>
     <string name="home_news_title">Nieuws: zorginnovatie</string>
+    <string name="home_news_refresh_cd">Laatste nieuws vernieuwen</string>
     <string name="home_news_intro">Recente koppen (ongeveer de laatste 45 dagen) uit RSS-feeds over digitale gezondheid en medische technologie. Alleen berichten die zowel over zorg/gezondheid als over innovatie of technologie gaan, worden getoond. Zonder internet verschijnt een korte offline-lijst. Tik om het volledige artikel in de browser te openen.</string>
     <string name="home_news_meta">%1$s · %2$s</string>
     <string name="home_news_open_hint">Tik om te openen in de browser</string>
@@ -55,6 +55,9 @@
     <string name="memory_add">Opslaan</string>
     <string name="memory_empty">Nog geen items.</string>
     <string name="memory_remove_cd">Geheugen-item verwijderen</string>
+    <string name="memory_edit_cd">Geheugen-item bewerken</string>
+    <string name="memory_edit_title">Notitie bewerken</string>
+    <string name="memory_update_note">Notitie bijwerken</string>
 
     <string name="changelog_title">App-versies</string>
 
@@ -78,6 +81,7 @@
     <string name="info_body">Deze app verbindt met jullie eigen backend voor login en chat.\n\nBeveiliging: gebruik HTTPS in productie. Gemini API-sleutels staan op het apparaat voor gemak—gebruik liever server-side AI voor vertrouwelijke data.\n\nFuncties: collectief geheugen (lokale database), REST-chat, producten met CameraX, ML Kit-labels als hint, gekoppelde Bluetooth-apparaten, Google Gemini (optioneel), testmeldingen, EN/NL UI.</string>
 
     <string name="about_body">Middin Innovatie is gevestigd in Den Haag. We werken aan innovatie, digitale producten en samenwerking met partners en collega’s.\n\nDeze applicatie bundelt interne tools: gedeeld geheugen, communicatie, productvastlegging en koppelingen (API, Gemini, Bluetooth) op één plek.\n\nVoor huisstijl, logo’s en officiële teksten: volg jullie interne brandrichtlijnen.</string>
+    <string name="copyright_line">\u00A9 %1$d Middin Innovatie</string>
 
     <string name="credits_intro">Mensen en teams achter deze build. Pas de lijst in code aan (CreditsRepository) naar jullie organisatie.</string>
 
@@ -127,11 +131,11 @@
     <string name="settings_update_check_button">Controleren op update</string>
     <string name="settings_update_install_button">Downloaden en installeren</string>
     <string name="settings_update_missing_url">Er is nog geen update-feed URL ingesteld.</string>
-    <string name="settings_update_checking">Controleren op updates...</string>
+    <string name="settings_update_checking">Controleren op updates…</string>
     <string name="settings_update_none">Geen update gevonden.</string>
     <string name="settings_update_found">Update gevonden: %1$s (%2$d)</string>
     <string name="settings_update_failed_check">Controleren op updates is mislukt.</string>
-    <string name="settings_update_downloading">Updatepakket wordt gedownload...</string>
+    <string name="settings_update_downloading">Updatepakket wordt gedownload…</string>
     <string name="settings_update_checksum_failed">Het gedownloade bestand is afgekeurd door de integriteitscontrole.</string>
     <string name="settings_update_enable_unknown">Sta onbekende app-installaties toe voor deze app en probeer opnieuw.</string>
     <string name="settings_update_install_prompted">Installatiescherm geopend. Bevestig de installatie om door te gaan.</string>

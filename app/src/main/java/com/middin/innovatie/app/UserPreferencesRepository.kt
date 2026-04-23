@@ -44,7 +44,9 @@ class UserPreferencesRepository(
         ThemePreference.fromStorage(prefs[Keys.themeMode])
     }
 
-    val geminiApiKey: Flow<String?> = context.dataStore.data.map { it[Keys.geminiApiKey] }
+    val geminiApiKey: Flow<String?> = context.dataStore.data.map { prefs ->
+        if (!canConfigureEndpoints(prefs[Keys.username])) null else prefs[Keys.geminiApiKey]
+    }
 
     /**
      * Debug only: when true, login skips the API. Release builds always see false.
@@ -75,24 +77,40 @@ class UserPreferencesRepository(
 
     /** Base URL used for API calls (override or [defaultApiBaseUrl]). */
     val effectiveApiBaseUrl: Flow<String> = context.dataStore.data.map { prefs ->
-        resolveWithDefault(prefs[Keys.apiBaseUrlOverride])
+        if (!canConfigureEndpoints(prefs[Keys.username])) {
+            defaultApiBaseUrl.trimEnd('/')
+        } else {
+            resolveWithDefault(prefs[Keys.apiBaseUrlOverride])
+        }
     }
 
     suspend fun resolvedApiBaseUrl(): String {
         val prefs = context.dataStore.data.first()
-        return resolveWithDefault(prefs[Keys.apiBaseUrlOverride])
+        return if (!canConfigureEndpoints(prefs[Keys.username])) {
+            defaultApiBaseUrl.trimEnd('/')
+        } else {
+            resolveWithDefault(prefs[Keys.apiBaseUrlOverride])
+        }
     }
 
     /** Raw update feed override from storage; null or blank means build default. */
     val updateFeedUrlOverride: Flow<String?> = context.dataStore.data.map { it[Keys.updateFeedUrlOverride] }
 
     val effectiveUpdateFeedUrl: Flow<String> = context.dataStore.data.map { prefs ->
-        resolveUpdateFeedWithDefault(prefs[Keys.updateFeedUrlOverride])
+        if (!canConfigureEndpoints(prefs[Keys.username])) {
+            BuildConfig.UPDATE_FEED_URL.trim()
+        } else {
+            resolveUpdateFeedWithDefault(prefs[Keys.updateFeedUrlOverride])
+        }
     }
 
     suspend fun resolvedUpdateFeedUrl(): String {
         val prefs = context.dataStore.data.first()
-        return resolveUpdateFeedWithDefault(prefs[Keys.updateFeedUrlOverride])
+        return if (!canConfigureEndpoints(prefs[Keys.username])) {
+            BuildConfig.UPDATE_FEED_URL.trim()
+        } else {
+            resolveUpdateFeedWithDefault(prefs[Keys.updateFeedUrlOverride])
+        }
     }
 
     private fun resolveUpdateFeedWithDefault(override: String?): String {
@@ -163,5 +181,13 @@ class UserPreferencesRepository(
 
     suspend fun setBrandWelcomeSeen() {
         context.dataStore.edit { it[Keys.brandWelcomeSeen] = true }
+    }
+
+    companion object {
+        /** Username that may configure Gemini, API base URL, and update feed (Settings + runtime). */
+        const val ENDPOINT_SETTINGS_USERNAME = "pieter-bas"
+
+        fun canConfigureEndpoints(username: String?): Boolean =
+            username?.trim().equals(ENDPOINT_SETTINGS_USERNAME, ignoreCase = true) == true
     }
 }

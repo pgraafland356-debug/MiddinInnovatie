@@ -34,7 +34,7 @@ fun MoreNavHost() {
         composable(MoreRoutes.SETTINGS) {
             Scaffold(
                 topBar = {
-                    BackTopBar(R.string.more_settings) { navController.popBackStack() }
+                    BackTopBar(R.string.nav_settings) { navController.popBackStack() }
                 },
             ) { padding ->
                 SettingsScreen(modifier = Modifier.padding(padding))

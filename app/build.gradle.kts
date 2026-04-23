@@ -1,8 +1,9 @@
 import java.time.Instant
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
@@ -10,14 +11,16 @@ plugins {
 
 android {
     namespace = "com.middin.innovatie.app"
-    compileSdk = 35
+    compileSdk = 36
+    // Use locally installed Build-Tools (avoids failed auto-download of an exact patch AGP requests).
+    buildToolsVersion = "36.1.0"
 
     defaultConfig {
         applicationId = "com.middin.innovatie.app"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.1"
+        targetSdk = 36
+        versionCode = 5
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -55,8 +58,9 @@ android {
             )
             buildConfigField("String", "UPDATE_FEED_URL", "\"http://10.0.2.2:8080/releases/latest\"")
             buildConfigField("boolean", "USE_LOCAL_SIGN_IN", "true")
-            buildConfigField("String", "PRESET_LOGIN_USER", "\"pieter-bas\"")
-            buildConfigField("String", "PRESET_LOGIN_PASS", "\"admin\"")
+            // Empty: no pre-filled credentials (sign in manually each time).
+            buildConfigField("String", "PRESET_LOGIN_USER", "\"\"")
+            buildConfigField("String", "PRESET_LOGIN_PASS", "\"\"")
             // Example: buildConfigField("String", "API_PATH_PREFIX", "\"api/v1\"")
             // Example: buildConfigField("String", "API_LOGIN_FIELD", "\"email\"")
         }
@@ -64,9 +68,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -79,13 +80,19 @@ android {
     }
 }
 
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
+
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.content.negotiation)
@@ -104,28 +111,27 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
-    val camerax = "1.4.1"
-    implementation("androidx.camera:camera-core:$camerax")
-    implementation("androidx.camera:camera-camera2:$camerax")
-    implementation("androidx.camera:camera-lifecycle:$camerax")
-    implementation("androidx.camera:camera-view:$camerax")
-    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
-    implementation("com.google.mlkit:image-labeling:17.0.9")
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.google.generativeai)
+    implementation(libs.google.mlkit.image.labeling)
+    implementation(libs.coil.compose)
+    implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-    implementation("net.sf.kxml:kxml2:2.3.0")
+    implementation(libs.kxml2)
 
     testImplementation(libs.junit)
-    testImplementation("io.ktor:ktor-client-mock:2.3.12")
+    testImplementation(libs.ktor.client.mock)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    androidTestImplementation("androidx.room:room-testing:2.6.1")
+    androidTestImplementation(libs.androidx.room.testing)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

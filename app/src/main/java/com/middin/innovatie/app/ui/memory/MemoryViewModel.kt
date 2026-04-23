@@ -35,6 +35,14 @@ class MemoryViewModel(
         }
     }
 
+    fun update(id: String, content: String) {
+        val text = content.trim()
+        if (text.isEmpty()) return
+        viewModelScope.launch {
+            dao.updateContent(id, text)
+        }
+    }
+
     companion object {
         fun factory(dao: MemoryDao) = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")

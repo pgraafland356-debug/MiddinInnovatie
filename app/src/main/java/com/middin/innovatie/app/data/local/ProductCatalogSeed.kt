@@ -2,7 +2,6 @@ package com.middin.innovatie.app.data.local
 
 /**
  * Default catalog: names + korte beschrijvingen (publieke productinformatie).
- * Speciale muis/balmuis nog zonder vaste catalogustekst.
  *
  * Bronnen o.a.: fabrikanten (Somnox, Luvion, MOWOOT, OrCam, handSteady, CRDL, Tinybots, Muse),
  * medische/registratiesites, Inclusive Inc. (OnPoint), MijnEigenPlan.nl, actigrafie MotionWatch,
@@ -12,8 +11,12 @@ object ProductCatalogSeed {
 
     data class Entry(val name: String, val description: String)
 
-    /** Oude seed-naam; vervangen door Visitaal Chat + BIG Launcher. */
-    private val obsoleteProductNames: List<String> = listOf("De digitaal chat app")
+    /** Oude seed-namen; catalogus is hernoemd of opgesplitst. */
+    private val obsoleteProductNames: List<String> = listOf(
+        "De digitaal chat app",
+        "De Speciale muis / bal muis",
+        "Qtronix",
+    )
 
     val catalog: List<Entry> = listOf(
         Entry(
@@ -95,7 +98,15 @@ object ProductCatalogSeed {
                 "wanneer je geest rustiger of juist actiever is. Bedoeld voor welzijn en training van aandacht, " +
                 "geen medische diagnose van hersenaandoeningen (bron: Muse / Choose Muse).",
         ),
-        Entry(name = "De Speciale muis / bal muis", description = ""),
+        Entry(
+            name = "Qtronix Libra 90 net",
+            description = "De Qtronix Libra 90 is een USB-trackball (balmuis) uit de Libra-serie: een grote rolbal " +
+                "voor duim of vingers, meerdere knoppen en vaak een scrollwiel — minimale polsbeweging bij aansturing, " +
+                "prettig bij RSI-klachten, tremor of beperkte arm-/handfunctie. Geschikt op bureau of rolstoeltafel; " +
+                "bedrade USB-aansluiting (meestal type-A; met adapter eventueel type-C). Installeer eventuele drivers " +
+                "alleen via de leverancier of fabrikant Qtronix. Geen medisch hulpmiddel — bij twijfel: overleg met " +
+                "een ergotherapeut.",
+        ),
         Entry(
             name = "Visitaal Chat",
             description = "Gratis Nederlandse chat-app met duidelijke pictogrammen in plaats van veel tekst — " +

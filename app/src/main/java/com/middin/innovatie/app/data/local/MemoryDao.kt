@@ -15,4 +15,7 @@ interface MemoryDao {
 
     @Query("DELETE FROM collective_memory WHERE id = :id")
     suspend fun deleteById(id: String)
+
+    @Query("UPDATE collective_memory SET content = :content WHERE id = :id")
+    suspend fun updateContent(id: String, content: String)
 }

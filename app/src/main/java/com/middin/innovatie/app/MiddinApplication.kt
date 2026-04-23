@@ -32,6 +32,8 @@ class MiddinApplication : Application() {
         container = AppContainer(this)
         NotificationHelper.ensureChannel(this)
         runBlocking {
+            // Do not restore login from the previous run: user must sign in again after each app (process) start.
+            container.userPreferences.setSession(loggedIn = false)
             val productDao = container.database.productDao()
             ProductCatalogSeed.seedIfEmpty(productDao)
             ProductCatalogSeed.fillEmptyDescriptions(productDao)

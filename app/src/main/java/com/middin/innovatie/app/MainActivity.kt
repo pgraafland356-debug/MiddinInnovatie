@@ -4,13 +4,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.middin.innovatie.app.ui.MiddinApp
 import com.middin.innovatie.app.ui.theme.MiddinTheme
@@ -42,7 +51,22 @@ class MainActivity : ComponentActivity() {
                 ThemePreference.SYSTEM -> isSystemInDarkTheme()
             }
             MiddinTheme(darkTheme = darkTheme) {
-                MiddinApp()
+                val activity = LocalContext.current as Activity
+                val view = LocalView.current
+                SideEffect {
+                    val window = activity.window
+                    WindowCompat.getInsetsController(window, view).apply {
+                        isAppearanceLightStatusBars = !darkTheme
+                        isAppearanceLightNavigationBars = !darkTheme
+                    }
+                }
+                // Edge-to-edge: the window is transparent; paint the full screen so login / welcome match the theme.
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background,
+                ) {
+                    MiddinApp()
+                }
             }
         }
     }

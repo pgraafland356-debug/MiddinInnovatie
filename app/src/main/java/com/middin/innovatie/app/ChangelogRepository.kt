@@ -10,11 +10,33 @@ data class ChangelogItem(
 object ChangelogData {
     val staticItems: List<ChangelogItem> = listOf(
         ChangelogItem(
+            version = "1.0.3",
+            dateIso = "2026-04-22",
+            bulletsEn = listOf(
+                "Login & welcome (edge-to-edge): DayNight activity theme, full-screen theme background, and status/navigation bar contrast that follows light vs dark — fixes dark mode on the sign-in screen.",
+                "Offline product assistant: “who are you” style questions in Dutch (e.g. «wie je bent», «Kun jij me vertellen wie je bent?») and English («tell me who you are») now return the Productassistent self-description instead of a generic product miss.",
+                "Local debug sign-in: added account CIV-demo (password demo) next to existing demo users.",
+            ),
+        ),
+        ChangelogItem(
+            version = "1.0.2",
+            dateIso = "2026-04-22",
+            bulletsEn = listOf(
+                "Collective memory: edit an existing note (dialog + save); entries still support delete.",
+                "Product catalog: Qtronix Libra 90 USB trackball description; obsolete seed names cleaned up.",
+                "Private updates: unknown-sources install flow simplified (minSdk 26+); Settings uses locale-aware strings for update status.",
+                "Targets compileSdk / targetSdk 36; dependencies aligned on the version catalog (incl. CameraX, Ktor test mock, Room testing).",
+                "Debug builds no longer ship preset sign-in credentials (empty by default).",
+                "Launcher: adaptive icon wired via vector foreground/background under mipmap-anydpi (legacy webp mipmaps removed).",
+                "Gradle: lower default heap / single worker for tighter machines; KSP incremental disabled as a workaround for a rare Windows classpath-snapshot crash.",
+            ),
+        ),
+        ChangelogItem(
             version = "1.0.1",
             dateIso = "2026-03-26",
             bulletsEn = listOf(
                 "Muse (EEG headband) product description in catalog.",
-                "Credits: Pieter - Bas Graafland, Andé de Winter, Safeer Khan (You).",
+                "Credits: Pieter - Bas Graafland, André de Winter, Safeer Khan (You).",
                 "Changelog: top card shows this APK’s version and exact build time from Gradle (updates on every assembleDebug / assembleRelease).",
             ),
         ),

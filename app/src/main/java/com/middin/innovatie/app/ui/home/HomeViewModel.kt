@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     productDao: ProductDao,
-    newsRepository: InnovationNewsRepository,
+    private val newsRepository: InnovationNewsRepository,
 ) : ViewModel() {
     val topProducts: StateFlow<List<Product>> = productDao.observeTop3()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
@@ -24,9 +24,23 @@ class HomeViewModel(
     private val _innovationNews = MutableStateFlow(newsRepository.fallbackFeed())
     val innovationNews: StateFlow<List<InnovationNewsItem>> = _innovationNews.asStateFlow()
 
+    private val _newsRefreshing = MutableStateFlow(false)
+    val newsRefreshing: StateFlow<Boolean> = _newsRefreshing.asStateFlow()
+
     init {
         viewModelScope.launch {
             _innovationNews.value = newsRepository.loadFeed()
+        }
+    }
+
+    fun refreshNews() {
+        viewModelScope.launch {
+            _newsRefreshing.value = true
+            try {
+                _innovationNews.value = newsRepository.loadFeed()
+            } finally {
+                _newsRefreshing.value = false
+            }
         }
     }
 

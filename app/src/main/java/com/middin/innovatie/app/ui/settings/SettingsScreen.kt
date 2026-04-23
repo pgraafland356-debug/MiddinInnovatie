@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.middin.innovatie.app.BuildConfig
 import com.middin.innovatie.app.R
+import com.middin.innovatie.app.UserPreferencesRepository
 import com.middin.innovatie.app.notifications.NotificationHelper
 import com.middin.innovatie.app.update.MinimalRelease
 import com.middin.innovatie.app.update.PrivateAppUpdater
@@ -47,13 +49,14 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen(
-    modifier: Modifier = Modifier.fillMaxSize(),
+    modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = viewModel(
         factory = SettingsViewModel.factory(rememberAppContainer().userPreferences),
     ),
 ) {
     val container = rememberAppContainer()
     val ctx = LocalContext.current
+    val resources = LocalResources.current
     val localeTag by container.userPreferences.localeTag.collectAsStateWithLifecycle(initialValue = "en")
     val themePref by container.userPreferences.themePreference.collectAsStateWithLifecycle(
         initialValue = ThemePreference.SYSTEM,
@@ -68,6 +71,8 @@ fun SettingsScreen(
     val useLocalSignIn by container.userPreferences.useLocalSignIn.collectAsStateWithLifecycle(
         initialValue = BuildConfig.DEBUG && BuildConfig.USE_LOCAL_SIGN_IN,
     )
+    val username by container.userPreferences.username.collectAsStateWithLifecycle(initialValue = null)
+    val showEndpointSettings = UserPreferencesRepository.canConfigureEndpoints(username)
 
     var serverDraft by remember(overrideRaw) { mutableStateOf(overrideRaw.orEmpty()) }
     var geminiDraft by remember(geminiStored) { mutableStateOf(geminiStored.orEmpty()) }
@@ -85,7 +90,9 @@ fun SettingsScreen(
     }
 
     LazyColumn(
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         item {
@@ -136,34 +143,36 @@ fun SettingsScreen(
                 )
             }
         }
-        item {
-            Text(
-                stringResource(R.string.settings_gemini_title),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 12.dp),
-            )
-            Text(
-                stringResource(R.string.settings_gemini_hint),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            OutlinedTextField(
-                value = geminiDraft,
-                onValueChange = { geminiDraft = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                label = { Text(stringResource(R.string.settings_gemini_key_label)) },
-                singleLine = false,
-                minLines = 2,
-            )
-            Button(
-                onClick = { viewModel.saveGeminiApiKey(geminiDraft) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-            ) {
-                Text(stringResource(R.string.settings_gemini_save))
+        if (showEndpointSettings) {
+            item {
+                Text(
+                    stringResource(R.string.settings_gemini_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(top = 12.dp),
+                )
+                Text(
+                    stringResource(R.string.settings_gemini_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                OutlinedTextField(
+                    value = geminiDraft,
+                    onValueChange = { geminiDraft = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    label = { Text(stringResource(R.string.settings_gemini_key_label)) },
+                    singleLine = false,
+                    minLines = 2,
+                )
+                Button(
+                    onClick = { viewModel.saveGeminiApiKey(geminiDraft) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                ) {
+                    Text(stringResource(R.string.settings_gemini_save))
+                }
             }
         }
         item {
@@ -193,175 +202,136 @@ fun SettingsScreen(
                 Text(stringResource(R.string.settings_test_notification))
             }
         }
-        item {
-            Text(
-                stringResource(R.string.settings_api_server_title),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 16.dp),
-            )
-            Text(
-                stringResource(R.string.settings_api_build_default, BuildConfig.API_BASE_URL),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            OutlinedTextField(
-                value = serverDraft,
-                onValueChange = { serverDraft = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                label = { Text(stringResource(R.string.settings_api_server_label)) },
-                placeholder = { Text(stringResource(R.string.settings_api_server_placeholder)) },
-                singleLine = false,
-                minLines = 2,
-            )
-            Text(
-                stringResource(R.string.settings_api_effective, effectiveUrl),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(top = 6.dp),
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Button(
-                    onClick = { viewModel.saveApiServerUrl(serverDraft) },
-                    modifier = Modifier.weight(1f),
+        if (showEndpointSettings) {
+            item {
+                Text(
+                    stringResource(R.string.settings_api_server_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(top = 16.dp),
+                )
+                Text(
+                    stringResource(R.string.settings_api_build_default, BuildConfig.API_BASE_URL),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                OutlinedTextField(
+                    value = serverDraft,
+                    onValueChange = { serverDraft = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    label = { Text(stringResource(R.string.settings_api_server_label)) },
+                    placeholder = { Text(stringResource(R.string.settings_api_server_placeholder)) },
+                    singleLine = false,
+                    minLines = 2,
+                )
+                Text(
+                    stringResource(R.string.settings_api_effective, effectiveUrl),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 6.dp),
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    Text(stringResource(R.string.settings_api_save))
-                }
-                TextButton(
-                    onClick = {
-                        serverDraft = ""
-                        viewModel.saveApiServerUrl("")
-                    },
-                ) {
-                    Text(stringResource(R.string.settings_api_use_default))
-                }
-            }
-            Text(
-                stringResource(R.string.settings_api_help),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-        item {
-            Text(
-                stringResource(R.string.settings_update_title),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(top = 16.dp),
-            )
-            Text(
-                stringResource(R.string.settings_update_current, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            OutlinedTextField(
-                value = updateFeedDraft,
-                onValueChange = { updateFeedDraft = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                label = { Text(stringResource(R.string.settings_update_feed_label)) },
-                placeholder = { Text(stringResource(R.string.settings_update_feed_placeholder)) },
-                singleLine = false,
-                minLines = 2,
-            )
-            Text(
-                stringResource(R.string.settings_update_feed_effective, effectiveUpdateFeed.ifBlank { "-" }),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.padding(top = 6.dp),
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Button(
-                    onClick = { viewModel.saveUpdateFeedUrl(updateFeedDraft) },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text(stringResource(R.string.settings_update_feed_save))
-                }
-                TextButton(
-                    onClick = {
-                        updateFeedDraft = ""
-                        viewModel.saveUpdateFeedUrl("")
-                    },
-                ) {
-                    Text(stringResource(R.string.settings_api_use_default))
-                }
-            }
-            Button(
-                onClick = {
-                    val endpoint = effectiveUpdateFeed.trim()
-                    if (endpoint.isBlank()) {
-                        updateStatus = ctx.getString(R.string.settings_update_missing_url)
-                        return@Button
+                    Button(
+                        onClick = { viewModel.saveApiServerUrl(serverDraft) },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(stringResource(R.string.settings_api_save))
                     }
-                    updateBusy = true
-                    updateStatus = ctx.getString(R.string.settings_update_checking)
-                    pendingRelease = null
-                    scope.launch {
-                        try {
-                            val release = updater.fetchLatestRelease(endpoint)
-                            if (release == null) {
-                                updateStatus = ctx.getString(R.string.settings_update_none)
-                            } else {
-                                pendingRelease = release
-                                updateStatus = ctx.getString(
-                                    R.string.settings_update_found,
-                                    release.versionName,
-                                    release.versionCode,
-                                )
-                            }
-                        } catch (_: Exception) {
-                            updateStatus = ctx.getString(R.string.settings_update_failed_check)
-                        } finally {
-                            updateBusy = false
+                    TextButton(
+                        onClick = {
+                            serverDraft = ""
+                            viewModel.saveApiServerUrl("")
+                        },
+                    ) {
+                        Text(stringResource(R.string.settings_api_use_default))
+                    }
+                }
+                Text(
+                    stringResource(R.string.settings_api_help),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            item {
+                Text(
+                    stringResource(R.string.settings_update_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(top = 16.dp),
+                )
+                Text(
+                    stringResource(R.string.settings_update_current, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                OutlinedTextField(
+                    value = updateFeedDraft,
+                    onValueChange = { updateFeedDraft = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    label = { Text(stringResource(R.string.settings_update_feed_label)) },
+                    placeholder = { Text(stringResource(R.string.settings_update_feed_placeholder)) },
+                    singleLine = false,
+                    minLines = 2,
+                )
+                Text(
+                    stringResource(R.string.settings_update_feed_effective, effectiveUpdateFeed.ifBlank { "-" }),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 6.dp),
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Button(
+                        onClick = { viewModel.saveUpdateFeedUrl(updateFeedDraft) },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(stringResource(R.string.settings_update_feed_save))
+                    }
+                    TextButton(
+                        onClick = {
+                            updateFeedDraft = ""
+                            viewModel.saveUpdateFeedUrl("")
+                        },
+                    ) {
+                        Text(stringResource(R.string.settings_api_use_default))
+                    }
+                }
+                Button(
+                    onClick = {
+                        val endpoint = effectiveUpdateFeed.trim()
+                        if (endpoint.isBlank()) {
+                            updateStatus = resources.getString(R.string.settings_update_missing_url)
+                            return@Button
                         }
-                    }
-                },
-                enabled = !updateBusy,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-            ) {
-                Text(stringResource(R.string.settings_update_check_button))
-            }
-            if (pendingRelease != null) {
-                Button(
-                    onClick = {
-                        val release = pendingRelease ?: return@Button
                         updateBusy = true
-                        updateStatus = ctx.getString(R.string.settings_update_downloading)
+                        updateStatus = resources.getString(R.string.settings_update_checking)
+                        pendingRelease = null
                         scope.launch {
                             try {
-                                val apk = updater.downloadApk(release)
-                                val ok = updater.verifySha256(apk, release.sha256)
-                                if (!ok) {
-                                    apk.delete()
-                                    updateStatus = ctx.getString(R.string.settings_update_checksum_failed)
-                                    return@launch
-                                }
-                                if (!updater.canInstallUnknownApps()) {
-                                    updater.openUnknownAppsSettings()
-                                    updateStatus = ctx.getString(R.string.settings_update_enable_unknown)
-                                    return@launch
-                                }
-                                val launched = updater.promptInstall(apk)
-                                updateStatus = if (launched) {
-                                    ctx.getString(R.string.settings_update_install_prompted)
+                                val release = updater.fetchLatestRelease(endpoint)
+                                if (release == null) {
+                                    updateStatus = resources.getString(R.string.settings_update_none)
                                 } else {
-                                    ctx.getString(R.string.settings_update_install_failed)
+                                    pendingRelease = release
+                                    updateStatus = resources.getString(
+                                        R.string.settings_update_found,
+                                        release.versionName,
+                                        release.versionCode,
+                                    )
                                 }
                             } catch (_: Exception) {
-                                updateStatus = ctx.getString(R.string.settings_update_download_failed)
+                                updateStatus = resources.getString(R.string.settings_update_failed_check)
                             } finally {
                                 updateBusy = false
                             }
@@ -372,16 +342,57 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .padding(top = 8.dp),
                 ) {
-                    Text(stringResource(R.string.settings_update_install_button))
+                    Text(stringResource(R.string.settings_update_check_button))
                 }
-            }
-            if (updateStatus.isNotBlank()) {
-                Text(
-                    updateStatus,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 6.dp),
-                )
+                if (pendingRelease != null) {
+                    Button(
+                        onClick = {
+                            val release = pendingRelease ?: return@Button
+                            updateBusy = true
+                            updateStatus = resources.getString(R.string.settings_update_downloading)
+                            scope.launch {
+                                try {
+                                    val apk = updater.downloadApk(release)
+                                    val ok = updater.verifySha256(apk, release.sha256)
+                                    if (!ok) {
+                                        apk.delete()
+                                        updateStatus = resources.getString(R.string.settings_update_checksum_failed)
+                                        return@launch
+                                    }
+                                    if (!updater.canInstallUnknownApps()) {
+                                        updater.openUnknownAppsSettings()
+                                        updateStatus = resources.getString(R.string.settings_update_enable_unknown)
+                                        return@launch
+                                    }
+                                    val launched = updater.promptInstall(apk)
+                                    updateStatus = if (launched) {
+                                        resources.getString(R.string.settings_update_install_prompted)
+                                    } else {
+                                        resources.getString(R.string.settings_update_install_failed)
+                                    }
+                                } catch (_: Exception) {
+                                    updateStatus = resources.getString(R.string.settings_update_download_failed)
+                                } finally {
+                                    updateBusy = false
+                                }
+                            }
+                        },
+                        enabled = !updateBusy,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                    ) {
+                        Text(stringResource(R.string.settings_update_install_button))
+                    }
+                }
+                if (updateStatus.isNotBlank()) {
+                    Text(
+                        updateStatus,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 6.dp),
+                    )
+                }
             }
         }
         item {

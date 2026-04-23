@@ -23,7 +23,6 @@
     <string name="nav_settings">Settings</string>
 
     <string name="more_title">More</string>
-    <string name="more_settings">Settings</string>
 
     <string name="login_title">Sign in</string>
     <string name="login_username">Username</string>
@@ -47,6 +46,7 @@
     <string name="home_news_tab_all">All</string>
     <string name="home_news_empty_tab">No articles for this source.</string>
     <string name="home_news_title">Care innovation news</string>
+    <string name="home_news_refresh_cd">Refresh latest news</string>
     <string name="home_news_intro">Recent headlines (about the last 45 days) from digital health and medtech RSS feeds. Only items that look both health-related and innovation or technology focused are shown. Without internet, a short offline list appears. Open in the browser for the full article.</string>
     <string name="home_news_meta">%1$s · %2$s</string>
     <string name="home_news_open_hint">Tap to open in browser</string>
@@ -55,6 +55,9 @@
     <string name="memory_add">Save</string>
     <string name="memory_empty">No entries yet.</string>
     <string name="memory_remove_cd">Remove memory entry</string>
+    <string name="memory_edit_cd">Edit memory entry</string>
+    <string name="memory_edit_title">Edit note</string>
+    <string name="memory_update_note">Update note</string>
 
     <string name="changelog_title">App versions</string>
 
@@ -78,6 +81,7 @@
     <string name="info_body">This app connects to your own backend for login and chat.\n\nSecurity: use HTTPS in production. API keys for Gemini are stored on-device for convenience—prefer server-side AI for confidential data.\n\nFeatures: collective memory (local database), REST chat, products with CameraX, ML Kit image labels as hints, Bluetooth paired devices, Google Gemini (optional), notifications test, EN/NL UI.</string>
 
     <string name="about_body">Middin Innovatie is based in Den Haag. We work on innovation, digital products, and collaboration with partners and colleagues.\n\nThis application bundles internal tools: shared memory, communication, product capture, and integrations (API, Gemini, Bluetooth) in one place.\n\nFor corporate identity, logos, and official press text, follow your internal brand guidelines.</string>
+    <string name="copyright_line">\u00A9 %1$d Middin Innovatie</string>
 
     <string name="credits_intro">People and teams behind this build. Edit the list in code (CreditsRepository) to match your organisation.</string>
 
@@ -127,11 +131,11 @@
     <string name="settings_update_check_button">Check for update</string>
     <string name="settings_update_install_button">Download and install</string>
     <string name="settings_update_missing_url">No update feed URL is configured yet.</string>
-    <string name="settings_update_checking">Checking for updates...</string>
+    <string name="settings_update_checking">Checking for updates…</string>
     <string name="settings_update_none">No update found.</string>
     <string name="settings_update_found">Update found: %1$s (%2$d)</string>
     <string name="settings_update_failed_check">Could not check for updates.</string>
-    <string name="settings_update_downloading">Downloading update package...</string>
+    <string name="settings_update_downloading">Downloading update package…</string>
     <string name="settings_update_checksum_failed">Downloaded file failed integrity check.</string>
     <string name="settings_update_enable_unknown">Allow unknown app installs for this app, then retry.</string>
     <string name="settings_update_install_prompted">Installer opened. Confirm installation to continue.</string>

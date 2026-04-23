@@ -76,7 +76,17 @@ object ProductChatKnowledge {
     private fun isWhoAreYouQuestion(lower: String): Boolean {
         if ("wie ben jij" in lower || "wie ben je" in lower) return true
         if ("wie zij jij" in lower || "wie zij je" in lower) return true
+        // e.g. "Kun jij me vertellen wie je bent?" — uses "wie je bent", not "wie ben je"
+        if ("wie je bent" in lower || "wie jij bent" in lower) return true
+        // "Vertel me wie je bent" / "Ik wil weten wie je bent"
+        if (("vertel" in lower || "vertellen" in lower || "zeggen" in lower || "weten" in lower) &&
+            "wie" in lower &&
+            ("je bent" in lower || "jij bent" in lower || "ben je" in lower || "ben jij" in lower)
+        ) {
+            return true
+        }
         if ("who are you" in lower) return true
+        if ("tell me who you are" in lower) return true
         return false
     }
 
@@ -209,8 +219,8 @@ object ProductChatKnowledge {
             name.contains("Onpoint", ignoreCase = true) || name.contains("tril stylus", ignoreCase = true) ->
                 listOf("onpoint", "stylus", "joystick", "muis")
             name.contains("Muse", ignoreCase = true) -> listOf("muse", "eeg", "meditatie", "hoofdband", "hersenen")
-            name.contains("Speciale muis", ignoreCase = true) || name.contains("bal muis", ignoreCase = true) ->
-                listOf("muis", "bal", "trackball")
+            name.contains("Qtronix", ignoreCase = true) || name.contains("Libra 90", ignoreCase = true) ->
+                listOf("qtronix", "libra", "90", "muis", "bal", "trackball", "ergonomisch", "usb", "invoer")
             else -> emptyList()
         }
     }

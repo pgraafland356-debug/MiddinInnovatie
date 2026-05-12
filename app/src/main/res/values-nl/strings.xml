@@ -38,6 +38,10 @@
     <string name="settings_dev_signin_hint">Alleen debug-builds. Zet uit om echte login tegen je backend te testen.</string>
     <string name="settings_dev_signin_local">Inloggen zonder server (lokaal)</string>
     <string name="logout">Uitloggen</string>
+    <string name="dialog_yes">Ja</string>
+    <string name="dialog_no">Nee</string>
+    <string name="product_delete_confirm_message">Weet je zeker dat je het wilt verwijderen?</string>
+    <string name="logout_confirm_message">Weet je zeker dat je wilt uitloggen?</string>
 
     <string name="home_tagline">Innovatie uit Den Haag</string>
     <string name="home_intro">Welkom bij de Middin Innovatie-app: collectief geheugen, teamchat, productideeën met camera en koppeling met jullie eigen API.</string>
@@ -50,6 +54,9 @@
     <string name="home_news_intro">Recente koppen (ongeveer de laatste 45 dagen) uit RSS-feeds over digitale gezondheid en medische technologie. Alleen berichten die zowel over zorg/gezondheid als over innovatie of technologie gaan, worden getoond. Zonder internet verschijnt een korte offline-lijst. Tik om het volledige artikel in de browser te openen.</string>
     <string name="home_news_meta">%1$s · %2$s</string>
     <string name="home_news_open_hint">Tik om te openen in de browser</string>
+    <string name="home_hub_overview_cta">Innovatienieuws &amp; nieuwste producten</string>
+    <string name="home_nav_back_to_menu">Terug naar home-menu</string>
+    <string name="home_hub_quick_nav_title">Ga naar</string>
 
     <string name="memory_hint">Voeg een notitie toe aan het gedeelde geheugen…</string>
     <string name="memory_add">Opslaan</string>

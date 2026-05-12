@@ -19,8 +19,8 @@ android {
         applicationId = "com.middin.innovatie.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.0.3"
+        versionCode = 11
+        versionName = "0.9.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -78,6 +78,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    // Less Lint classpath work on low-RAM Windows hosts (daemon OOM during :app:lintAnalyzeDebug).
+    lint {
+        checkDependencies = false
+        checkTestSources = false
+        checkGeneratedSources = false
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
@@ -123,7 +129,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-    implementation(libs.kxml2)
+    testImplementation(libs.kxml2)
 
     testImplementation(libs.junit)
     testImplementation(libs.ktor.client.mock)

@@ -1,7 +1,6 @@
 package com.middin.innovatie.app.ui.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,6 +16,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,17 +35,16 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -53,9 +53,10 @@ import com.middin.innovatie.app.R
 import com.middin.innovatie.app.data.InnovationNewsItem
 import com.middin.innovatie.app.data.local.Product
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
-fun HomeScreen(
+fun HomeNewsAndProductsScreen(
     viewModel: HomeViewModel = viewModel(
         factory = HomeViewModel.factory(
             rememberAppContainer().database.productDao(),
@@ -67,24 +68,23 @@ fun HomeScreen(
     val news by viewModel.innovationNews.collectAsStateWithLifecycle()
     val newsRefreshing by viewModel.newsRefreshing.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
+    val localeForDates = LocalLocale.current.platformLocale
+    LaunchedEffect(localeForDates) {
+        viewModel.loadNews(localeForDates)
+    }
 
+    val hPad = MiddinDimens.screenHorizontalPadding()
+    val vPad = MiddinDimens.screenVerticalPadding()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(horizontal = hPad, vertical = vPad),
     ) {
-        Text(stringResource(R.string.home_tagline), style = MaterialTheme.typography.titleMedium)
-        Text(
-            stringResource(R.string.home_intro),
-            modifier = Modifier.padding(top = 8.dp),
-            style = MaterialTheme.typography.bodyLarge,
-        )
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp, bottom = 8.dp),
+                .padding(bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -135,21 +135,19 @@ fun HomeScreen(
         }
         val showSourceInCard = selectedTabIndex == 0
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState()),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             tabLabels.forEachIndexed { index, label ->
                 FilterChip(
                     selected = selectedTabIndex == index,
                     onClick = { selectedTabIndex = index },
+                    modifier = Modifier.fillMaxWidth(),
                     label = {
                         Text(
                             label,
-                            maxLines = 1,
+                            maxLines = 2,
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.labelLarge,
                         )
@@ -193,7 +191,10 @@ fun HomeScreen(
                 contentPadding = PaddingValues(vertical = 4.dp),
             ) {
                 items(top, key = { it.id }) { product ->
-                    ProductHighlightCard(product)
+                    ProductHighlightCard(
+                        product = product,
+                        modifier = Modifier.width(MiddinDimens.productHighlightCardWidth(hPad)),
+                    )
                 }
             }
         }
@@ -244,8 +245,8 @@ private fun InnovationNewsCard(
 }
 
 @Composable
-private fun ProductHighlightCard(product: Product) {
-    Card(modifier = Modifier.width(280.dp)) {
+private fun ProductHighlightCard(product: Product, modifier: Modifier = Modifier) {
+    Card(modifier = modifier) {
         Column(Modifier.padding(12.dp)) {
             val uri = product.imageUri
             if (!uri.isNullOrBlank()) {

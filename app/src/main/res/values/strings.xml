@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Middin Innovatie</string>
     <string name="logo_content_description">Middin Innovatie logo</string>
     <string name="brand_title">Middin Innovatie</string>
@@ -38,6 +38,10 @@
     <string name="settings_dev_signin_hint">Debug builds only. Turn off to test real login against your backend.</string>
     <string name="settings_dev_signin_local">Sign in without server (local)</string>
     <string name="logout">Sign out</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="product_delete_confirm_message">Are you sure you want to delete it?</string>
+    <string name="logout_confirm_message">Are you sure you want to sign out?</string>
 
     <string name="home_tagline">Innovation from Den Haag</string>
     <string name="home_intro">Welcome to the Middin Innovatie app: collective memory, team chat, product ideas with camera capture, and tools for your custom API.</string>
@@ -50,6 +54,9 @@
     <string name="home_news_intro">Recent headlines (about the last 45 days) from digital health and medtech RSS feeds. Only items that look both health-related and innovation or technology focused are shown. Without internet, a short offline list appears. Open in the browser for the full article.</string>
     <string name="home_news_meta">%1$s · %2$s</string>
     <string name="home_news_open_hint">Tap to open in browser</string>
+    <string name="home_hub_overview_cta">Innovation news &amp; newest products</string>
+    <string name="home_nav_back_to_menu">Back to home menu</string>
+    <string name="home_hub_quick_nav_title">Go to</string>
 
     <string name="memory_hint">Add a note for the shared memory…</string>
     <string name="memory_add">Save</string>
@@ -81,7 +88,7 @@
     <string name="info_body">This app connects to your own backend for login and chat.\n\nSecurity: use HTTPS in production. API keys for Gemini are stored on-device for convenience—prefer server-side AI for confidential data.\n\nFeatures: collective memory (local database), REST chat, products with CameraX, ML Kit image labels as hints, Bluetooth paired devices, Google Gemini (optional), notifications test, EN/NL UI.</string>
 
     <string name="about_body">Middin Innovatie is based in Den Haag. We work on innovation, digital products, and collaboration with partners and colleagues.\n\nThis application bundles internal tools: shared memory, communication, product capture, and integrations (API, Gemini, Bluetooth) in one place.\n\nFor corporate identity, logos, and official press text, follow your internal brand guidelines.</string>
-    <string name="copyright_line">\u00A9 %1$d Middin Innovatie</string>
+    <string name="copyright_line" tools:ignore="PluralsCandidate">\u00A9 %1$d Middin Innovatie</string>
 
     <string name="credits_intro">People and teams behind this build. Edit the list in code (CreditsRepository) to match your organisation.</string>
 

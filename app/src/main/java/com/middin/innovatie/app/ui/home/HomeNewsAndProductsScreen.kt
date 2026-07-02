@@ -38,7 +38,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -68,10 +67,6 @@ fun HomeNewsAndProductsScreen(
     val news by viewModel.innovationNews.collectAsStateWithLifecycle()
     val newsRefreshing by viewModel.newsRefreshing.collectAsStateWithLifecycle()
     val uriHandler = LocalUriHandler.current
-    val localeForDates = LocalLocale.current.platformLocale
-    LaunchedEffect(localeForDates) {
-        viewModel.loadNews(localeForDates)
-    }
 
     val hPad = MiddinDimens.screenHorizontalPadding()
     val vPad = MiddinDimens.screenVerticalPadding()

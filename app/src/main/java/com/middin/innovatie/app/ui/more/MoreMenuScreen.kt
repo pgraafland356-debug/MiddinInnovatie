@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.UserPreferencesRepository
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 data class MoreMenuItem(
     val titleRes: Int,
@@ -42,7 +43,10 @@ fun MoreMenuScreen(onOpen: (String) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
     ) {
         item {
             Text(stringResource(R.string.more_title), style = MaterialTheme.typography.titleLarge)

@@ -9,7 +9,7 @@ data class UpdateItem(
 class UpdatesRepository {
     val items: List<UpdateItem> = listOf(
         UpdateItem(
-            title = "App 1.0.0",
+            title = "App 0.9.1 (beta)",
             dateIso = "2026-03-24",
             bulletsEn = listOf(
                 "Phases 1–4 baseline: home, products (top 3 + list), camera + ML labels, Bluetooth devices, Gemini assistant, updates & info, notifications test, theme & Middin Den Haag branding.",

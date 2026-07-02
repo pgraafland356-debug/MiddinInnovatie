@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.UpdatesRepository
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun UpdatesScreen(
@@ -27,7 +28,7 @@ fun UpdatesScreen(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = MiddinDimens.screenHorizontalPadding()),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         contentPadding = PaddingValues(top = 8.dp, bottom = 32.dp),
     ) {

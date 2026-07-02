@@ -45,6 +45,7 @@ import com.middin.innovatie.app.data.local.LocalProductChatRepository
 import com.middin.innovatie.app.data.remote.dto.ChatMessageDto
 import com.middin.innovatie.app.ui.components.MiddinLogoMark
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun ChatScreen(
@@ -84,7 +85,10 @@ fun ChatScreen(
             .fillMaxSize()
             // Keep type field above the software keyboard (edge-to-edge + Scaffold).
             .imePadding()
-            .padding(16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

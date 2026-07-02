@@ -1,0 +1,13 @@
+﻿{
+    "changelog":  "Middin Innovatie 0.9.2: productcatalogus, MEMO Timer, Windows installer met Java, auto-update.",
+    "versionCode":  11,
+    "versionName":  "0.9.2",
+    "android":  {
+                    "sha256":  "0b546d8d0c7ee90bdb468d03d3cdcd7e2d19b94208afdc8a86fde3dc81f658eb",
+                    "apkUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.2/middin-innovatie-0.9.2.apk"
+                },
+    "windows":  {
+                    "setupUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.2/MiddinInnovatie-Windows-Setup-0.9.2.exe",
+                    "sha256":  "0c5edf124493e4461874cba669c9bc6bc7704a31ecf95b12b6eec0abb7b8c320"
+                }
+}

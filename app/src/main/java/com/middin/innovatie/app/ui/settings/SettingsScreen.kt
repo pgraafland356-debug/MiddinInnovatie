@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -26,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +46,7 @@ import com.middin.innovatie.app.notifications.NotificationHelper
 import com.middin.innovatie.app.update.MinimalRelease
 import com.middin.innovatie.app.update.PrivateAppUpdater
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 import com.middin.innovatie.app.ui.theme.ThemePreference
 import kotlinx.coroutines.launch
 
@@ -89,10 +92,37 @@ fun SettingsScreen(
         if (granted) NotificationHelper.showTestNotification(ctx)
     }
 
+    var showLogoutConfirm by rememberSaveable { mutableStateOf(false) }
+
+    if (showLogoutConfirm) {
+        AlertDialog(
+            onDismissRequest = { showLogoutConfirm = false },
+            text = { Text(stringResource(R.string.logout_confirm_message)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutConfirm = false
+                        viewModel.logout()
+                    },
+                ) {
+                    Text(stringResource(R.string.dialog_yes))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showLogoutConfirm = false }) {
+                    Text(stringResource(R.string.dialog_no))
+                }
+            },
+        )
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         item {
@@ -424,7 +454,7 @@ fun SettingsScreen(
         }
         item {
             Button(
-                onClick = { viewModel.logout() },
+                onClick = { showLogoutConfirm = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 24.dp, bottom = 32.dp),

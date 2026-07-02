@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun GeminiScreen(
@@ -43,7 +44,10 @@ fun GeminiScreen(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
     ) {
         Text(stringResource(R.string.gemini_hint), style = MaterialTheme.typography.bodyMedium)
         OutlinedTextField(

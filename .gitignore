@@ -17,3 +17,10 @@ hs_err_pid*.log
 replay_pid*.log
 # Microsoft Office lock files (never commit)
 ~$*
+*.docx
+# Local installer copies (upload via GitHub Releases only)
+MiddinInnovatie-Windows-Setup*.exe
+MiddinInnovatie-Windows-Installer*.zip
+MiddinInnovatie-Windows-desktop*.zip
+releases/artifacts/
+!releases/latest.json

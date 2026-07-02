@@ -14,9 +14,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -39,6 +42,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -79,24 +83,31 @@ fun AddProductScreen(
         }
     }
 
+    // PreviewView defaults to SurfaceView (PERFORMANCE), which composites above siblings and overlaps
+    // fields inside a scroll. COMPATIBLE uses TextureView and stays in the normal view stack.
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
     ) {
-        Text(stringResource(R.string.product_add_title), style = MaterialTheme.typography.titleLarge)
         if (!cameraReady) {
             Text(stringResource(R.string.product_camera_permission), modifier = Modifier.padding(top = 8.dp))
         }
         Spacer(Modifier.height(12.dp))
         AndroidView(
             factory = { ctx ->
-                PreviewView(ctx).apply { scaleType = PreviewView.ScaleType.FILL_CENTER }
+                PreviewView(ctx).apply {
+                    scaleType = PreviewView.ScaleType.FILL_CENTER
+                    implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(280.dp),
+                .height(240.dp)
+                .clip(RectangleShape),
             update = { view ->
                 if (previewView !== view) {
                     previewView = view
@@ -137,51 +148,59 @@ fun AddProductScreen(
                 modifier = Modifier.padding(top = 4.dp),
             )
         }
-        OutlinedTextField(
-            value = name,
-            onValueChange = { name = it },
+        Column(
             modifier = Modifier
+                .weight(1f)
                 .fillMaxWidth()
-                .padding(top = 16.dp),
-            label = { Text(stringResource(R.string.product_name_label)) },
-            singleLine = true,
-        )
-        OutlinedTextField(
-            value = description,
-            onValueChange = { description = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            label = { Text(stringResource(R.string.product_desc_label)) },
-            minLines = 3,
-        )
-        errorText?.let {
-            Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
-        }
-        Spacer(Modifier.height(16.dp))
-        Button(
-            onClick = {
-                scope.launch {
-                    runCatching {
-                        viewModel.saveProduct(context, name, description, photoPath)
-                        onClose()
-                    }.onFailure { e ->
-                        errorText = e.message ?: "Error"
+                .verticalScroll(rememberScrollState())
+                .imePadding(),
+        ) {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                label = { Text(stringResource(R.string.product_name_label)) },
+                singleLine = true,
+            )
+            OutlinedTextField(
+                value = description,
+                onValueChange = { description = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                label = { Text(stringResource(R.string.product_desc_label)) },
+                minLines = 3,
+            )
+            errorText?.let {
+                Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+            }
+            Spacer(Modifier.height(16.dp))
+            Button(
+                onClick = {
+                    scope.launch {
+                        runCatching {
+                            viewModel.saveProduct(context, name, description, photoPath)
+                            onClose()
+                        }.onFailure { e ->
+                            errorText = e.message ?: "Error"
+                        }
                     }
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = name.isNotBlank(),
-        ) {
-            Text(stringResource(R.string.product_save))
-        }
-        Button(
-            onClick = onClose,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-        ) {
-            Text(stringResource(R.string.product_cancel))
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = name.isNotBlank(),
+            ) {
+                Text(stringResource(R.string.product_save))
+            }
+            Button(
+                onClick = onClose,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+            ) {
+                Text(stringResource(R.string.product_cancel))
+            }
         }
     }
 

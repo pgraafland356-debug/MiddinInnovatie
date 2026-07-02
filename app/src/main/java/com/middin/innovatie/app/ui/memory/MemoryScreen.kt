@@ -39,6 +39,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.data.local.MemoryEntry
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 import java.text.DateFormat
 import java.util.Date
 
@@ -92,7 +93,10 @@ fun MemoryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
     ) {
         OutlinedTextField(
             value = draft,

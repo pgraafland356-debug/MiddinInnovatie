@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -25,17 +26,15 @@ class UserPreferencesRepository(
         val localeTag = stringPreferencesKey("locale_tag")
         val apiBaseUrlOverride = stringPreferencesKey("api_base_url_override")
         val updateFeedUrlOverride = stringPreferencesKey("update_feed_url_override")
+        val updateNoticeDismissedCode = intPreferencesKey("update_notice_dismissed_code")
         val themeMode = stringPreferencesKey("theme_preference")
         val geminiApiKey = stringPreferencesKey("gemini_api_key")
         /** Debug only: prefer offline/local login. Ignored in release builds. */
         val useLocalSignIn = booleanPreferencesKey("use_local_sign_in")
-        /** One-time brand welcome before first visit to the login screen. */
-        val brandWelcomeSeen = booleanPreferencesKey("brand_welcome_seen")
     }
 
     val session: Flow<Boolean> = context.dataStore.data.map { it[Keys.loggedIn] == true }
 
-    val brandWelcomeSeen: Flow<Boolean> = context.dataStore.data.map { it[Keys.brandWelcomeSeen] == true }
     val username: Flow<String?> = context.dataStore.data.map { it[Keys.username] }
     val authToken: Flow<String?> = context.dataStore.data.map { it[Keys.authToken] }
     val localeTag: Flow<String> = context.dataStore.data.map { it[Keys.localeTag] ?: "en" }
@@ -145,6 +144,16 @@ class UserPreferencesRepository(
         }
     }
 
+    suspend fun getUpdateNoticeDismissedCode(): Int {
+        return context.dataStore.data.first()[Keys.updateNoticeDismissedCode] ?: 0
+    }
+
+    suspend fun setUpdateNoticeDismissedCode(versionCode: Int) {
+        context.dataStore.edit { prefs ->
+            prefs[Keys.updateNoticeDismissedCode] = versionCode
+        }
+    }
+
     suspend fun setAuthenticatedSession(username: String, token: String) {
         context.dataStore.edit { prefs ->
             prefs[Keys.loggedIn] = true
@@ -177,10 +186,6 @@ class UserPreferencesRepository(
             val t = key?.trim().orEmpty()
             if (t.isEmpty()) prefs.remove(Keys.geminiApiKey) else prefs[Keys.geminiApiKey] = t
         }
-    }
-
-    suspend fun setBrandWelcomeSeen() {
-        context.dataStore.edit { it[Keys.brandWelcomeSeen] = true }
     }
 
     companion object {

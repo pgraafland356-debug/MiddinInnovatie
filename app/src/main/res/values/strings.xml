@@ -43,6 +43,10 @@
     <string name="product_delete_confirm_message">Are you sure you want to delete it?</string>
     <string name="logout_confirm_message">Are you sure you want to sign out?</string>
 
+    <string name="home_landing_title">Welcome home</string>
+    <string name="home_landing_body">This is your new home start page. Use the button below to open the dashboard with shortcuts, innovation news, and product highlights.</string>
+    <string name="home_landing_continue">Open dashboard</string>
+
     <string name="home_tagline">Innovation from Den Haag</string>
     <string name="home_intro">Welcome to the Middin Innovatie app: collective memory, team chat, product ideas with camera capture, and tools for your custom API.</string>
     <string name="home_top_products">Newest products (top 3)</string>
@@ -148,6 +152,10 @@
     <string name="settings_update_install_prompted">Installer opened. Confirm installation to continue.</string>
     <string name="settings_update_install_failed">Could not open installer on this device.</string>
     <string name="settings_update_download_failed">Failed to download or verify the update.</string>
+    <string name="update_prompt_title">Update available</string>
+    <string name="update_prompt_message">Version %1$s (%2$d) is available. Download and install now?</string>
+    <string name="update_prompt_install">Update now</string>
+    <string name="update_prompt_later">Later</string>
     <string name="settings_language">Language</string>
     <string name="language_en">English</string>
     <string name="language_nl">Nederlands</string>

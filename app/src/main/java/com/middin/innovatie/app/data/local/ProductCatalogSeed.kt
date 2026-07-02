@@ -3,7 +3,7 @@ package com.middin.innovatie.app.data.local
 /**
  * Default catalog: names + korte beschrijvingen (publieke productinformatie).
  *
- * Bronnen o.a.: fabrikanten (Somnox, Luvion, MOWOOT, OrCam, handSteady, CRDL, Tinybots, Muse),
+ * Bronnen o.a.: fabrikanten (Somnox, Luvion, MOWOOT, OrCam, handSteady, CRDL, Tinybots, Muse, Abilia),
  * medische/registratiesites, Inclusive Inc. (OnPoint), MijnEigenPlan.nl, actigrafie MotionWatch,
  * Stichting Visitaal / visitaal.nl, Kennisplein Gehandicaptenzorg (Visitaal Chat), BIG Launcher (biglauncher.com, o.a. Visio kennisportaal).
  */
@@ -124,6 +124,17 @@ object ProductCatalogSeed {
                 "motorische beperkingen. Aanpasbare tekstgroottes en kleurenthema's; vaak een SOS-functie " +
                 "(waaronder locatie delen). Basis gratis, uitbreidingen optioneel betaald — zie biglauncher.com en " +
                 "Google Play (o.a. toegelicht door Koninklijke Visio in het kennisportaal).",
+        ),
+        Entry(
+            name = "MEMO Timer van Abilia",
+            description = "MEMO Timer van Abilia: draagbare visuele timer die tijd zichtbaar maakt — LED-stippen in " +
+                "een lichtzuil doven geleidelijk uit naarmate de tijd verstrijkt, zodat iets abstracts als 'een half uur' " +
+                "concreet wordt. Bij het einde flitsen de LED's; optioneel met geluidssignaal en trilling. " +
+                "Waterdicht (IP67), geschikt voor badkamer, douche of buiten. Vier varianten met vaste tijdsintervallen: " +
+                "MEMO Timer 8 (2/4/6/8 min), MEMO Timer 20 (5/10/15/20 min), MEMO Timer 60 (15/30/45/60 min) en " +
+                "MEMO Timer 80 (20/40/60/80 min). Inclusief pols- en nekkoord; werkt op 2× AA-batterijen. " +
+                "Hulpmiddel klasse I voor mensen met een beperking die ondersteuning nodig hebben bij tijdsbesef en " +
+                "planning (o.a. douchen, activiteiten, overgangen tussen taken). Bron: abilia.com.",
         ),
     )
 

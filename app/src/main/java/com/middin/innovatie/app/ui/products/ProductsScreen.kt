@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -20,8 +21,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -33,6 +38,7 @@ import coil.compose.AsyncImage
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.data.local.Product
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun ProductsScreen(
@@ -42,6 +48,29 @@ fun ProductsScreen(
     ),
 ) {
     val list by viewModel.products.collectAsStateWithLifecycle()
+    var pendingDeleteId by remember { mutableStateOf<String?>(null) }
+
+    pendingDeleteId?.let { id ->
+        AlertDialog(
+            onDismissRequest = { pendingDeleteId = null },
+            text = { Text(stringResource(R.string.product_delete_confirm_message)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        pendingDeleteId = null
+                        viewModel.removeProduct(id)
+                    },
+                ) {
+                    Text(stringResource(R.string.dialog_yes))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingDeleteId = null }) {
+                    Text(stringResource(R.string.dialog_no))
+                }
+            },
+        )
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -54,7 +83,7 @@ fun ProductsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = MiddinDimens.screenHorizontalPadding()),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             contentPadding = PaddingValues(top = 16.dp, bottom = 88.dp),
         ) {
@@ -69,7 +98,7 @@ fun ProductsScreen(
                 items(list, key = { it.id }) { product ->
                     ProductRowCard(
                         product = product,
-                        onRemove = { viewModel.removeProduct(product.id) },
+                        onRemove = { pendingDeleteId = product.id },
                     )
                 }
             }

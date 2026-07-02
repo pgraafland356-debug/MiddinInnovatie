@@ -9,7 +9,6 @@ import androidx.core.net.toUri
 import com.middin.innovatie.app.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -37,15 +36,7 @@ class PrivateAppUpdater(
         try {
             if (conn.responseCode !in 200..299) return@withContext null
             val body = conn.inputStream.bufferedReader().use { it.readText() }
-            val json = JSONObject(body)
-            val release = MinimalRelease(
-                versionCode = json.getInt("versionCode"),
-                versionName = json.optString("versionName", ""),
-                apkUrl = json.getString("apkUrl"),
-                sha256 = json.getString("sha256"),
-                changelog = json.optString("changelog", ""),
-            )
-            if (release.versionCode > BuildConfig.VERSION_CODE) release else null
+            ReleaseManifest.parseAndroidRelease(body, BuildConfig.VERSION_CODE)
         } finally {
             conn.disconnect()
         }

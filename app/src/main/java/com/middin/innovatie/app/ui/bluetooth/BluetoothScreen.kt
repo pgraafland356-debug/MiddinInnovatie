@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.middin.innovatie.app.R
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun BluetoothScreen(modifier: Modifier = Modifier) {
@@ -55,7 +56,10 @@ fun BluetoothScreen(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
     ) {
         Text(stringResource(R.string.bt_intro), style = MaterialTheme.typography.bodyMedium)
         when {

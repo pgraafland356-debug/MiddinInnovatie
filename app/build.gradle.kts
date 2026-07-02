@@ -9,6 +9,14 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+val middinGhOwner = (project.findProperty("middin.github.owner") as String?)?.trim().orEmpty()
+val middinGhRepo = ((project.findProperty("middin.github.repo") as String?)?.trim()).takeUnless { it.isNullOrBlank() } ?: "MiddinInnovatie"
+val middinUpdateFeedUrl = if (middinGhOwner.isNotEmpty() && !middinGhOwner.startsWith("YOUR_")) {
+    "https://raw.githubusercontent.com/$middinGhOwner/$middinGhRepo/main/releases/latest.json"
+} else {
+    ""
+}
+
 android {
     namespace = "com.middin.innovatie.app"
     compileSdk = 36
@@ -28,7 +36,7 @@ android {
         buildConfigField("String", "BUILD_TIME_ISO", "\"${Instant.now()}\"")
 
         buildConfigField("String", "API_BASE_URL", "\"https://api.example.com\"")
-        buildConfigField("String", "UPDATE_FEED_URL", "\"\"")
+        buildConfigField("String", "UPDATE_FEED_URL", "\"$middinUpdateFeedUrl\"")
         // No leading slash; e.g. "api/v1" → …/api/v1/auth/login. Leave "" for flat paths.
         buildConfigField("String", "API_PATH_PREFIX", "\"\"")
         // Login JSON: only "username" + "password" OR only "email" + "password".
@@ -56,7 +64,7 @@ android {
                 "API_BASE_URL",
                 "\"http://10.0.2.2:8080\"",
             )
-            buildConfigField("String", "UPDATE_FEED_URL", "\"http://10.0.2.2:8080/releases/latest\"")
+            buildConfigField("String", "UPDATE_FEED_URL", "\"$middinUpdateFeedUrl\"")
             buildConfigField("boolean", "USE_LOCAL_SIGN_IN", "true")
             // Empty: no pre-filled credentials (sign in manually each time).
             buildConfigField("String", "PRESET_LOGIN_USER", "\"\"")

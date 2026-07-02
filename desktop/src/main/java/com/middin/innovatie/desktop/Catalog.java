@@ -1,0 +1,32 @@
+package com.middin.innovatie.desktop;
+
+import java.util.List;
+
+public final class Catalog {
+    public record Product(String name, String description) {}
+
+    public static List<Product> all() {
+        return List.of(
+            new Product("De Somnox", "Zachte slaaprobot die een rustig ademritme nabootst. Door hem vast te houden stemt je ademhaling vaak mee, wat ontspanning en inslapen kan helpen. Instellingen via de Somnox-app (o.a. adempo-efeningen)."),
+            new Product("De Motionwatch", "Polsactigraaf (bekend als MotionWatch 8) voor slapen, activiteit en circadiaans ritme. Bevat een versnellingsmeter en vaak een lichtsensor; data-export voor zorg en onderzoek. CE-gemarkeerd medisch hulpmiddel in deze productlijn."),
+            new Product("De Tessa", "Kleine zorgrobot van Tinybots (Nederland): gesproken herinneringen, stappenplannen en bevestigingsvragen. Begeleiders plannen via het web; o.a. bij dementie, NAH, ASS en verstandelijke beperking. Ruim ingezet in de wijkverpleging."),
+            new Product("De luvion White noise speaker / Sleep assistant", "Luvion slaap- en witte-ruishulp met tientallen kalmerende geluiden (hartslag, natuur, regen, ventilator, enz.), timers en USB-opladen. Maskeert omgevingsgeluid; geschikt vanaf geboorte en ook voor volwassenen."),
+            new Product("De Mowoot 1", "MOWOOT: medisch hulpmiddel bij chronische obstipatie door zachte pneumatische buikmassage (darmperistalse stimuleren). Korte dagelijkse sessies; niet-medicamenteus, CE klasse IIa."),
+            new Product("Mijn eigen plan app", "MijnEigenPlan: app en platform voor dag-/weekoverzicht, stappenplannen, herinneringen en emotieregulatie. Voor cliënten en begeleiders in o.a. gehandicaptenzorg, GGZ en speciaal onderwijs (mijneigenplan.nl)."),
+            new Product("De launcher app", "Vereenvoudigde Android-startschermen: grote pictogrammen, weinig gebaren, vaak SOS of contacten op één tik (los van de aparte vermelding BIG Launcher). Voorbeelden: Elder Launcher, Senior Home, Simple Launcher — handig bij cognitieve of visuele beperking."),
+            new Product("De VR-bril", "Virtualreality-bril voor therapie, training, ontspanning of exposure-oefeningen. In zorg soms voor motoriek of cognitie; duur en duizeligheid beperken—afstemmen met zorgverlener."),
+            new Product("De CRDL", "CRDL (‘cradle’): houten muziekinstrument waarbij aanraking tussen twee mensen via contactpunten muziek maakt. Gericht op contact en welbevinden bij o.a. ernstige dementie en apathie."),
+            new Product("De Orcam", "OrCam: kleine camera op de bril die tekst hardop voorleest, gezichten en voorwerpen herkent. Werkt grotendeels offline; bedoeld voor slechtzienden en blinden."),
+            new Product("De handsteady", "handSteady-drinkbeker met draaigreep en deksel: de inhoud blijft vlakker bij tremor (Parkinson, essentiële tremor). Lichte, herbruikbare beker, vaak vaatwasmachinebestendig."),
+            new Product("De Braintrainer", "Cognitieve training via apps (geheugen, aandacht, snelheid), bijv. CogniFit of NeuroNation met persoonlijke schema’s. Kan ondersteunen bij training; geen vervanging van medisch onderzoek."),
+            new Product("De Onpoint tril stylus", "OnPoint (Inclusive Inc.): precisie-joystick als muis of met Microsoft Adaptive Controller voor fijne aansturing bij beperkte motoriek. Apart bestaan trillende pennen voor o.a. Parkinson; dit product is vooral joystick/pointerfunctionaliteit."),
+            new Product("De Muse", "Muse is een draagbare hoofdband met EEG-sensoren die hersenactiviteit meet tijdens meditatie en ontspanning. De bijbehorende app geeft biofeedback (geluid of beeld) zodat je merkt wanneer je geest rustiger of juist actiever is. Bedoeld voor welzijn en training van aandacht, geen medische diagnose van hersenaandoeningen (bron: Muse / Choose Muse)."),
+            new Product("Qtronix Libra 90 net", "De Qtronix Libra 90 is een USB-trackball (balmuis) uit de Libra-serie: een grote rolbal voor duim of vingers, meerdere knoppen en vaak een scrollwiel — minimale polsbeweging bij aansturing, prettig bij RSI-klachten, tremor of beperkte arm-/handfunctie. Geschikt op bureau of rolstoeltafel; bedrade USB-aansluiting (meestal type-A; met adapter eventueel type-C). Installeer eventuele drivers alleen via de leverancier of fabrikant Qtronix. Geen medisch hulpmiddel — bij twijfel: overleg met een ergotherapeut."),
+            new Product("Visitaal Chat", "Gratis Nederlandse chat-app met duidelijke pictogrammen in plaats van veel tekst — begrijpelijk voor wie moeite heeft met lezen en schrijven, vergelijkbaar in doel met een toegankelijk alternatief voor standaard chatapps. Ruim 350 pictogrammen; ook foto's, emoji's, GIF's en spraakberichten; berichten kunnen hardop worden voorgelezen. Bedoeld o.a. voor mensen met een (lichte) verstandelijke of communicatieve beperking, auditieve beperking, dementie, anderstaligen en laaggeletterden. Beschikbaar voor Android en iOS (telefoon en tablet); in de praktijk vaak via wifi. (Stichting Visitaal — visitaal.nl; o.a. beschreven op Kennisplein Gehandicaptenzorg.)"),
+            new Product("BIG Launcher", "Android-app die het standaard startscherm vervangt door een eenvoudige interface met zeer grote knoppen en tekst: minder fouten en overzicht voor senioren, slechtzienden en mensen met motorische beperkingen. Aanpasbare tekstgroottes en kleurenthema's; vaak een SOS-functie (waaronder locatie delen). Basis gratis, uitbreidingen optioneel betaald — zie biglauncher.com en Google Play (o.a. toegelicht door Koninklijke Visio in het kennisportaal)."),
+            new Product("MEMO Timer van Abilia", "MEMO Timer van Abilia: draagbare visuele timer die tijd zichtbaar maakt — LED-stippen in een lichtzuil doven geleidelijk uit naarmate de tijd verstrijkt, zodat iets abstracts als 'een half uur' concreet wordt. Bij het einde flitsen de LED's; optioneel met geluidssignaal en trilling. Waterdicht (IP67), geschikt voor badkamer, douche of buiten. Vier varianten met vaste tijdsintervallen: MEMO Timer 8 (2/4/6/8 min), MEMO Timer 20 (5/10/15/20 min), MEMO Timer 60 (15/30/45/60 min) en MEMO Timer 80 (20/40/60/80 min). Inclusief pols- en nekkoord; werkt op 2× AA-batterijen. Hulpmiddel klasse I voor mensen met een beperking die ondersteuning nodig hebben bij tijdsbesef en planning (o.a. douchen, activiteiten, overgangen tussen taken). Bron: abilia.com.")
+        );
+    }
+
+    private Catalog() {}
+}

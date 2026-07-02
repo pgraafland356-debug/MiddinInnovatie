@@ -1,6 +1,8 @@
 package com.middin.innovatie.app.ui.welcome
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,10 +26,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.components.MiddinLogoMark
+import com.middin.innovatie.app.ui.i18n.LanguageToggleBar
 import com.middin.innovatie.app.ui.theme.MiddinBrandColors
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun WelcomeScreen(
@@ -46,11 +51,21 @@ fun WelcomeScreen(
             .fillMaxSize()
             .background(gradient),
     ) {
+        LanguageToggleBar(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 12.dp),
+        )
+        val hPad = MiddinDimens.screenHorizontalPadding()
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 28.dp, vertical = 40.dp),
-            verticalArrangement = Arrangement.Center,
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    horizontal = hPad + 8.dp,
+                    vertical = MiddinDimens.screenVerticalPadding() + 28.dp,
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             MiddinLogoMark(size = 112.dp)
@@ -58,7 +73,9 @@ fun WelcomeScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
             ) {
                 Box(
                     modifier = Modifier
@@ -71,6 +88,10 @@ fun WelcomeScreen(
                     text = stringResource(R.string.welcome_brand_line),
                     style = MaterialTheme.typography.titleLarge.copy(fontStyle = FontStyle.Italic),
                     color = MiddinBrandColors.Text,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
             Spacer(Modifier.height(20.dp))

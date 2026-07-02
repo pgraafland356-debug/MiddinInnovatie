@@ -43,6 +43,10 @@
     <string name="product_delete_confirm_message">Weet je zeker dat je het wilt verwijderen?</string>
     <string name="logout_confirm_message">Weet je zeker dat je wilt uitloggen?</string>
 
+    <string name="home_landing_title">Welkom thuis</string>
+    <string name="home_landing_body">Dit is je nieuwe startpagina op Home. Gebruik de knop hieronder om het dashboard te openen met snelkoppelingen, innovatienieuws en producten.</string>
+    <string name="home_landing_continue">Dashboard openen</string>
+
     <string name="home_tagline">Innovatie uit Den Haag</string>
     <string name="home_intro">Welkom bij de Middin Innovatie-app: collectief geheugen, teamchat, productideeën met camera en koppeling met jullie eigen API.</string>
     <string name="home_top_products">Nieuwste producten (top 3)</string>
@@ -148,6 +152,10 @@
     <string name="settings_update_install_prompted">Installatiescherm geopend. Bevestig de installatie om door te gaan.</string>
     <string name="settings_update_install_failed">Installatiescherm kon niet worden geopend op dit apparaat.</string>
     <string name="settings_update_download_failed">Downloaden of verifiëren van de update is mislukt.</string>
+    <string name="update_prompt_title">Update beschikbaar</string>
+    <string name="update_prompt_message">Versie %1$s (%2$d) is beschikbaar. Nu downloaden en installeren?</string>
+    <string name="update_prompt_install">Nu bijwerken</string>
+    <string name="update_prompt_later">Later</string>
     <string name="settings_language">Taal</string>
     <string name="language_en">English</string>
     <string name="language_nl">Nederlands</string>

@@ -1,11 +1,11 @@
 package com.middin.innovatie.app.ui.settings
 
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.middin.innovatie.app.UserPreferencesRepository
+import com.middin.innovatie.app.locale.AppLocaleHelper
 import com.middin.innovatie.app.ui.theme.ThemePreference
 import kotlinx.coroutines.launch
 
@@ -14,8 +14,7 @@ class SettingsViewModel(
 ) : ViewModel() {
     fun setLocale(tag: String) {
         viewModelScope.launch {
-            userPreferences.setLocaleTag(tag)
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
+            AppLocaleHelper.apply(userPreferences, tag)
         }
     }
 

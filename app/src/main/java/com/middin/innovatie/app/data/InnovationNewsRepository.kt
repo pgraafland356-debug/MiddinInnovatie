@@ -131,7 +131,7 @@ class InnovationNewsRepository(
                 summary = "Programma’s en subsidies voor zorginnovatie en onderzoek. Relevant als je wilt weten welke richtingen (o.a. technologie) in NL worden gefinancierd.",
                 dateLabel = "maart 2026",
                 sortEpochMs = epoch(2026, 3, 25),
-                articleUrl = "https://www.zonmw.nl/nl/onderzoek-projecten/innovatie/",
+                articleUrl = "https://www.zonmw.nl/nl/programma/innovatie",
                 sourceLabel = "ZonMw",
             ),
             InnovationNewsItem(
@@ -140,7 +140,7 @@ class InnovationNewsRepository(
                 summary = "Wie toezicht houdt op medische hulpmiddelen in Nederland en waar je basisinformatie vindt over regels, meldingen en markttoezicht.",
                 dateLabel = "maart 2026",
                 sortEpochMs = epoch(2026, 3, 12),
-                articleUrl = "https://www.nvwa.nl/onderwerpen/medische-hulpmiddelen",
+                articleUrl = "https://www.nvwa.nl/onderwerpen/erkenningen-registraties-en-vergunningen/aanvragen-en-informatie-per-bedrijfstype-product-of-activiteit/medische-hulpmiddelen-registratie",
                 sourceLabel = "NVWA",
             ),
             InnovationNewsItem(

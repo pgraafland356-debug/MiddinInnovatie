@@ -16,8 +16,8 @@ object InnovationRssSources {
             sourceLabel = "MobiHealthNews",
         ),
         InnovationRssSource(
-            url = "https://www.digitalhealth.net/feed/",
-            sourceLabel = "Digital Health",
+            url = "https://www.healthcareitnews.com/feed/",
+            sourceLabel = "Healthcare IT News",
         ),
         InnovationRssSource(
             url = "https://www.medicaldevice-network.com/feed/",

@@ -2,7 +2,7 @@ package com.middin.innovatie.app
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
+import com.middin.innovatie.app.locale.AppLocaleHelper
 import com.middin.innovatie.app.notifications.NotificationHelper
 import com.middin.innovatie.app.data.local.ProductCatalogSeed
 import com.middin.innovatie.app.ui.theme.ThemePreference
@@ -40,7 +40,7 @@ class MiddinApplication : Application() {
             ProductCatalogSeed.removeObsoleteProducts(productDao)
             ProductCatalogSeed.syncMissingCatalogEntries(productDao)
             val tag = container.userPreferences.localeTag.first()
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(tag))
+            AppLocaleHelper.apply(container.userPreferences, tag)
             val theme = container.userPreferences.themePreference.first()
             AppCompatDelegate.setDefaultNightMode(
                 when (theme) {

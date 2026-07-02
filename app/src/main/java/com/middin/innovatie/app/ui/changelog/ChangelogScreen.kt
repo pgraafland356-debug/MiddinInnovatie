@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.middin.innovatie.app.ChangelogRepository
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun ChangelogScreen(
@@ -27,7 +28,10 @@ fun ChangelogScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
     ) {
         Text(stringResource(R.string.changelog_title), style = MaterialTheme.typography.titleLarge)
         LazyColumn(

@@ -16,13 +16,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.middin.innovatie.app.CreditsRepository
 import com.middin.innovatie.app.R
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun CreditsScreen(modifier: Modifier = Modifier) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         item {

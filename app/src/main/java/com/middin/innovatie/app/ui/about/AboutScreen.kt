@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.components.MiddinLogoMark
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 import java.time.Year
 
 @Composable
@@ -26,7 +27,10 @@ fun AboutScreen(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(
+                horizontal = MiddinDimens.screenHorizontalPadding(),
+                vertical = MiddinDimens.screenVerticalPadding(),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         MiddinLogoMark(size = 96.dp)

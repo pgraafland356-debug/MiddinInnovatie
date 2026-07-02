@@ -6,7 +6,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-val MiddinTypography = Typography(
+/**
+ * Start vanaf de volledige Material 3-schaal (alle rollen, correcte [sp]-schaal),
+ * met alleen hier merk-afwijkingen voor body/titel.
+ */
+val MiddinTypography = Typography().copy(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Normal,

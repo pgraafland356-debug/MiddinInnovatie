@@ -1,6 +1,7 @@
 package com.middin.innovatie.app.ui.login
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,7 +35,9 @@ import android.app.Application
 import com.middin.innovatie.app.BuildConfig
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.components.MiddinLogoMark
+import com.middin.innovatie.app.ui.i18n.LanguageToggleBar
 import com.middin.innovatie.app.ui.rememberAppContainer
+import com.middin.innovatie.app.ui.theme.MiddinDimens
 
 @Composable
 fun LoginScreen() {
@@ -54,13 +57,20 @@ fun LoginScreen() {
     var pass by rememberSaveable { mutableStateOf(BuildConfig.PRESET_LOGIN_PASS) }
     val state by viewModel.ui.collectAsStateWithLifecycle()
 
+    val hPad = MiddinDimens.screenHorizontalPadding()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = hPad, vertical = MiddinDimens.screenVerticalPadding() + 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        LanguageToggleBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+        )
+        Spacer(Modifier.height(8.dp))
         MiddinLogoMark(size = 88.dp)
         Spacer(Modifier.height(20.dp))
         Text(stringResource(R.string.login_title), style = MaterialTheme.typography.titleLarge)
@@ -153,5 +163,6 @@ fun LoginScreen() {
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+        Spacer(Modifier.height(32.dp))
     }
 }

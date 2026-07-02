@@ -50,6 +50,7 @@ import com.middin.innovatie.app.ui.chat.ChatScreen
 import com.middin.innovatie.app.ui.home.HomeHubScreen
 import com.middin.innovatie.app.ui.home.HomeNewsAndProductsScreen
 import com.middin.innovatie.app.ui.login.LoginScreen
+import com.middin.innovatie.app.ui.update.UpdateAvailablePrompt
 import com.middin.innovatie.app.ui.welcome.WelcomeScreen
 import com.middin.innovatie.app.ui.memory.MemoryScreen
 import com.middin.innovatie.app.ui.more.MoreNavHost
@@ -101,6 +102,8 @@ private fun MainShell() {
     var showLogoutConfirm by rememberSaveable { mutableStateOf(false) }
     val container = rememberAppContainer()
     val scope = rememberCoroutineScope()
+
+    UpdateAvailablePrompt()
 
     if (showLogoutConfirm) {
         AlertDialog(

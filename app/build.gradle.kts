@@ -11,8 +11,9 @@ plugins {
 
 val middinGhOwner = (project.findProperty("middin.github.owner") as String?)?.trim().orEmpty()
 val middinGhRepo = ((project.findProperty("middin.github.repo") as String?)?.trim()).takeUnless { it.isNullOrBlank() } ?: "MiddinInnovatie"
+val middinGhBranch = ((project.findProperty("middin.github.branch") as String?)?.trim()).takeUnless { it.isNullOrBlank() } ?: "main"
 val middinUpdateFeedUrl = if (middinGhOwner.isNotEmpty() && !middinGhOwner.startsWith("YOUR_")) {
-    "https://raw.githubusercontent.com/$middinGhOwner/$middinGhRepo/main/releases/latest.json"
+    "https://raw.githubusercontent.com/$middinGhOwner/$middinGhRepo/$middinGhBranch/releases/latest.json"
 } else {
     ""
 }

@@ -1,5 +1,5 @@
 ﻿{
-    "changelog":  "Middin Innovatie 0.9.3 - login wachtwoordvalidatie, uninstall wizard, GitHub auto-update feed, alleen account pieter-bas.",
+    "changelog":  "Middin Innovatie 0.9.3 - login validatie, uninstall wizard, 5 desktop thema\u0027s, GitHub auto-update.",
     "versionCode":  12,
     "versionName":  "0.9.3",
     "android":  {
@@ -8,6 +8,6 @@
                 },
     "windows":  {
                     "setupUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.3/MiddinInnovatie-Windows-Setup-0.9.3.exe",
-                    "sha256":  "a7a510efccf814a74080c62e95c52f624ea91a1d74cdb21f28681fd3b2a1848b"
+                    "sha256":  "660ae350d87216e4e6841845362cc770a856c99c3ac8567eab87de786e9ae16e"
                 }
 }

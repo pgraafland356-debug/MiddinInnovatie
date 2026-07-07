@@ -24,8 +24,9 @@ val rootProps = Properties().apply {
 }
 val ghOwner = rootProps.getProperty("middin.github.owner", "").trim()
 val ghRepo = rootProps.getProperty("middin.github.repo", "MiddinInnovatie").trim().ifBlank { "MiddinInnovatie" }
+val ghBranch = rootProps.getProperty("middin.github.branch", "main").trim().ifBlank { "main" }
 val updateFeedUrl = if (ghOwner.isNotEmpty() && !ghOwner.startsWith("YOUR_")) {
-    "https://raw.githubusercontent.com/$ghOwner/$ghRepo/main/releases/latest.json"
+    "https://raw.githubusercontent.com/$ghOwner/$ghRepo/$ghBranch/releases/latest.json"
 } else {
     ""
 }

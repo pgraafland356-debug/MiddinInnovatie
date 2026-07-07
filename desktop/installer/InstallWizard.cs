@@ -9,7 +9,7 @@ using System.Windows.Forms;
 internal sealed class InstallWizardForm : Form
 {
     private const string EmbeddedPayloadName = "MiddinInnovatie.Payload.zip";
-    private readonly string version = "0.9.2";
+    private readonly string version = "0.9.3";
     private readonly string payloadDir;
     private readonly Panel content;
     private readonly Button backBtn;
@@ -296,7 +296,9 @@ internal sealed class InstallWizardForm : Form
         AddBody(
             "Middin Innovatie is geïnstalleerd in:\n"
                 + installRoot + "\n\n"
-                + "U kunt de app starten via het Start-menu of het bureaublad.");
+                + "U kunt de app starten via het Start-menu of het bureaublad.\n\n"
+                + "Updates: Meer > Instellingen > Controleren op update\n"
+                + InstallerUrls.UpdateFeedUrl);
         launchAfter = new CheckBox
         {
             Text = "Middin Innovatie nu starten",
@@ -320,6 +322,7 @@ internal sealed class InstallWizardForm : Form
             CopyPayloadFile("Start Middin Innovatie.bat", Path.Combine(installRoot, "Start Middin Innovatie.bat"));
             CopyPayloadFile(Path.Combine("app", "MiddinInnovatie.jar"), Path.Combine(installRoot, "app", "MiddinInnovatie.jar"));
             CopyPayloadDirectory("runtime", Path.Combine(installRoot, "runtime"));
+            CopyPayloadFile("MiddinInnovatie-Uninstall.exe", Path.Combine(installRoot, "MiddinInnovatie-Uninstall.exe"));
 
             SetProgress(60, "Snelkoppelingen aanmaken...");
             string target = Path.Combine(installRoot, "MiddinInnovatie.exe");
@@ -398,18 +401,18 @@ internal sealed class InstallWizardForm : Form
 
     private void WriteUninstaller()
     {
+        string uninstallExe = Path.Combine(installRoot, "MiddinInnovatie-Uninstall.exe");
         string menuDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.Programs),
             "Middin Innovatie");
-        string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        string uninstall = Path.Combine(installRoot, "uninstall.ps1");
+        Directory.CreateDirectory(menuDir);
+        CreateShortcut(Path.Combine(menuDir, "Middin Innovatie verwijderen.lnk"), uninstallExe);
+
+        string uninstallPs1 = Path.Combine(installRoot, "uninstall.ps1");
         string script =
             "$ErrorActionPreference = 'Stop'\r\n"
-            + "Remove-Item -LiteralPath '" + installRoot.Replace("'", "''") + "' -Recurse -Force -ErrorAction SilentlyContinue\r\n"
-            + "Remove-Item -LiteralPath '" + menuDir.Replace("'", "''") + "' -Recurse -Force -ErrorAction SilentlyContinue\r\n"
-            + "Remove-Item -LiteralPath '" + Path.Combine(desktop, "Middin Innovatie.lnk").Replace("'", "''") + "' -Force -ErrorAction SilentlyContinue\r\n"
-            + "Write-Host 'Middin Innovatie verwijderd.'\r\n";
-        File.WriteAllText(uninstall, script);
+            + "Start-Process -FilePath '" + uninstallExe.Replace("'", "''") + "' -Wait\r\n";
+        File.WriteAllText(uninstallPs1, script);
     }
 
     private void SetProgress(int value, string message)

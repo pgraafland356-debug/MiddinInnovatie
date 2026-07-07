@@ -326,7 +326,7 @@ public final class MorePanel extends JPanel {
         p.setOpaque(false);
         p.add(MiddinTheme.bodyLabel("Geplande uitrol en release-opmerkingen voor het team."));
         p.add(Box.createVerticalStrut(12));
-        p.add(MiddinTheme.bodyLabel("Desktopversie 0.9.2 — Windows."));
+        p.add(MiddinTheme.bodyLabel("Desktopversie " + AppVersion.NAME + " — Windows."));
         p.add(Box.createVerticalStrut(8));
         p.add(muted("Voor app-updates op Android: Meer → Instellingen → App-updates."));
         return p;

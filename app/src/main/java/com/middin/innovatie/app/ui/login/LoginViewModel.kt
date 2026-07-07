@@ -83,9 +83,6 @@ class LoginViewModel(
     private object LocalDevAccounts {
         private val accounts: List<Pair<String, String>> = listOf(
             UserPreferencesRepository.ENDPOINT_SETTINGS_USERNAME to "admin",
-            "wesley" to "work",
-            "middin-demo" to "demo",
-            "CIV-demo" to "demo",
         )
 
         fun matches(username: String, password: String): Boolean =

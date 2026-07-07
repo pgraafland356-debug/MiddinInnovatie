@@ -54,15 +54,21 @@ $deskLnk.TargetPath = $target
 $deskLnk.WorkingDirectory = $installRoot
 $deskLnk.Save()
 
-$uninstall = Join-Path $installRoot "uninstall.ps1"
-$uninstallContent = @"
-`$ErrorActionPreference = 'Stop'
-Remove-Item -LiteralPath '$installRoot' -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -LiteralPath '$shortcutDir' -Recurse -Force -ErrorAction SilentlyContinue
-Remove-Item -LiteralPath (Join-Path '$desktop' 'Middin Innovatie.lnk') -Force -ErrorAction SilentlyContinue
-Write-Host 'Middin Innovatie verwijderd.'
-"@
-Set-Content -Path $uninstall -Value $uninstallContent -Encoding UTF8
+$uninstallSrc = Join-Path $payload "MiddinInnovatie-Uninstall.exe"
+if (-not (Test-Path $uninstallSrc)) {
+    $uninstallSrc = Join-Path $PSScriptRoot "MiddinInnovatie-Uninstall.exe"
+}
+if (Test-Path $uninstallSrc) {
+    Copy-Item $uninstallSrc (Join-Path $installRoot "MiddinInnovatie-Uninstall.exe") -Force
+    $uninstallExe = Join-Path $installRoot "MiddinInnovatie-Uninstall.exe"
+    $unlnk = $wsh.CreateShortcut((Join-Path $shortcutDir "Middin Innovatie verwijderen.lnk"))
+    $unlnk.TargetPath = $uninstallExe
+    $unlnk.WorkingDirectory = $installRoot
+    $unlnk.Description = "Middin Innovatie verwijderen"
+    $unlnk.Save()
+    $uninstallPs1 = Join-Path $installRoot "uninstall.ps1"
+    Set-Content -Path $uninstallPs1 -Value "Start-Process -FilePath '$uninstallExe' -Wait" -Encoding UTF8
+}
 
 Write-Host ""
 Write-Host "Installation complete." -ForegroundColor Green

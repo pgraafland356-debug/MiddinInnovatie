@@ -37,7 +37,7 @@ public final class InnovationNewsClient {
         HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL().openConnection();
         conn.setConnectTimeout(12_000);
         conn.setReadTimeout(12_000);
-        conn.setRequestProperty("User-Agent", "MiddinInnovatie-Desktop/0.9.2");
+        conn.setRequestProperty("User-Agent", "MiddinInnovatie-Desktop/" + AppVersion.NAME);
         String xml = new String(conn.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
         List<NewsItem> items = new ArrayList<>();
         Matcher m = ITEM.matcher(xml);

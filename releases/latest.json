@@ -1,13 +1,13 @@
 ﻿{
-    "changelog":  "Middin Innovatie 0.9.2 - productcatalogus (18 producten), MEMO Timer, Windows installer met Java, auto-update.",
-    "versionCode":  11,
-    "versionName":  "0.9.2",
+    "changelog":  "Middin Innovatie 0.9.3 - login wachtwoordvalidatie, uninstall wizard, GitHub auto-update feed, alleen account pieter-bas.",
+    "versionCode":  12,
+    "versionName":  "0.9.3",
     "android":  {
-                    "sha256":  "0b546d8d0c7ee90bdb468d03d3cdcd7e2d19b94208afdc8a86fde3dc81f658eb",
-                    "apkUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.2/middin-innovatie-0.9.2.apk"
+                    "sha256":  "48a475ee8967521af4b64e799799de72efe3ad6eced15244c27c1d84a24178f1",
+                    "apkUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.3/middin-innovatie-0.9.3.apk"
                 },
     "windows":  {
-                    "setupUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.2/MiddinInnovatie-Windows-Setup-0.9.2.exe",
-                    "sha256":  "91c8450c6361c6c8da5a7f46f16b393df370f59968f2db8b96bb066fd0768095"
+                    "setupUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.3/MiddinInnovatie-Windows-Setup-0.9.3.exe",
+                    "sha256":  "a7a510efccf814a74080c62e95c52f624ea91a1d74cdb21f28681fd3b2a1848b"
                 }
 }

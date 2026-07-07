@@ -20,6 +20,11 @@ HOST = "0.0.0.0"
 PORT = 8080
 DEV_TOKEN = "local-mock-api-token"
 
+# Keep in sync with LoginViewModel.LocalDevAccounts (Android) and desktop LocalDevAccounts.java
+VALID_ACCOUNTS = {
+    "pieter-bas": "admin",
+}
+
 _messages: list[dict[str, Any]] = []
 _lock = threading.Lock()
 
@@ -70,10 +75,14 @@ class Handler(BaseHTTPRequestHandler):
 
         if kind == "login":
             body = _json_body(self)
-            user = body.get("username") or body.get("email") or ""
+            user = (body.get("username") or body.get("email") or "").strip()
             pwd = body.get("password") or ""
-            if not user.strip() or not pwd:
+            if not user or not pwd:
                 _send_json(self, 400, {"error": "username/email and password required"})
+                return
+            expected = VALID_ACCOUNTS.get(user.lower())
+            if expected is None or expected != pwd:
+                _send_json(self, 401, {"error": "invalid credentials"})
                 return
             _send_json(self, 200, {"token": DEV_TOKEN})
             return
@@ -135,7 +144,7 @@ def main() -> None:
     print("Middin mock API listening on http://127.0.0.1:%s" % PORT)
     print("  Emulator: http://10.0.2.2:%s" % PORT)
     print("  Phone on Wi-Fi: http://<this-PC-LAN-IP>:%s" % PORT)
-    print("  Login accepts any non-empty username + password.")
+    print("  Login requires a valid Middin dev account (see LocalDevAccounts in the app).")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

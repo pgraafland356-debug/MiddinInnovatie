@@ -41,6 +41,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
 public final class DesktopApp {
@@ -156,7 +157,7 @@ public final class DesktopApp {
         card.add(Box.createVerticalStrut(6));
         card.add(pass);
         card.add(Box.createVerticalStrut(12));
-        JLabel hint = MiddinTheme.mutedLabel("Desktop: vul willekeurige gegevens in om verder te gaan.");
+        JLabel hint = MiddinTheme.mutedLabel("Gebruik je Middin-account (pieter-bas).");
         hint.setAlignmentX(0.5f);
         card.add(hint);
         card.add(Box.createVerticalStrut(20));
@@ -177,19 +178,59 @@ public final class DesktopApp {
 
         final boolean[] ok = {false};
         Runnable attemptLogin = () -> {
-            if (user.getText().isBlank() || pass.getPassword().length == 0) {
+            String username = user.getText().trim();
+            char[] passwordChars = pass.getPassword();
+            String password = new String(passwordChars);
+            java.util.Arrays.fill(passwordChars, '\0');
+            if (username.isBlank() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(login, "Vul gebruikersnaam en wachtwoord in.", "Inloggen", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            prefs.setLoggedIn(true);
-            prefs.setUsername(user.getText().trim());
-            try {
-                prefs.save();
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(login, "Kon sessie niet opslaan: " + ex.getMessage());
-            }
-            ok[0] = true;
-            login.dispose();
+            loginBtn.setEnabled(false);
+            loginBtn.setText("Bezig…");
+            new SwingWorker<Boolean, Void>() {
+                private String error = "Onjuiste gebruikersnaam of wachtwoord.";
+
+                @Override
+                protected Boolean doInBackground() {
+                    if (LocalDevAccounts.matches(username, password)) {
+                        return true;
+                    }
+                    try {
+                        DesktopAuthRepository.signIn(prefs.getEffectiveApiBaseUrl(), username, password);
+                        return true;
+                    } catch (IOException ex) {
+                        error = ex.getMessage() == null || ex.getMessage().isBlank()
+                                ? "Inloggen mislukt. Controleer je gegevens of API-server."
+                                : ex.getMessage();
+                        return false;
+                    }
+                }
+
+                @Override
+                protected void done() {
+                    loginBtn.setEnabled(true);
+                    loginBtn.setText("Doorgaan");
+                    try {
+                        if (Boolean.TRUE.equals(get())) {
+                            prefs.setLoggedIn(true);
+                            prefs.setUsername(username);
+                            try {
+                                prefs.save();
+                            } catch (IOException ex) {
+                                JOptionPane.showMessageDialog(login, "Kon sessie niet opslaan: " + ex.getMessage());
+                                return;
+                            }
+                            ok[0] = true;
+                            login.dispose();
+                        } else {
+                            JOptionPane.showMessageDialog(login, error, "Inloggen", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(login, "Inloggen mislukt: " + ex.getMessage(), "Inloggen", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }.execute();
         };
         loginBtn.addActionListener(e -> attemptLogin.run());
         login.getRootPane().setDefaultButton(loginBtn);

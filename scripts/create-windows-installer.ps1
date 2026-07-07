@@ -1,8 +1,10 @@
 # Creates Middin Innovatie Windows installer (single EXE + optional zip).
 
 $ErrorActionPreference = "Stop"
-$version = "0.9.2"
+$version = "0.9.3"
 $repo = Split-Path -Parent $PSScriptRoot
+. (Join-Path $repo "scripts\read-github-update-config.ps1")
+$gh = Get-MiddinGithubUpdateConfig -Root $repo
 Push-Location $repo
 
 try {
@@ -41,6 +43,9 @@ try {
     Copy-Item (Join-Path $portableDir "app\MiddinInnovatie.jar") (Join-Path $payload "app\MiddinInnovatie.jar") -Force
     Copy-Item (Join-Path $portableDir "MiddinInnovatie.exe") (Join-Path $payload "MiddinInnovatie.exe") -Force
     Copy-Item (Join-Path $portableDir "Start Middin Innovatie.bat") (Join-Path $payload "Start Middin Innovatie.bat") -Force
+    Write-Host "Building uninstall wizard..." -ForegroundColor Cyan
+    & (Join-Path $repo "scripts\build-uninstall-wizard-exe.ps1") -OutDir $stage
+    Copy-Item (Join-Path $stage "MiddinInnovatie-Uninstall.exe") (Join-Path $payload "MiddinInnovatie-Uninstall.exe") -Force
     Write-Host "Copying portable Java runtime into installer payload..." -ForegroundColor Cyan
     Copy-Item (Join-Path $portableDir "runtime") (Join-Path $payload "runtime") -Recurse -Force
 
@@ -63,6 +68,14 @@ try {
         -OutExeName $standaloneName `
         -PayloadZip $payloadZip
     Remove-Item $payloadZip -Force -ErrorAction SilentlyContinue
+
+    $uninstallName = "MiddinInnovatie-Windows-Uninstall-$version.exe"
+    Copy-Item (Join-Path $stage "MiddinInnovatie-Uninstall.exe") (Join-Path $outDir $uninstallName) -Force
+    try {
+        Copy-Item (Join-Path $outDir $uninstallName) (Join-Path $repo $uninstallName) -Force
+    } catch {
+        Write-Host "Note: could not copy uninstall exe to project root (file locked?)" -ForegroundColor Yellow
+    }
 
     $standaloneExe = Join-Path $outDir $standaloneName
     try {
@@ -88,10 +101,17 @@ try {
     Copy-Item (Join-Path $repo "scripts\installer\install.ps1") (Join-Path $stage "install.ps1") -Force
     Copy-Item (Join-Path $repo "scripts\installer\INSTALL.bat") (Join-Path $stage "INSTALL.bat") -Force
     Copy-Item (Join-Path $repo "scripts\installer\Start-MiddinInnovatie.bat") (Join-Path $stage "Start-MiddinInnovatie.bat") -Force
+    # payload already lives at $stage\payload from the build steps above
     @"
 Middin Innovatie v$version
 ========================
 Aanbevolen: dubbelklik MiddinInnovatie-Windows-Setup-$version.exe
+
+Updates (auto): $($gh.FeedUrl)
+Downloads: $($gh.ReleasesUrl)
+
+Verwijderen: Start-menu > Middin Innovatie > Middin Innovatie verwijderen
+(of MiddinInnovatie-Windows-Uninstall-$version.exe)
 
 Alternatief (na uitpakken zip):
 - INSTALL.bat

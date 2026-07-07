@@ -10,13 +10,16 @@ $tag = "v$version"
 Push-Location $repo
 
 function Find-Gh {
-    $candidates = @(
-        (Get-Command gh -ErrorAction SilentlyContinue)?.Source,
+    $paths = @(
         "$env:ProgramFiles\GitHub CLI\gh.exe",
         "$env:LocalAppData\Programs\GitHub CLI\gh.exe"
-    ) | Where-Object { $_ -and (Test-Path $_) }
-    if (-not $candidates) { throw "GitHub CLI (gh) not found. Install: winget install GitHub.cli" }
-    return $candidates[0]
+    )
+    foreach ($p in $paths) {
+        if (Test-Path $p) { return $p }
+    }
+    $cmd = Get-Command gh -ErrorAction SilentlyContinue
+    if ($cmd) { return $cmd.Source }
+    throw "GitHub CLI (gh) not found."
 }
 
 try {
@@ -50,7 +53,7 @@ try {
     $manifest = @{
         versionName = $version
         versionCode = 11
-        changelog = "Middin Innovatie $version — productcatalogus (18 producten), MEMO Timer, Windows installer met Java, auto-update."
+        changelog = "Middin Innovatie $version - productcatalogus (18 producten), MEMO Timer, Windows installer met Java, auto-update."
         android = @{
             apkUrl = "https://github.com/$owner/$repoName/releases/download/$tag/middin-innovatie-$version.apk"
             sha256 = $apkHash
@@ -61,9 +64,12 @@ try {
         }
     } | ConvertTo-Json -Depth 4
     Set-Content (Join-Path $repo "releases\latest.json") $manifest -Encoding UTF8
+    $utf8NoBom = New-Object System.Text.UTF8Encoding $false
+    [System.IO.File]::WriteAllText((Join-Path $repo "releases\latest.json"), $manifest, $utf8NoBom)
     Write-Host "Updated releases/latest.json" -ForegroundColor Green
 
-    if (-not (git remote get-url origin 2>$null)) {
+    $hasOrigin = git remote 2>$null | Select-String -Pattern '^origin$' -Quiet
+    if (-not $hasOrigin) {
         Write-Host "Creating GitHub repo $owner/$repoName ..." -ForegroundColor Cyan
         & $gh repo create "$owner/$repoName" --public --description "Middin Innovatie app (Android + Windows)" --source . --remote origin
         if ($LASTEXITCODE -ne 0) {

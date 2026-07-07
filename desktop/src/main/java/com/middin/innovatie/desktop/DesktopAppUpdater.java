@@ -44,6 +44,9 @@ public final class DesktopAppUpdater {
             try (InputStream in = conn.getInputStream()) {
                 body = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
             }
+            if (!body.isEmpty() && body.charAt(0) == '\uFEFF') {
+                body = body.substring(1);
+            }
             return parseWindowsRelease(body, AppVersion.CODE);
         } finally {
             conn.disconnect();

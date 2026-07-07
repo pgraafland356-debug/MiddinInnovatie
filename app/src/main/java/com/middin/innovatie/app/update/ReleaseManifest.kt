@@ -10,7 +10,7 @@ import org.json.JSONObject
 object ReleaseManifest {
 
     fun parseAndroidRelease(jsonBody: String, currentVersionCode: Int): MinimalRelease? {
-        val root = JSONObject(jsonBody.trim())
+        val root = JSONObject(jsonBody.trim().removePrefix("\uFEFF"))
         val versionCode = root.optInt("versionCode", -1)
         if (versionCode <= currentVersionCode) return null
 

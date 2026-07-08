@@ -1,13 +1,13 @@
 {
-    "changelog": "Middin Innovatie 0.9.3 - login validatie, uninstall wizard, 5 desktop thema's, portable zip, GitHub auto-update.",
-    "versionCode": 12,
-    "versionName": "0.9.3",
-    "android": {
-        "sha256": "48a475ee8967521af4b64e799799de72efe3ad6eced15244c27c1d84a24178f1",
-        "apkUrl": "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.3/middin-innovatie-0.9.3.apk"
-    },
-    "windows": {
-        "setupUrl": "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.3/MiddinInnovatie-Windows-Setup-0.9.3.exe",
-        "sha256": "474769a07ad32bbfa80fa5e7d1cbcef951ccd6e51fd74fb6ee9222308703a3ea"
-    }
+    "changelog":  "Middin Innovatie 0.9.5 - standalone updater, logo naar home (Windows), release-checklist script, duidelijkere update-meldingen.",
+    "versionCode":  14,
+    "versionName":  "0.9.5",
+    "android":  {
+                    "sha256":  "426a8b33ec430fa489c88273ffd35a48d8d6dc513c28621df1d7bcfff754e73a",
+                    "apkUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.5/middin-innovatie-0.9.5.apk"
+                },
+    "windows":  {
+                    "setupUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.5/MiddinInnovatie-Windows-Setup-0.9.5.exe",
+                    "sha256":  "05912f58b89fa9c3a7e4919f4830298af92124cbe4c78cc80bba7c6cf9176f7e"
+                }
 }

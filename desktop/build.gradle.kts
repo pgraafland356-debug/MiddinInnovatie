@@ -6,7 +6,7 @@ plugins {
 import java.util.Properties
 
 group = "com.middin.innovatie"
-version = "0.9.3"
+version = "0.9.5"
 
 java {
     toolchain {

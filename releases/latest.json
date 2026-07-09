@@ -1,13 +1,13 @@
 {
-    "changelog":  "Middin Innovatie 0.9.5 - standalone updater, logo naar home (Windows), release-checklist script, duidelijkere update-meldingen.",
-    "versionCode":  14,
-    "versionName":  "0.9.5",
+    "changelog":  "Middin Innovatie 0.9.6 - dev-accounts voor collega\u0027s (Priscilla, Andre, Silvia, Martien), ASCII-thema (Windows), bijgewerkte installer, updater en uninstaller.",
+    "versionCode":  15,
+    "versionName":  "0.9.6",
     "android":  {
-                    "sha256":  "426a8b33ec430fa489c88273ffd35a48d8d6dc513c28621df1d7bcfff754e73a",
-                    "apkUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.5/middin-innovatie-0.9.5.apk"
+                    "sha256":  "ed6697b1723cc54d0247f5efd97e7771bfd9afe68ce18575cefc47e4ea4c8e93",
+                    "apkUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.6/middin-innovatie-0.9.6.apk"
                 },
     "windows":  {
-                    "setupUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.5/MiddinInnovatie-Windows-Setup-0.9.5.exe",
-                    "sha256":  "05912f58b89fa9c3a7e4919f4830298af92124cbe4c78cc80bba7c6cf9176f7e"
+                    "setupUrl":  "https://github.com/pgraafland356-debug/MiddinInnovatie/releases/download/v0.9.6/MiddinInnovatie-Windows-Setup-0.9.6.exe",
+                    "sha256":  "26f5f892ebf72892899f83d84aa5dd86a624399a597a75d15e253fb430d9544d"
                 }
 }

@@ -28,17 +28,17 @@ android {
         applicationId = "com.middin.innovatie.app"
         minSdk = 26
         targetSdk = 36
-        versionCode = 14
-        versionName = "0.9.5"
+        versionCode = 15
+        versionName = "0.9.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Refreshes when Gradle configures this module â€” each APK build gets a new stamp in the changelog.
+        // Refreshes when Gradle configures this module Ã¢â‚¬â€ each APK build gets a new stamp in the changelog.
         buildConfigField("String", "BUILD_TIME_ISO", "\"${Instant.now()}\"")
 
         buildConfigField("String", "API_BASE_URL", "\"https://api.example.com\"")
         buildConfigField("String", "UPDATE_FEED_URL", "\"$middinUpdateFeedUrl\"")
-        // No leading slash; e.g. "api/v1" â†’ â€¦/api/v1/auth/login. Leave "" for flat paths.
+        // No leading slash; e.g. "api/v1" Ã¢â€ â€™ Ã¢â‚¬Â¦/api/v1/auth/login. Leave "" for flat paths.
         buildConfigField("String", "API_PATH_PREFIX", "\"\"")
         // Login JSON: only "username" + "password" OR only "email" + "password".
         buildConfigField("String", "API_LOGIN_FIELD", "\"username\"")
@@ -59,7 +59,7 @@ android {
         }
         debug {
             isMinifyEnabled = false
-            // Emulator â†’ host PC. Physical devices cannot use 10.0.2.2; use local sign-in or set your PC LAN IP in Settings.
+            // Emulator Ã¢â€ â€™ host PC. Physical devices cannot use 10.0.2.2; use local sign-in or set your PC LAN IP in Settings.
             buildConfigField(
                 "String",
                 "API_BASE_URL",

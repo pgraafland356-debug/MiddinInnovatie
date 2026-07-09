@@ -9,7 +9,7 @@ class ReleaseManifestTest {
 
   private val sample = """
     {
-      "versionName": "0.9.3",
+      "versionName": "0.9.4",
       "versionCode": 12,
       "changelog": "Test",
       "android": {

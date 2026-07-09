@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.UserPreferencesRepository
+import com.middin.innovatie.app.auth.LocalDevAccounts
 import com.middin.innovatie.app.data.remote.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -44,8 +45,9 @@ class LoginViewModel(
             if (userPreferences.isLocalSignInEnabled()) {
                 runCatching {
                     val u = username.trim()
-                    check(LocalDevAccounts.matches(u, password)) {
-                        getApplication<Application>().getString(R.string.login_error_local_credentials)
+                    val app = getApplication<Application>()
+                    check(LocalDevAccounts.matches(app, u, password)) {
+                        app.getString(R.string.login_error_local_credentials)
                     }
                     userPreferences.setAuthenticatedSession(
                         username = u,
@@ -77,18 +79,6 @@ class LoginViewModel(
                     }
             }
         }
-    }
-
-    /** Debug / offline sign-in: fixed accounts only (see [LocalDevAccounts]). */
-    private object LocalDevAccounts {
-        private val accounts: List<Pair<String, String>> = listOf(
-            UserPreferencesRepository.ENDPOINT_SETTINGS_USERNAME to "admin",
-        )
-
-        fun matches(username: String, password: String): Boolean =
-            accounts.any { (u, p) ->
-                u.equals(username, ignoreCase = true) && p == password
-            }
     }
 
     companion object {

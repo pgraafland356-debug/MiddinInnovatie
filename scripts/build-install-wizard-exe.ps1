@@ -11,6 +11,7 @@ $repo = Split-Path -Parent $PSScriptRoot
 $srcDir = Join-Path $repo "desktop\installer"
 $src = Join-Path $srcDir "InstallWizard.cs"
 $urls = Join-Path $srcDir "InstallerUrls.cs"
+$version = Join-Path $srcDir "InstallerVersion.cs"
 if (-not (Test-Path $src)) { throw "Missing $src" }
 
 if (-not $OutDir) {
@@ -39,6 +40,7 @@ if ($PayloadZip -and (Test-Path $PayloadZip)) {
     Write-Host "Embedding payload: $PayloadZip" -ForegroundColor Cyan
 }
 $args += $urls
+$args += $version
 $args += $src
 
 Write-Host "Building install wizard: $outExe" -ForegroundColor Cyan

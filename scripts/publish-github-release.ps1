@@ -1,18 +1,23 @@
 # Build release artifacts and generate releases/latest.json for GitHub.
 # Usage:
-#   1. Set middin.github.owner in gradle.properties
-#   2. Bump versionCode in app/build.gradle.kts and AppVersion.java
-#   3. .\scripts\publish-github-release.ps1
-#   4. Create GitHub Release tag v{version}, upload APK + Setup EXE, commit latest.json
+#   .\scripts\publish-github-release.ps1
+#   .\scripts\release-checklist.ps1 -BumpPatch          # preferred: full checklist
+# Or with explicit version:
+#   .\scripts\publish-github-release.ps1 -VersionName "0.9.5" -VersionCode 14
 
 param(
-    [string]$VersionName = "0.9.2",
-    [int]$VersionCode = 11,
-    [string]$Changelog = "Middin Innovatie release $VersionName"
+    [string]$VersionName = "",
+    [int]$VersionCode = 0,
+    [string]$Changelog = ""
 )
 
 $ErrorActionPreference = "Stop"
 $repo = Split-Path -Parent $PSScriptRoot
+. (Join-Path $repo "scripts\read-app-version.ps1")
+$appVersion = Get-AppVersion -Root $repo
+if (-not $VersionName) { $VersionName = $appVersion.VersionName }
+if ($VersionCode -le 0) { $VersionCode = $appVersion.VersionCode }
+if (-not $Changelog) { $Changelog = "Middin Innovatie release $VersionName" }
 Push-Location $repo
 
 function Get-Sha256Hex([string]$Path) {

@@ -8,11 +8,14 @@ import com.middin.innovatie.desktop.ui.MorePanel;
 import com.middin.innovatie.desktop.ui.ThemeManager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -319,7 +322,18 @@ public final class DesktopApp {
         JPanel brand = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         brand.setOpaque(false);
         ImageIcon logo = loadBrandIcon(40);
-        if (logo != null) brand.add(new JLabel(logo));
+        if (logo != null) {
+            JLabel logoLbl = new JLabel(logo);
+            logoLbl.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            logoLbl.setToolTipText("Naar Home");
+            logoLbl.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    navigateToHome();
+                }
+            });
+            brand.add(logoLbl);
+        }
         JPanel titles = new JPanel();
         titles.setLayout(new BoxLayout(titles, BoxLayout.Y_AXIS));
         titles.setOpaque(false);
@@ -355,7 +369,7 @@ public final class DesktopApp {
         navProducts = MiddinTheme.navButton("Producten", false);
         navMore = MiddinTheme.navButton("Meer", false);
 
-        navHome.addActionListener(e -> showCard(CARD_HOME));
+        navHome.addActionListener(e -> navigateToHome());
         navMemory.addActionListener(e -> showCard(CARD_MEMORY));
         navChat.addActionListener(e -> showCard(CARD_CHAT));
         navProducts.addActionListener(e -> showCard(CARD_PRODUCTS));
@@ -376,6 +390,10 @@ public final class DesktopApp {
         gbc.gridx = 4;
         bar.add(navMore, gbc);
         return bar;
+    }
+
+    private void navigateToHome() {
+        showCard(CARD_HOME);
     }
 
     private void showCard(String card) {

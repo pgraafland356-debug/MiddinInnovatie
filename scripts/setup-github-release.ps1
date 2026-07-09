@@ -63,9 +63,9 @@ try {
             sha256 = $setupHash
         }
     } | ConvertTo-Json -Depth 4
-    Set-Content (Join-Path $repo "releases\latest.json") $manifest -Encoding UTF8
+    $manifestPath = Join-Path $repo "releases\latest.json"
     $utf8NoBom = New-Object System.Text.UTF8Encoding $false
-    [System.IO.File]::WriteAllText((Join-Path $repo "releases\latest.json"), $manifest, $utf8NoBom)
+    [System.IO.File]::WriteAllText($manifestPath, $manifest, $utf8NoBom)
     Write-Host "Updated releases/latest.json" -ForegroundColor Green
 
     $hasOrigin = git remote 2>$null | Select-String -Pattern '^origin$' -Quiet

@@ -13,17 +13,32 @@ import threading
 import time
 import uuid
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
 HOST = "0.0.0.0"
 PORT = 8080
 DEV_TOKEN = "local-mock-api-token"
+DEV_ACCOUNTS_PATH = Path(__file__).resolve().parent.parent / "dev-accounts" / "dev-accounts.json"
 
-# Keep in sync with LoginViewModel.LocalDevAccounts (Android) and desktop LocalDevAccounts.java
-VALID_ACCOUNTS = {
-    "pieter-bas": "admin",
-}
+
+def _load_valid_accounts() -> dict[str, str]:
+    """Load accounts from dev-accounts/dev-accounts.json (same source as Android + desktop)."""
+    try:
+        data = json.loads(DEV_ACCOUNTS_PATH.read_text(encoding="utf-sig"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    accounts = data.get("accounts") or []
+    out: dict[str, str] = {}
+    for item in accounts:
+        if not isinstance(item, dict):
+            continue
+        username = str(item.get("username", "")).strip()
+        password = str(item.get("password", ""))
+        if username and password:
+            out[username.lower()] = password
+    return out
 
 _messages: list[dict[str, Any]] = []
 _lock = threading.Lock()
@@ -80,7 +95,7 @@ class Handler(BaseHTTPRequestHandler):
             if not user or not pwd:
                 _send_json(self, 400, {"error": "username/email and password required"})
                 return
-            expected = VALID_ACCOUNTS.get(user.lower())
+            expected = _load_valid_accounts().get(user.lower())
             if expected is None or expected != pwd:
                 _send_json(self, 401, {"error": "invalid credentials"})
                 return

@@ -3,7 +3,10 @@ package com.middin.innovatie.app.data.remote
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.header
+import io.ktor.http.HttpHeaders
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
@@ -17,6 +20,9 @@ fun createHttpClient(enableLogging: Boolean): HttpClient = HttpClient(CIO) {
                 isLenient = true
             },
         )
+    }
+    defaultRequest {
+        header(HttpHeaders.UserAgent, "MiddinInnovatie/1.0 (Android)")
     }
     install(HttpTimeout) {
         requestTimeoutMillis = 30_000

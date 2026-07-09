@@ -1,8 +1,9 @@
 # Creates Middin Innovatie Windows installer (single EXE + optional zip).
 
 $ErrorActionPreference = "Stop"
-$version = "0.9.3"
 $repo = Split-Path -Parent $PSScriptRoot
+. (Join-Path $repo "scripts\read-app-version.ps1")
+$version = (Get-AppVersion -Root $repo).VersionName
 . (Join-Path $repo "scripts\read-github-update-config.ps1")
 $gh = Get-MiddinGithubUpdateConfig -Root $repo
 Push-Location $repo
@@ -46,6 +47,12 @@ try {
     Write-Host "Building uninstall wizard..." -ForegroundColor Cyan
     & (Join-Path $repo "scripts\build-uninstall-wizard-exe.ps1") -OutDir $stage
     Copy-Item (Join-Path $stage "MiddinInnovatie-Uninstall.exe") (Join-Path $payload "MiddinInnovatie-Uninstall.exe") -Force
+
+    Write-Host "Building update program..." -ForegroundColor Cyan
+    & (Join-Path $repo "scripts\build-update-wizard-exe.ps1") -OutDir $stage
+    Copy-Item (Join-Path $stage "MiddinInnovatie-Update.exe") (Join-Path $payload "MiddinInnovatie-Update.exe") -Force
+    Copy-Item (Join-Path $stage "MiddinInnovatie-Update.exe") (Join-Path $portableDir "MiddinInnovatie-Update.exe") -Force
+
     Write-Host "Copying portable Java runtime into installer payload..." -ForegroundColor Cyan
     Copy-Item (Join-Path $portableDir "runtime") (Join-Path $payload "runtime") -Recurse -Force
 
@@ -108,6 +115,7 @@ Middin Innovatie v$version
 Aanbevolen: dubbelklik MiddinInnovatie-Windows-Setup-$version.exe
 
 Updates (auto): $($gh.FeedUrl)
+Update-programma: MiddinInnovatie-Update.exe (of Start-menu > Middin Innovatie bijwerken)
 Downloads: $($gh.ReleasesUrl)
 
 Verwijderen: Start-menu > Middin Innovatie > Middin Innovatie verwijderen
@@ -125,6 +133,15 @@ Alternatief (na uitpakken zip):
     Write-Host "Creating zip installer..." -ForegroundColor Cyan
     Compress-Archive -Path "$stage\*" -DestinationPath $zipPath -Force
     Copy-Item $zipPath (Join-Path $repo "MiddinInnovatie-Windows-Installer-$version.zip") -Force
+
+    $updateName = "MiddinInnovatie-Update.exe"
+    $updateExe = Join-Path $outDir $updateName
+    try {
+        Copy-Item $updateExe (Join-Path $repo $updateName) -Force
+        Copy-Item $updateExe (Join-Path $downloads $updateName) -Force
+    } catch {
+        Write-Host "Note: could not copy update exe to project root or Downloads" -ForegroundColor Yellow
+    }
 
     $exeMb = [math]::Round((Get-Item $standaloneExe).Length / 1MB, 2)
     $downloadsExe = Join-Path $downloads $standaloneName

@@ -12,12 +12,12 @@ data class InnovationRssSource(
 object InnovationRssSources {
     val feeds: List<InnovationRssSource> = listOf(
         InnovationRssSource(
-            url = "https://www.mobihealthnews.com/feed/",
-            sourceLabel = "MobiHealthNews",
+            url = "https://www.beckershospitalreview.com/feed/",
+            sourceLabel = "Becker's Hospital Review",
         ),
         InnovationRssSource(
-            url = "https://www.healthcareitnews.com/feed/",
-            sourceLabel = "Healthcare IT News",
+            url = "https://www.healthcarefinancenews.com/rss.xml",
+            sourceLabel = "Healthcare Finance News",
         ),
         InnovationRssSource(
             url = "https://www.medicaldevice-network.com/feed/",

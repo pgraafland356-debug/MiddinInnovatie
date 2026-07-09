@@ -3,8 +3,8 @@ package com.middin.innovatie.desktop.ui;
 /** Retro and default desktop themes (Instellingen → Thema). */
 public enum DesktopThemeId {
     DEFAULT("default", "Default"),
-    COMMODORE("commodore", "Commodore BASIC 2.0"),
     DOS("dos", "DOS"),
+    ASCII("ascii", "ASCII"),
     WIN95("win95", "Windows 95"),
     WIN98("win98", "Windows 98"),
     WINXP("winxp", "Windows XP");
@@ -29,7 +29,8 @@ public enum DesktopThemeId {
     public ThemeUiFamily uiFamily() {
         return switch (this) {
             case WIN95, WIN98, WINXP -> ThemeUiFamily.WINDOWS_CLASSIC;
-            case COMMODORE, DOS -> ThemeUiFamily.CRT;
+            case DOS -> ThemeUiFamily.CRT;
+            case ASCII -> ThemeUiFamily.ASCII;
             default -> ThemeUiFamily.MODERN;
         };
     }
@@ -38,7 +39,8 @@ public enum DesktopThemeId {
         if (raw == null || raw.isBlank()) return DEFAULT;
         String t = raw.trim().toLowerCase();
         // Legacy light/dark/system prefs map to default.
-        if ("system".equals(t) || "light".equals(t) || "dark".equals(t) || "terminal".equals(t)) return DEFAULT;
+        if ("system".equals(t) || "light".equals(t) || "dark".equals(t) || "commodore".equals(t)) return DEFAULT;
+        if ("terminal".equals(t)) return ASCII;
         for (DesktopThemeId theme : values()) {
             if (theme.id.equals(t)) return theme;
         }

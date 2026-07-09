@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 /** Simplified RSS loader (same feeds as InnovationRssSources). */
 public final class InnovationNewsClient {
     private static final String[][] FEEDS = {
-        {"https://www.mobihealthnews.com/feed/", "MobiHealthNews"},
-        {"https://www.healthcareitnews.com/feed/", "Healthcare IT News"},
+        {"https://www.beckershospitalreview.com/feed/", "Becker's Hospital Review"},
+        {"https://www.healthcarefinancenews.com/rss.xml", "Healthcare Finance News"},
         {"https://www.medicaldevice-network.com/feed/", "Medical Device Network"},
         {"https://www.fiercehealthcare.com/rss/xml", "Fierce Healthcare"},
     };

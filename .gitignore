@@ -24,3 +24,9 @@ MiddinInnovatie-Windows-Installer*.zip
 MiddinInnovatie-Windows-desktop*.zip
 releases/artifacts/
 !releases/latest.json
+
+desktop/bin/
+.vscode/
+MiddinInnovatie-Update.exe
+MiddinInnovatie-Windows-Uninstall-*.exe
+

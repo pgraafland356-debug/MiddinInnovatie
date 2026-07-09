@@ -4,5 +4,6 @@ package com.middin.innovatie.desktop.ui;
 public enum ThemeUiFamily {
     MODERN,
     WINDOWS_CLASSIC,
-    CRT
+    CRT,
+    ASCII
 }

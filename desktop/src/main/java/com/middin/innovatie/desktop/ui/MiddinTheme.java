@@ -86,6 +86,12 @@ public final class MiddinTheme {
     }
 
     public static Border cardBorder() {
+        if (uiFamily == ThemeUiFamily.ASCII) {
+            return new CompoundBorder(
+                new AsciiBoxBorder(BORDER, FONT_SMALL),
+                new EmptyBorder(8, 10, 8, 10)
+            );
+        }
         if (bevelButtons) {
             return new CompoundBorder(
                 BorderFactory.createBevelBorder(BevelBorder.RAISED, Color.WHITE, BORDER),
@@ -100,7 +106,11 @@ public final class MiddinTheme {
 
     public static JPanel cardPanel() {
         JPanel panel = new JPanel();
-        panel.setBackground(bevelButtons ? Color.WHITE : PRIMARY_LIGHT);
+        panel.setBackground(switch (uiFamily) {
+            case WINDOWS_CLASSIC -> Color.WHITE;
+            case ASCII -> SURFACE_VARIANT;
+            default -> bevelButtons ? Color.WHITE : PRIMARY_LIGHT;
+        });
         panel.setBorder(cardBorder());
         return panel;
     }
@@ -148,12 +158,18 @@ public final class MiddinTheme {
     private static Color inputBackground() {
         return switch (uiFamily) {
             case WINDOWS_CLASSIC -> Color.WHITE;
-            case CRT -> SURFACE_VARIANT;
+            case CRT, ASCII -> SURFACE_VARIANT;
             default -> BACKGROUND;
         };
     }
 
     private static Border inputBorder() {
+        if (uiFamily == ThemeUiFamily.ASCII) {
+            return new CompoundBorder(
+                new AsciiBoxBorder(BORDER_INPUT, FONT_SMALL),
+                new EmptyBorder(6, 8, 6, 8)
+            );
+        }
         if (bevelButtons) {
             return BorderFactory.createBevelBorder(BevelBorder.LOWERED);
         }
@@ -176,12 +192,18 @@ public final class MiddinTheme {
 
     public static JScrollPane scroll(JTextArea area) {
         JScrollPane sp = new JScrollPane(area);
-        if (bevelButtons) {
+        if (uiFamily == ThemeUiFamily.ASCII) {
+            sp.setBorder(new AsciiBoxBorder(BORDER, FONT_SMALL));
+        } else if (bevelButtons) {
             sp.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         } else {
             sp.setBorder(new LineBorder(BORDER, 1, true));
         }
-        sp.getViewport().setBackground(bevelButtons ? Color.WHITE : BACKGROUND);
+        sp.getViewport().setBackground(switch (uiFamily) {
+            case WINDOWS_CLASSIC -> Color.WHITE;
+            case ASCII -> SURFACE_VARIANT;
+            default -> bevelButtons ? Color.WHITE : BACKGROUND;
+        });
         return sp;
     }
 
@@ -238,6 +260,7 @@ public final class MiddinTheme {
         switch (uiFamily) {
             case WINDOWS_CLASSIC -> applyWinClassicActionStyle(b, primary, selected);
             case CRT -> applyCrtActionStyle(b, primary, selected);
+            case ASCII -> applyAsciiActionStyle(b, primary, selected);
             default -> applyModernActionStyle(b, primary, selected);
         }
         return b;
@@ -286,6 +309,20 @@ public final class MiddinTheme {
         ));
     }
 
+    private static void applyAsciiActionStyle(JButton b, boolean primary, boolean selected) {
+        b.setForeground(primary ? ON_PRIMARY : TEXT);
+        b.setBackground(primary ? PRIMARY : BACKGROUND);
+        b.setBorderPainted(true);
+        b.setContentAreaFilled(true);
+        b.setBorder(BorderFactory.createCompoundBorder(
+            new AsciiBoxBorder(primary ? ON_PRIMARY : BORDER, FONT_SMALL),
+            new EmptyBorder(6, 12, 6, 12)
+        ));
+        if (primary) {
+            b.setFont(FONT_BODY.deriveFont(Font.BOLD));
+        }
+    }
+
     private static void applyNavStyle(JButton b, boolean selected) {
         switch (uiFamily) {
             case WINDOWS_CLASSIC -> {
@@ -304,6 +341,16 @@ public final class MiddinTheme {
                 b.setBorder(new LineBorder(selected ? TEXT : BORDER, selected ? 2 : 1, false));
                 b.setBackground(selected ? SURFACE_VARIANT : BACKGROUND);
                 b.setForeground(TEXT);
+                if (selected) b.setFont(FONT_NAV.deriveFont(Font.BOLD));
+            }
+            case ASCII -> {
+                b.setBorderPainted(true);
+                b.setBorder(BorderFactory.createCompoundBorder(
+                    new AsciiBoxBorder(selected ? TEXT : BORDER, FONT_SMALL),
+                    new EmptyBorder(8, 10, 8, 10)
+                ));
+                b.setBackground(selected ? PRIMARY_LIGHT : BACKGROUND);
+                b.setForeground(selected ? PRIMARY : TEXT_LIGHT);
                 if (selected) b.setFont(FONT_NAV.deriveFont(Font.BOLD));
             }
             default -> {
@@ -337,6 +384,14 @@ public final class MiddinTheme {
                 row.setBorder(BorderFactory.createCompoundBorder(
                     new LineBorder(BORDER, 1, false),
                     new EmptyBorder(12, 16, 12, 16)
+                ));
+            }
+            case ASCII -> {
+                row.setForeground(TEXT);
+                row.setBackground(SURFACE_VARIANT);
+                row.setBorder(BorderFactory.createCompoundBorder(
+                    new AsciiBoxBorder(BORDER, FONT_SMALL),
+                    new EmptyBorder(10, 14, 10, 14)
                 ));
             }
             default -> {
@@ -376,6 +431,15 @@ public final class MiddinTheme {
                 b.setBorderPainted(true);
                 b.setBorder(BorderFactory.createCompoundBorder(
                     new LineBorder(selected ? p.text : p.border, selected ? 2 : 1, false),
+                    new EmptyBorder(10, 12, 10, 12)
+                ));
+            }
+            case ASCII -> {
+                b.setForeground(selected ? p.onPrimary : p.text);
+                b.setBackground(selected ? p.primary : p.surfaceVariant);
+                b.setBorderPainted(true);
+                b.setBorder(BorderFactory.createCompoundBorder(
+                    new AsciiBoxBorder(selected ? p.onPrimary : p.border, p.fontSmall),
                     new EmptyBorder(10, 12, 10, 12)
                 ));
             }

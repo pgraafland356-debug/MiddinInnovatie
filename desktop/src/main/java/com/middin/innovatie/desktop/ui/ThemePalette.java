@@ -58,8 +58,8 @@ final class ThemePalette {
     static ThemePalette forTheme(DesktopThemeId theme) {
         return switch (theme) {
             case DEFAULT -> defaultTheme();
-            case COMMODORE -> commodoreTheme();
             case DOS -> dosTheme();
+            case ASCII -> asciiTheme();
             case WIN95 -> win95Theme();
             case WIN98 -> win98Theme();
             case WINXP -> winXpTheme();
@@ -87,29 +87,6 @@ final class ThemePalette {
         );
     }
 
-    private static ThemePalette commodoreTheme() {
-        Font mono = new Font(Font.MONOSPACED, Font.BOLD, 14);
-        Color bg = c(0x35, 0x28, 0x79);
-        Color lightBlue = c(0x78, 0x78, 0xFC);
-        return new ThemePalette(
-            lightBlue,
-            c(0x4B, 0x3F, 0xB8),
-            c(0x6C, 0x5E, 0xB5),
-            lightBlue,
-            c(0x9B, 0x9B, 0xFF),
-            bg,
-            c(0x40, 0x31, 0x8D),
-            lightBlue,
-            c(0x6C, 0x5E, 0xB5),
-            bg,
-            mono.deriveFont(20f),
-            mono,
-            mono.deriveFont(12f),
-            mono.deriveFont(12f),
-            false
-        );
-    }
-
     private static ThemePalette dosTheme() {
         Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 14);
         Color gray = c(0xAA, 0xAA, 0xAA);
@@ -125,6 +102,30 @@ final class ThemePalette {
             c(0x88, 0x88, 0x88),
             Color.BLACK,
             mono.deriveFont(Font.BOLD, 20f),
+            mono,
+            mono.deriveFont(12f),
+            mono.deriveFont(12f),
+            false
+        );
+    }
+
+    private static ThemePalette asciiTheme() {
+        Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 14);
+        Color green = c(0x33, 0xFF, 0x33);
+        Color dim = c(0x22, 0xAA, 0x22);
+        Color bg = c(0x05, 0x05, 0x05);
+        return new ThemePalette(
+            c(0x00, 0xFF, 0x41),
+            c(0x0D, 0x1F, 0x0D),
+            c(0x00, 0x44, 0x00),
+            green,
+            dim,
+            bg,
+            c(0x0A, 0x14, 0x0A),
+            c(0x00, 0xAA, 0x00),
+            c(0x00, 0x77, 0x00),
+            Color.BLACK,
+            mono.deriveFont(Font.BOLD, 18f),
             mono,
             mono.deriveFont(12f),
             mono.deriveFont(12f),

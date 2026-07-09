@@ -4,12 +4,13 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
+using System.Text;
 using System.Windows.Forms;
 
 internal sealed class InstallWizardForm : Form
 {
     private const string EmbeddedPayloadName = "MiddinInnovatie.Payload.zip";
-    private readonly string version = "0.9.3";
+    private readonly string version = InstallerVersion.VERSION_NAME;
     private readonly string payloadDir;
     private readonly Panel content;
     private readonly Button backBtn;
@@ -323,11 +324,16 @@ internal sealed class InstallWizardForm : Form
             CopyPayloadFile(Path.Combine("app", "MiddinInnovatie.jar"), Path.Combine(installRoot, "app", "MiddinInnovatie.jar"));
             CopyPayloadDirectory("runtime", Path.Combine(installRoot, "runtime"));
             CopyPayloadFile("MiddinInnovatie-Uninstall.exe", Path.Combine(installRoot, "MiddinInnovatie-Uninstall.exe"));
+            CopyPayloadFileIfPresent("MiddinInnovatie-Update.exe", Path.Combine(installRoot, "MiddinInnovatie-Update.exe"));
+
+            SetProgress(55, "Versie-informatie opslaan...");
+            WriteVersionJson();
 
             SetProgress(60, "Snelkoppelingen aanmaken...");
             string target = Path.Combine(installRoot, "MiddinInnovatie.exe");
             if (startMenuShortcut.Checked) CreateStartMenuShortcut(target);
             if (desktopShortcut.Checked) CreateDesktopShortcut(target);
+            CreateUpdateShortcutIfPresent();
 
             SetProgress(80, "Verwijderen voorbereiden...");
             WriteUninstaller();
@@ -340,6 +346,33 @@ internal sealed class InstallWizardForm : Form
             MessageBox.Show("Installatie mislukt:\n" + ex.Message, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             ShowStep(3);
         }
+    }
+
+    private void CopyPayloadFileIfPresent(string relative, string destFile)
+    {
+        string src = Path.Combine(payloadDir, relative);
+        if (!File.Exists(src)) return;
+        string destDir = Path.GetDirectoryName(destFile);
+        if (!string.IsNullOrEmpty(destDir)) Directory.CreateDirectory(destDir);
+        File.Copy(src, destFile, true);
+    }
+
+    private void WriteVersionJson()
+    {
+        string json = "{\r\n  \"versionName\": \"" + InstallerVersion.VERSION_NAME + "\",\r\n"
+            + "  \"versionCode\": " + InstallerVersion.VERSION_CODE + "\r\n}";
+        File.WriteAllText(Path.Combine(installRoot, "version.json"), json, Encoding.UTF8);
+    }
+
+    private void CreateUpdateShortcutIfPresent()
+    {
+        string updater = Path.Combine(installRoot, "MiddinInnovatie-Update.exe");
+        if (!File.Exists(updater)) return;
+        string menuDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.Programs),
+            "Middin Innovatie");
+        Directory.CreateDirectory(menuDir);
+        CreateShortcut(Path.Combine(menuDir, "Middin Innovatie bijwerken.lnk"), updater);
     }
 
     private void CopyPayloadFile(string relative, string destFile)

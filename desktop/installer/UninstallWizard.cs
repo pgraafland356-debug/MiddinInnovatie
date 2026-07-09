@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 internal sealed class UninstallWizardForm : Form
 {
-    private readonly string version = "0.9.3";
+    private readonly string version = InstallerVersion.VERSION_NAME;
     private readonly Panel content;
     private readonly Button backBtn;
     private readonly Button nextBtn;

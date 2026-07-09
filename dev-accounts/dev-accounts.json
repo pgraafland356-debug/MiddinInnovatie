@@ -1,0 +1,9 @@
+{
+  "accounts": [
+    { "username": "pieter-bas", "password": "admin" },
+    { "username": "priscilla", "password": "middin" },
+    { "username": "andre", "password": "middin" },
+    { "username": "silvia", "password": "middin" },
+    { "username": "martien", "password": "middin" }
+  ]
+}

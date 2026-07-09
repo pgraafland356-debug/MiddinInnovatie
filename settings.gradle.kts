@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MiddinInnovatie"
 include(":app")
+include(":desktop")

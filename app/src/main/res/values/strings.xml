@@ -136,7 +136,7 @@
     <string name="settings_update_title">App updates</string>
     <string name="settings_update_current">Current version: %1$s (%2$d)</string>
     <string name="settings_update_feed_label">Update feed URL (optional)</string>
-    <string name="settings_update_feed_placeholder">e.g. https://updates.example.com/releases/latest</string>
+    <string name="settings_update_feed_placeholder">https://raw.githubusercontent.com/pgraafland356-debug/MiddinInnovatie/main/releases/latest.json</string>
     <string name="settings_update_feed_effective">Feed in use: %1$s</string>
     <string name="settings_update_feed_save">Save feed URL</string>
     <string name="settings_update_check_button">Check for update</string>

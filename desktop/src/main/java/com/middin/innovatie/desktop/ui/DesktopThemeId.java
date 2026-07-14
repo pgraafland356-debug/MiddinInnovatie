@@ -4,7 +4,6 @@ package com.middin.innovatie.desktop.ui;
 public enum DesktopThemeId {
     DEFAULT("default", "Default"),
     DOS("dos", "DOS"),
-    ASCII("ascii", "ASCII"),
     WIN95("win95", "Windows 95"),
     WIN98("win98", "Windows 98"),
     WINXP("winxp", "Windows XP");
@@ -30,7 +29,6 @@ public enum DesktopThemeId {
         return switch (this) {
             case WIN95, WIN98, WINXP -> ThemeUiFamily.WINDOWS_CLASSIC;
             case DOS -> ThemeUiFamily.CRT;
-            case ASCII -> ThemeUiFamily.ASCII;
             default -> ThemeUiFamily.MODERN;
         };
     }
@@ -39,8 +37,7 @@ public enum DesktopThemeId {
         if (raw == null || raw.isBlank()) return DEFAULT;
         String t = raw.trim().toLowerCase();
         // Legacy light/dark/system prefs map to default.
-        if ("system".equals(t) || "light".equals(t) || "dark".equals(t) || "commodore".equals(t)) return DEFAULT;
-        if ("terminal".equals(t)) return ASCII;
+        if ("system".equals(t) || "light".equals(t) || "dark".equals(t) || "terminal".equals(t) || "commodore".equals(t) || "ascii".equals(t)) return DEFAULT;
         for (DesktopThemeId theme : values()) {
             if (theme.id.equals(t)) return theme;
         }

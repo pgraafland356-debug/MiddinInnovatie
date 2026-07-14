@@ -59,7 +59,6 @@ final class ThemePalette {
         return switch (theme) {
             case DEFAULT -> defaultTheme();
             case DOS -> dosTheme();
-            case ASCII -> asciiTheme();
             case WIN95 -> win95Theme();
             case WIN98 -> win98Theme();
             case WINXP -> winXpTheme();
@@ -102,30 +101,6 @@ final class ThemePalette {
             c(0x88, 0x88, 0x88),
             Color.BLACK,
             mono.deriveFont(Font.BOLD, 20f),
-            mono,
-            mono.deriveFont(12f),
-            mono.deriveFont(12f),
-            false
-        );
-    }
-
-    private static ThemePalette asciiTheme() {
-        Font mono = new Font(Font.MONOSPACED, Font.PLAIN, 14);
-        Color green = c(0x33, 0xFF, 0x33);
-        Color dim = c(0x22, 0xAA, 0x22);
-        Color bg = c(0x05, 0x05, 0x05);
-        return new ThemePalette(
-            c(0x00, 0xFF, 0x41),
-            c(0x0D, 0x1F, 0x0D),
-            c(0x00, 0x44, 0x00),
-            green,
-            dim,
-            bg,
-            c(0x0A, 0x14, 0x0A),
-            c(0x00, 0xAA, 0x00),
-            c(0x00, 0x77, 0x00),
-            Color.BLACK,
-            mono.deriveFont(Font.BOLD, 18f),
             mono,
             mono.deriveFont(12f),
             mono.deriveFont(12f),

@@ -18,7 +18,6 @@
     <string name="nav_info">Info</string>
     <string name="nav_about">Over ons</string>
     <string name="nav_credits">Credits</string>
-    <string name="nav_gemini">Gemini-assistent</string>
     <string name="nav_bluetooth">Bluetooth</string>
     <string name="nav_settings">Instellingen</string>
 
@@ -89,16 +88,12 @@
 
     <string name="updates_intro">Geplande uitrol en release-opmerkingen voor het team.</string>
 
-    <string name="info_body">Deze app verbindt met jullie eigen backend voor login en chat.\n\nBeveiliging: gebruik HTTPS in productie. Gemini API-sleutels staan op het apparaat voor gemak—gebruik liever server-side AI voor vertrouwelijke data.\n\nFuncties: collectief geheugen (lokale database), REST-chat, producten met CameraX, ML Kit-labels als hint, gekoppelde Bluetooth-apparaten, Google Gemini (optioneel), testmeldingen, EN/NL UI.</string>
+    <string name="info_body">Deze app verbindt met jullie eigen backend voor login en chat.\n\nBeveiliging: gebruik HTTPS in productie.\n\nFuncties: collectief geheugen (lokale database), REST-chat, producten met CameraX, ML Kit-labels als hint, gekoppelde Bluetooth-apparaten, testmeldingen, EN/NL UI.</string>
 
-    <string name="about_body">Middin Innovatie is gevestigd in Den Haag. We werken aan innovatie, digitale producten en samenwerking met partners en collega’s.\n\nDeze applicatie bundelt interne tools: gedeeld geheugen, communicatie, productvastlegging en koppelingen (API, Gemini, Bluetooth) op één plek.\n\nVoor huisstijl, logo’s en officiële teksten: volg jullie interne brandrichtlijnen.</string>
+    <string name="about_body">Middin Innovatie is gevestigd in Den Haag. We werken aan innovatie, digitale producten en samenwerking met partners en collega’s.\n\nDeze applicatie bundelt interne tools: gedeeld geheugen, communicatie, productvastlegging en koppelingen (API, Bluetooth) op één plek.\n\nVoor huisstijl, logo’s en officiële teksten: volg jullie interne brandrichtlijnen.</string>
     <string name="copyright_line">\u00A9 %1$d Middin Innovatie</string>
 
     <string name="credits_intro">Mensen en teams achter deze build. Pas de lijst in code aan (CreditsRepository) naar jullie organisatie.</string>
-
-    <string name="gemini_hint">Gebruikt Google Gemini (gemini-1.5-flash). Plak een API-sleutel van Google AI Studio onder Meer → Instellingen. Sleutels blijven op dit apparaat.</string>
-    <string name="gemini_prompt_label">Prompt</string>
-    <string name="gemini_run">Uitvoeren</string>
 
     <string name="bt_intro">Toont klassieke Bluetooth-apparaten die al met deze telefoon zijn gekoppeld. Voor scannen of BLE: breid dit scherm uit.</string>
     <string name="bt_no_adapter">Bluetooth is niet beschikbaar op dit apparaat.</string>
@@ -118,10 +113,6 @@
     <string name="settings_theme_system">Zelfde als telefoon</string>
     <string name="settings_theme_light">Licht</string>
     <string name="settings_theme_dark">Donker</string>
-    <string name="settings_gemini_title">Gemini API-sleutel</string>
-    <string name="settings_gemini_hint">Van Google AI Studio. Opgeslagen in app-voorkeuren op alleen dit apparaat.</string>
-    <string name="settings_gemini_key_label">API-sleutel</string>
-    <string name="settings_gemini_save">Sleutel opslaan</string>
     <string name="settings_notifications_title">Meldingen</string>
     <string name="settings_test_notification">Testmelding versturen</string>
 

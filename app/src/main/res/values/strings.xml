@@ -18,7 +18,6 @@
     <string name="nav_info">Info</string>
     <string name="nav_about">About us</string>
     <string name="nav_credits">Credits</string>
-    <string name="nav_gemini">Gemini assistant</string>
     <string name="nav_bluetooth">Bluetooth</string>
     <string name="nav_settings">Settings</string>
 
@@ -89,16 +88,12 @@
 
     <string name="updates_intro">Planned rollouts and release notes for the team.</string>
 
-    <string name="info_body">This app connects to your own backend for login and chat.\n\nSecurity: use HTTPS in production. API keys for Gemini are stored on-device for convenience—prefer server-side AI for confidential data.\n\nFeatures: collective memory (local database), REST chat, products with CameraX, ML Kit image labels as hints, Bluetooth paired devices, Google Gemini (optional), notifications test, EN/NL UI.</string>
+    <string name="info_body">This app connects to your own backend for login and chat.\n\nSecurity: use HTTPS in production.\n\nFeatures: collective memory (local database), REST chat, products with CameraX, ML Kit image labels as hints, Bluetooth paired devices, notifications test, EN/NL UI.</string>
 
-    <string name="about_body">Middin Innovatie is based in Den Haag. We work on innovation, digital products, and collaboration with partners and colleagues.\n\nThis application bundles internal tools: shared memory, communication, product capture, and integrations (API, Gemini, Bluetooth) in one place.\n\nFor corporate identity, logos, and official press text, follow your internal brand guidelines.</string>
+    <string name="about_body">Middin Innovatie is based in Den Haag. We work on innovation, digital products, and collaboration with partners and colleagues.\n\nThis application bundles internal tools: shared memory, communication, product capture, and integrations (API, Bluetooth) in one place.\n\nFor corporate identity, logos, and official press text, follow your internal brand guidelines.</string>
     <string name="copyright_line" tools:ignore="PluralsCandidate">\u00A9 %1$d Middin Innovatie</string>
 
     <string name="credits_intro">People and teams behind this build. Edit the list in code (CreditsRepository) to match your organisation.</string>
-
-    <string name="gemini_hint">Uses Google Gemini (gemini-1.5-flash). Paste an API key from Google AI Studio under More → Settings. Keys stay on this device.</string>
-    <string name="gemini_prompt_label">Prompt</string>
-    <string name="gemini_run">Run</string>
 
     <string name="bt_intro">Shows classic Bluetooth devices already paired with this phone. For scanning or BLE workflows, extend this screen.</string>
     <string name="bt_no_adapter">Bluetooth is not available on this device.</string>
@@ -118,10 +113,6 @@
     <string name="settings_theme_system">Match phone</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
-    <string name="settings_gemini_title">Gemini API key</string>
-    <string name="settings_gemini_hint">From Google AI Studio. Stored in app preferences on this device only.</string>
-    <string name="settings_gemini_key_label">API key</string>
-    <string name="settings_gemini_save">Save key</string>
     <string name="settings_notifications_title">Notifications</string>
     <string name="settings_test_notification">Send test notification</string>
 

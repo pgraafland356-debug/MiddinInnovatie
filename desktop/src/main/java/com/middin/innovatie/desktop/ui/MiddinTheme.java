@@ -197,13 +197,47 @@ public final class MiddinTheme {
     }
 
     public static JButton navButton(String label, boolean selected) {
+        return navButton(label, selected, ButtonLayoutId.BOTTOM);
+    }
+
+    public static JButton navButton(String label, boolean selected, ButtonLayoutId layout) {
         JButton b = new JButton(label);
         b.setFont(FONT_NAV);
         b.setFocusPainted(false);
         b.setOpaque(true);
-        b.setPreferredSize(new Dimension(100, 56));
+        if (layout == ButtonLayoutId.LEFT) {
+            b.setPreferredSize(new Dimension(140, 48));
+            b.setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
+            b.setAlignmentX(0f);
+            b.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        } else {
+            b.setPreferredSize(new Dimension(100, 48));
+        }
         b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         applyNavStyle(b, selected);
+        return b;
+    }
+
+    public static JButton layoutPickButton(ButtonLayoutId layout, boolean selected) {
+        JButton b = new JButton(layout.label());
+        b.setFont(FONT_BODY);
+        b.setFocusPainted(false);
+        b.setOpaque(true);
+        b.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        b.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
+        b.setAlignmentX(0f);
+        if (selected) {
+            b.setForeground(ON_PRIMARY);
+            b.setBackground(PRIMARY);
+            b.setBorder(new EmptyBorder(10, 14, 10, 14));
+        } else {
+            b.setForeground(TEXT);
+            b.setBackground(PRIMARY_LIGHT);
+            b.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(BORDER, 1, true),
+                new EmptyBorder(10, 14, 10, 14)
+            ));
+        }
         return b;
     }
 

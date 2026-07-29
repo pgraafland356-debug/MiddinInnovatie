@@ -8,7 +8,6 @@ import com.middin.innovatie.app.data.InnovationNewsRepository
 import com.middin.innovatie.app.data.ChatRepository
 import com.middin.innovatie.app.data.local.LocalProductChatRepository
 import com.middin.innovatie.app.data.remote.AuthRepository
-import com.middin.innovatie.app.data.remote.GeminiRepository
 import com.middin.innovatie.app.data.remote.createHttpClient
 
 class AppContainer(context: Context) {
@@ -29,10 +28,12 @@ class AppContainer(context: Context) {
     )
     private val httpClient = createHttpClient(enableLogging = BuildConfig.DEBUG)
 
-    val changelogRepository = ChangelogRepository()
+    val changelogRepository = ChangelogRepository(
+        context = appContext,
+        feedUrlProvider = { userPreferences.resolvedUpdateFeedUrl() },
+    )
     val innovationNewsRepository = InnovationNewsRepository(httpClient = httpClient)
     val updatesRepository = UpdatesRepository()
-    val geminiRepository = GeminiRepository()
 
     val authRepository = AuthRepository(
         client = httpClient,

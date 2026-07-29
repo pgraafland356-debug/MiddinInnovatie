@@ -43,12 +43,6 @@ class SettingsViewModel(
         }
     }
 
-    fun saveGeminiApiKey(key: String) {
-        viewModelScope.launch {
-            userPreferences.setGeminiApiKey(key)
-        }
-    }
-
     fun logout() {
         viewModelScope.launch {
             userPreferences.setSession(loggedIn = false)

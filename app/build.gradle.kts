@@ -130,7 +130,6 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
-    implementation(libs.google.generativeai)
     implementation(libs.google.mlkit.image.labeling)
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.coroutines.play.services)

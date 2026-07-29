@@ -14,7 +14,6 @@ import com.middin.innovatie.app.ui.bluetooth.BluetoothScreen
 import com.middin.innovatie.app.ui.changelog.ChangelogScreen
 import com.middin.innovatie.app.ui.components.BackTopBar
 import com.middin.innovatie.app.ui.credits.CreditsScreen
-import com.middin.innovatie.app.ui.gemini.GeminiScreen
 import com.middin.innovatie.app.ui.info.InfoScreen
 import com.middin.innovatie.app.ui.settings.SettingsScreen
 import com.middin.innovatie.app.ui.updates.UpdatesScreen
@@ -83,15 +82,6 @@ fun MoreNavHost() {
                 },
             ) { padding ->
                 CreditsScreen(modifier = Modifier.padding(padding))
-            }
-        }
-        composable(MoreRoutes.GEMINI) {
-            Scaffold(
-                topBar = {
-                    BackTopBar(R.string.nav_gemini) { navController.popBackStack() }
-                },
-            ) { padding ->
-                GeminiScreen(modifier = Modifier.padding(padding))
             }
         }
         composable(MoreRoutes.BLUETOOTH) {

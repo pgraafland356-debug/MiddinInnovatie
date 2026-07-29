@@ -9,12 +9,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.middin.innovatie.app.ChangelogRepository
 import com.middin.innovatie.app.R
 import com.middin.innovatie.app.ui.rememberAppContainer
@@ -25,6 +33,15 @@ fun ChangelogScreen(
     modifier: Modifier = Modifier,
     repo: ChangelogRepository = rememberAppContainer().changelogRepository,
 ) {
+    val items by repo.items.collectAsStateWithLifecycle()
+    var refreshing by remember { mutableStateOf(true) }
+
+    LaunchedEffect(repo) {
+        refreshing = true
+        repo.refresh()
+        refreshing = false
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -34,24 +51,32 @@ fun ChangelogScreen(
             ),
     ) {
         Text(stringResource(R.string.changelog_title), style = MaterialTheme.typography.titleLarge)
-        LazyColumn(
-            modifier = Modifier.padding(top = 12.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(bottom = 24.dp),
-        ) {
-            items(repo.items) { item ->
-                Card(modifier = Modifier.fillMaxWidth()) {
-                    Column(Modifier.padding(12.dp)) {
-                        Text(
-                            "${item.version} · ${item.dateIso}",
-                            style = MaterialTheme.typography.titleMedium,
-                        )
-                        item.bulletsEn.forEach { line ->
+        if (refreshing && items.isEmpty()) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .align(Alignment.CenterHorizontally),
+            )
+        } else {
+            LazyColumn(
+                modifier = Modifier.padding(top = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(bottom = 24.dp),
+            ) {
+                items(items) { item ->
+                    Card(modifier = Modifier.fillMaxWidth()) {
+                        Column(Modifier.padding(12.dp)) {
                             Text(
-                                "• $line",
-                                modifier = Modifier.padding(top = 6.dp),
-                                style = MaterialTheme.typography.bodyMedium,
+                                "${item.displayLabel} · ${item.dateIso}",
+                                style = MaterialTheme.typography.titleMedium,
                             )
+                            item.bulletsEn.forEach { line ->
+                                Text(
+                                    "• $line",
+                                    modifier = Modifier.padding(top = 6.dp),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                )
+                            }
                         }
                     }
                 }

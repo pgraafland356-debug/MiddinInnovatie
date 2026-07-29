@@ -63,22 +63,21 @@ public final class DesktopPreferences {
         props.setProperty("theme", theme == null ? "default" : theme);
     }
 
+    /** Navigation button placement: bottom | left | top */
+    public String getButtonLayout() {
+        return props.getProperty("button_layout", "bottom");
+    }
+
+    public void setButtonLayout(String layout) {
+        props.setProperty("button_layout", layout == null || layout.isBlank() ? "bottom" : layout.trim());
+    }
+
     public String getLocale() {
         return props.getProperty("locale", "nl");
     }
 
     public void setLocale(String locale) {
         props.setProperty("locale", locale == null ? "nl" : locale);
-    }
-
-    public String getGeminiApiKey() {
-        return props.getProperty("gemini_api_key", "").trim();
-    }
-
-    public void setGeminiApiKey(String key) {
-        String t = key == null ? "" : key.trim();
-        if (t.isEmpty()) props.remove("gemini_api_key");
-        else props.setProperty("gemini_api_key", t);
     }
 
     public String getApiBaseUrlOverride() {

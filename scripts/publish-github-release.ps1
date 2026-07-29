@@ -17,10 +17,18 @@ $repo = Split-Path -Parent $PSScriptRoot
 $appVersion = Get-AppVersion -Root $repo
 if (-not $VersionName) { $VersionName = $appVersion.VersionName }
 if ($VersionCode -le 0) { $VersionCode = $appVersion.VersionCode }
-if (-not $Changelog) { $Changelog = "Middin Innovatie release $VersionName" }
-Push-Location $repo
+    if (-not $Changelog) { $Changelog = "Middin Innovatie release $VersionName" }
+    Push-Location $repo
 
-function Get-Sha256Hex([string]$Path) {
+    Write-Host "Updating changelog..." -ForegroundColor Cyan
+    & (Join-Path $repo "scripts\update-changelog.ps1") `
+        -VersionName $VersionName `
+        -VersionCode $VersionCode `
+        -Changelog $Changelog `
+        -RepoRoot $repo
+    & (Join-Path $repo "scripts\sync-changelog.ps1") -RepoRoot $repo
+
+    function Get-Sha256Hex([string]$Path) {
     return (Get-FileHash -Path $Path -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 
@@ -90,7 +98,7 @@ try {
     Write-Host "  $manifestPath"
     Write-Host ""
     Write-Host "Next steps on GitHub:" -ForegroundColor Cyan
-    Write-Host "  1. Commit and push releases/latest.json"
+    Write-Host "  1. Commit and push releases/latest.json and releases/changelog.json"
     Write-Host "  2. New Release tag: $tag"
     Write-Host "  3. Upload: $apkName and $setupName"
     Write-Host "  4. Colleagues get updates via Meer -> Instellingen -> Controleren op update"

@@ -16,15 +16,30 @@ using System.Windows.Forms;
 /// </summary>
 internal sealed class UpdateWizardForm : Form
 {
+    // Middin brand colors (aligned with desktop app)
+    private static readonly Color BrandPrimary = Color.FromArgb(0x00, 0x1A, 0x9E);
+    private static readonly Color BrandPrimaryLight = Color.FromArgb(0xF2, 0xF3, 0xFA);
+    private static readonly Color BrandBorder = Color.FromArgb(0xCC, 0xCC, 0xCC);
+    private static readonly Color BrandMuted = Color.FromArgb(0x77, 0x77, 0x77);
+    private static readonly Color BrandOk = Color.FromArgb(0x1B, 0x7A, 0x4E);
+    private static readonly Color BrandWarn = Color.FromArgb(0xB2, 0x6A, 0x00);
+    private static readonly Color BrandErr = Color.FromArgb(0xB0, 0x00, 0x20);
+
     private readonly bool silentMode;
     private readonly string defaultInstallDir;
     private string installDir;
     private int installedVersionCode;
     private string installedVersionName;
 
-    private Label titleLabel;
-    private Label bodyLabel;
+    private Label headerTitle;
+    private Label headerSub;
+    private Label installedValue;
+    private Label remoteValue;
+    private Label statusBadge;
+    private Label statusMessage;
+    private TextBox changelogBox;
     private ProgressBar progressBar;
+    private Label progressLabel;
     private Button checkBtn;
     private Button installBtn;
     private Button releasesBtn;
@@ -43,58 +58,236 @@ internal sealed class UpdateWizardForm : Form
 
         Text = "Middin Innovatie bijwerken";
         AutoScaleMode = AutoScaleMode.Font;
-        ClientSize = new Size(560, 420);
+        ClientSize = new Size(600, 520);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
+        BackColor = Color.White;
+        Font = new Font("Segoe UI", 9f, FontStyle.Regular);
 
-        titleLabel = new Label
-        {
-            Location = new Point(20, 16),
-            Size = new Size(520, 28),
-            Font = new Font(Font.FontFamily, 12f, FontStyle.Bold),
-            Text = "Middin Innovatie Update"
-        };
-
-        bodyLabel = new Label
-        {
-            Location = new Point(20, 52),
-            Size = new Size(520, 220),
-            Text = BuildStatusText("Klik op Controleren om te zien of er een nieuwere versie is.")
-        };
-
-        progressBar = new ProgressBar
-        {
-            Location = new Point(20, 280),
-            Size = new Size(520, 22),
-            Style = ProgressBarStyle.Continuous,
-            Visible = false
-        };
-
-        checkBtn = new Button { Text = "Controleren op update", Location = new Point(20, 320), Width = 160, Height = 30 };
-        installBtn = new Button { Text = "Downloaden en installeren", Location = new Point(190, 320), Width = 180, Height = 30, Enabled = false };
-        releasesBtn = new Button { Text = "GitHub releases", Location = new Point(380, 320), Width = 120, Height = 30 };
-        closeBtn = new Button { Text = "Sluiten", Location = new Point(460, 360), Width = 80, Height = 30 };
-
-        checkBtn.Click += delegate { BeginCheck(false); };
-        installBtn.Click += delegate { BeginInstall(); };
-        releasesBtn.Click += delegate { OpenReleasesPage(); };
-        closeBtn.Click += delegate { Close(); };
-
-        Controls.Add(titleLabel);
-        Controls.Add(bodyLabel);
-        Controls.Add(progressBar);
-        Controls.Add(checkBtn);
-        Controls.Add(installBtn);
-        Controls.Add(releasesBtn);
-        Controls.Add(closeBtn);
+        BuildUi();
 
         Shown += delegate
         {
             if (silentMode) BeginCheck(true);
             else if (!string.IsNullOrEmpty(InstallerUrls.UpdateFeedUrl)) BeginCheck(false);
         };
+    }
+
+    private void BuildUi()
+    {
+        // Header band
+        Panel header = new Panel
+        {
+            Location = new Point(0, 0),
+            Size = new Size(600, 72),
+            BackColor = BrandPrimary
+        };
+        headerTitle = new Label
+        {
+            Location = new Point(20, 14),
+            Size = new Size(560, 28),
+            Font = new Font("Segoe UI", 14f, FontStyle.Bold),
+            ForeColor = Color.White,
+            BackColor = BrandPrimary,
+            Text = "Middin Innovatie Update"
+        };
+        headerSub = new Label
+        {
+            Location = new Point(20, 42),
+            Size = new Size(560, 20),
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Regular),
+            ForeColor = Color.FromArgb(220, 220, 255),
+            BackColor = BrandPrimary,
+            Text = "Controleert de GitHub-releasefeed en installeert de Windows-setup"
+        };
+        header.Controls.Add(headerTitle);
+        header.Controls.Add(headerSub);
+
+        // Version cards row
+        Panel installedCard = MakeInfoCard(20, 88, 270, 78, "Geinstalleerd", out installedValue);
+        Panel remoteCard = MakeInfoCard(310, 88, 270, 78, "Op GitHub", out remoteValue);
+        installedValue.Text = FormatVersion(installedVersionName, installedVersionCode);
+        remoteValue.Text = "Nog niet gecontroleerd";
+
+        // Status badge + message
+        statusBadge = new Label
+        {
+            Location = new Point(20, 180),
+            Size = new Size(140, 26),
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
+            TextAlign = ContentAlignment.MiddleCenter,
+            Text = "KLAAR",
+            ForeColor = Color.White,
+            BackColor = BrandPrimary
+        };
+        statusMessage = new Label
+        {
+            Location = new Point(170, 180),
+            Size = new Size(410, 48),
+            Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+            ForeColor = BrandMuted,
+            Text = "Klik op Controleren om te zien of er een nieuwere versie is."
+        };
+
+        Label changelogTitle = new Label
+        {
+            Location = new Point(20, 236),
+            Size = new Size(200, 18),
+            Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
+            ForeColor = BrandPrimary,
+            Text = "Wijzigingen"
+        };
+        changelogBox = new TextBox
+        {
+            Location = new Point(20, 256),
+            Size = new Size(560, 110),
+            Multiline = true,
+            ReadOnly = true,
+            ScrollBars = ScrollBars.Vertical,
+            BorderStyle = BorderStyle.FixedSingle,
+            BackColor = BrandPrimaryLight,
+            ForeColor = BrandPrimary,
+            Font = new Font("Segoe UI", 9f, FontStyle.Regular),
+            Text = "Geen update-info geladen."
+        };
+
+        progressLabel = new Label
+        {
+            Location = new Point(20, 378),
+            Size = new Size(560, 16),
+            Font = new Font("Segoe UI", 8f, FontStyle.Regular),
+            ForeColor = BrandMuted,
+            Text = "",
+            Visible = false
+        };
+        progressBar = new ProgressBar
+        {
+            Location = new Point(20, 396),
+            Size = new Size(560, 16),
+            Style = ProgressBarStyle.Continuous,
+            Visible = false
+        };
+
+        checkBtn = MakeButton("Controleren", 20, 430, 150, true);
+        installBtn = MakeButton("Downloaden & installeren", 180, 430, 200, true);
+        installBtn.Enabled = false;
+        releasesBtn = MakeButton("GitHub", 390, 430, 90, false);
+        closeBtn = MakeButton("Sluiten", 490, 430, 90, false);
+
+        checkBtn.Click += delegate { BeginCheck(false); };
+        installBtn.Click += delegate { BeginInstall(); };
+        releasesBtn.Click += delegate { OpenReleasesPage(); };
+        closeBtn.Click += delegate { Close(); };
+
+        Label footer = new Label
+        {
+            Location = new Point(20, 478),
+            Size = new Size(560, 28),
+            Font = new Font("Segoe UI", 7.5f, FontStyle.Regular),
+            ForeColor = BrandMuted,
+            Text = ShortPath(installDir)
+                + (string.IsNullOrEmpty(InstallerUrls.UpdateFeedUrl)
+                    ? "  |  feed niet geconfigureerd"
+                    : "  |  feed: GitHub raw latest.json")
+        };
+
+        Controls.Add(header);
+        Controls.Add(installedCard);
+        Controls.Add(remoteCard);
+        Controls.Add(statusBadge);
+        Controls.Add(statusMessage);
+        Controls.Add(changelogTitle);
+        Controls.Add(changelogBox);
+        Controls.Add(progressLabel);
+        Controls.Add(progressBar);
+        Controls.Add(checkBtn);
+        Controls.Add(installBtn);
+        Controls.Add(releasesBtn);
+        Controls.Add(closeBtn);
+        Controls.Add(footer);
+    }
+
+    private static Panel MakeInfoCard(int x, int y, int w, int h, string title, out Label valueLabel)
+    {
+        Panel card = new Panel
+        {
+            Location = new Point(x, y),
+            Size = new Size(w, h),
+            BackColor = BrandPrimaryLight,
+            BorderStyle = BorderStyle.FixedSingle
+        };
+        Label titleLbl = new Label
+        {
+            Location = new Point(12, 8),
+            Size = new Size(w - 24, 18),
+            Font = new Font("Segoe UI", 8f, FontStyle.Bold),
+            ForeColor = BrandMuted,
+            BackColor = BrandPrimaryLight,
+            Text = title.ToUpperInvariant()
+        };
+        valueLabel = new Label
+        {
+            Location = new Point(12, 30),
+            Size = new Size(w - 24, 36),
+            Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+            ForeColor = BrandPrimary,
+            BackColor = BrandPrimaryLight,
+            Text = "—"
+        };
+        card.Controls.Add(titleLbl);
+        card.Controls.Add(valueLabel);
+        return card;
+    }
+
+    private static Button MakeButton(string text, int x, int y, int width, bool primary)
+    {
+        Button b = new Button
+        {
+            Text = text,
+            Location = new Point(x, y),
+            Size = new Size(width, 36),
+            FlatStyle = FlatStyle.Flat,
+            Font = new Font("Segoe UI", 9f, primary ? FontStyle.Bold : FontStyle.Regular),
+            Cursor = Cursors.Hand
+        };
+        if (primary)
+        {
+            b.BackColor = BrandPrimary;
+            b.ForeColor = Color.White;
+            b.FlatAppearance.BorderSize = 0;
+        }
+        else
+        {
+            b.BackColor = Color.White;
+            b.ForeColor = BrandPrimary;
+            b.FlatAppearance.BorderColor = BrandBorder;
+            b.FlatAppearance.BorderSize = 1;
+        }
+        return b;
+    }
+
+    private static string FormatVersion(string name, int code)
+    {
+        if (string.IsNullOrEmpty(name) || name == "onbekend")
+            return "code " + code;
+        return name + "  ·  code " + code;
+    }
+
+    private static string ShortPath(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return "";
+        if (path.Length <= 70) return path;
+        return "..." + path.Substring(path.Length - 67);
+    }
+
+    private void SetUiState(string badge, Color badgeColor, string message, string changelog)
+    {
+        statusBadge.Text = badge;
+        statusBadge.BackColor = badgeColor;
+        statusMessage.Text = message;
+        if (changelog != null) changelogBox.Text = changelog;
     }
 
     private void ReadInstalledVersion()
@@ -106,11 +299,11 @@ internal sealed class UpdateWizardForm : Form
         {
             if (File.Exists(Path.Combine(installDir, "MiddinInnovatie.exe")))
             {
-                installedVersionName = "geïnstalleerd (versie onbekend)";
+                installedVersionName = "geinstalleerd (versie onbekend)";
             }
             else
             {
-                installedVersionName = "niet geïnstalleerd";
+                installedVersionName = "niet geinstalleerd";
             }
             return;
         }
@@ -129,29 +322,12 @@ internal sealed class UpdateWizardForm : Form
         }
     }
 
-    private string BuildStatusText(string message)
-    {
-        string feed = string.IsNullOrEmpty(InstallerUrls.UpdateFeedUrl)
-            ? "(feed niet geconfigureerd — zet middin.github.owner in gradle.properties)"
-            : InstallerUrls.UpdateFeedUrl;
-        return "Installatiemap:\n  " + installDir
-            + "\n\nGeïnstalleerde versie: " + installedVersionName
-            + " (code " + installedVersionCode + ")"
-            + "\n\nUpdate-feed:\n  " + feed
-            + "\n\n" + message;
-    }
-
-    private void SetStatus(string message)
-    {
-        bodyLabel.Text = BuildStatusText(message);
-    }
-
     private void BeginCheck(bool autoInstall)
     {
         string feed = InstallerUrls.UpdateFeedUrl != null ? InstallerUrls.UpdateFeedUrl.Trim() : "";
         if (string.IsNullOrEmpty(feed) || feed.Contains("YOUR_"))
         {
-            SetStatus("Update-feed is niet geconfigureerd.");
+            SetUiState("FOUT", BrandErr, "Update-feed is niet geconfigureerd.", "Zet middin.github.owner in gradle.properties en bouw opnieuw.");
             if (silentMode) Environment.Exit(2);
             return;
         }
@@ -159,7 +335,7 @@ internal sealed class UpdateWizardForm : Form
         checkBtn.Enabled = false;
         installBtn.Enabled = false;
         pendingRelease = null;
-        SetStatus("Controleren op update...");
+        SetUiState("BEZIG", BrandWarn, "Controleren op update...", changelogBox.Text);
 
         ThreadPool.QueueUserWorkItem(delegate
         {
@@ -167,12 +343,13 @@ internal sealed class UpdateWizardForm : Form
             ReleaseInfo release = null;
             int remoteVersionCode = 0;
             string remoteVersionName = "";
+            string remoteChangelog = "";
             try
             {
                 string body = DownloadFeed(feed);
                 remoteVersionCode = ExtractInt(body, "versionCode");
-                remoteVersionName = ExtractString(body, "versionName");
-                if (remoteVersionName == null) remoteVersionName = "";
+                remoteVersionName = ExtractString(body, "versionName") ?? "";
+                remoteChangelog = ExtractString(body, "changelog") ?? "";
                 release = ParseWindowsRelease(body, installedVersionCode);
             }
             catch (Exception ex)
@@ -183,9 +360,13 @@ internal sealed class UpdateWizardForm : Form
             BeginInvoke(new Action(delegate
             {
                 checkBtn.Enabled = true;
+                remoteValue.Text = remoteVersionCode > 0
+                    ? FormatVersion(remoteVersionName, remoteVersionCode)
+                    : "onbekend";
+
                 if (error != null)
                 {
-                    SetStatus("Fout bij controleren:\n" + error);
+                    SetUiState("FOUT", BrandErr, "Fout bij controleren: " + error, remoteChangelog);
                     if (silentMode) Environment.Exit(2);
                     return;
                 }
@@ -194,20 +375,19 @@ internal sealed class UpdateWizardForm : Form
                 {
                     if (remoteVersionCode > 0 && remoteVersionCode < installedVersionCode)
                     {
-                        SetStatus(
-                            "Geen update op GitHub (versie "
-                            + remoteVersionName + " / code " + remoteVersionCode + ").\n\n"
-                            + "Jouw installatie is nieuwer (code " + installedVersionCode + "). "
-                            + "Lokale codewijzigingen gaan niet automatisch via de updater.\n\n"
-                            + "• Lokaal testen: .\\scripts\\release-checklist.ps1 -DeployLocal\n"
-                            + "• Uitrollen: -BumpPatch -Publish (en push releases/latest.json)");
+                        SetUiState(
+                            "LOKAAL NIEUWER",
+                            BrandWarn,
+                            "Geen update op GitHub — jouw installatie is nieuwer. Lokale codewijzigingen gaan niet via de updater.",
+                            string.IsNullOrEmpty(remoteChangelog) ? "Geen changelog." : remoteChangelog);
                     }
                     else
                     {
-                        SetStatus(
-                            "U gebruikt al de nieuwste versie op GitHub ("
-                            + remoteVersionName + " / code " + remoteVersionCode + ").\n\n"
-                            + "Nieuwe codewijzigingen vereisen een hogere versionCode, rebuild en publicatie.");
+                        SetUiState(
+                            "ACTUEEL",
+                            BrandOk,
+                            "Je gebruikt al de nieuwste versie op GitHub.",
+                            string.IsNullOrEmpty(remoteChangelog) ? "Geen changelog." : remoteChangelog);
                     }
                     if (silentMode) Environment.Exit(0);
                     return;
@@ -216,9 +396,12 @@ internal sealed class UpdateWizardForm : Form
                 pendingRelease = release;
                 string version = string.IsNullOrEmpty(release.VersionName)
                     ? release.VersionCode.ToString() : release.VersionName;
-                string changelog = string.IsNullOrEmpty(release.Changelog)
-                    ? "" : "\n\nWijzigingen:\n" + release.Changelog;
-                SetStatus("Update beschikbaar: versie " + version + " (code " + release.VersionCode + ")." + changelog);
+                remoteValue.Text = FormatVersion(release.VersionName, release.VersionCode);
+                SetUiState(
+                    "UPDATE",
+                    BrandPrimary,
+                    "Update beschikbaar: versie " + version + " (code " + release.VersionCode + "). Klik op Downloaden & installeren.",
+                    string.IsNullOrEmpty(release.Changelog) ? "Geen changelog." : release.Changelog);
                 installBtn.Enabled = true;
                 if (autoInstall) BeginInstall();
             }));
@@ -233,8 +416,10 @@ internal sealed class UpdateWizardForm : Form
         installBtn.Enabled = false;
         releasesBtn.Enabled = false;
         progressBar.Visible = true;
+        progressLabel.Visible = true;
         progressBar.Value = 0;
-        SetStatus("Downloaden van setup...");
+        progressLabel.Text = "Downloaden van setup...";
+        SetUiState("DOWNLOAD", BrandWarn, "Setup wordt gedownload...", null);
 
         string cacheDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -251,7 +436,8 @@ internal sealed class UpdateWizardForm : Form
                     BeginInvoke(new Action(delegate
                     {
                         progressBar.Value = Math.Min(100, e.ProgressPercentage);
-                        SetStatus("Downloaden... " + e.ProgressPercentage + "%");
+                        progressLabel.Text = "Downloaden... " + e.ProgressPercentage + "%";
+                        SetUiState("DOWNLOAD", BrandWarn, "Downloaden... " + e.ProgressPercentage + "%", null);
                     }));
                 }
             };
@@ -278,26 +464,30 @@ internal sealed class UpdateWizardForm : Form
         if (e.Error != null)
         {
             progressBar.Visible = false;
-            SetStatus("Download mislukt:\n" + e.Error.Message);
+            progressLabel.Visible = false;
+            SetUiState("FOUT", BrandErr, "Download mislukt: " + e.Error.Message, null);
             installBtn.Enabled = pendingRelease != null;
             if (silentMode) Environment.Exit(2);
             return;
         }
 
-        SetStatus("Controleren van bestand (SHA-256)...");
+        progressLabel.Text = "Controleren van bestand (SHA-256)...";
+        SetUiState("CHECK", BrandWarn, "SHA-256 controleren...", null);
         try
         {
             if (!VerifySha256(setupPath, pendingRelease.Sha256))
             {
                 progressBar.Visible = false;
+                progressLabel.Visible = false;
                 File.Delete(setupPath);
-                SetStatus("SHA-256 komt niet overeen. Download geannuleerd.");
+                SetUiState("FOUT", BrandErr, "SHA-256 komt niet overeen. Download geannuleerd.", null);
                 installBtn.Enabled = true;
                 if (silentMode) Environment.Exit(2);
                 return;
             }
 
-            SetStatus("Setup wordt gestart. Sluit Middin Innovatie als die nog open staat.");
+            SetUiState("START", BrandOk, "Setup wordt gestart. Sluit Middin Innovatie als die nog open staat.", null);
+            progressLabel.Text = "Installer starten...";
             StopRunningApp();
             Process.Start(new ProcessStartInfo
             {
@@ -311,7 +501,8 @@ internal sealed class UpdateWizardForm : Form
         catch (Exception ex)
         {
             progressBar.Visible = false;
-            SetStatus("Installatie starten mislukt:\n" + ex.Message);
+            progressLabel.Visible = false;
+            SetUiState("FOUT", BrandErr, "Installatie starten mislukt: " + ex.Message, null);
             installBtn.Enabled = true;
             if (silentMode) Environment.Exit(2);
         }
@@ -346,12 +537,6 @@ internal sealed class UpdateWizardForm : Form
         string url = InstallerUrls.ReleasesPageUrl;
         if (string.IsNullOrEmpty(url)) return;
         Process.Start(new ProcessStartInfo { FileName = url, UseShellExecute = true });
-    }
-
-    private static ReleaseInfo FetchLatestRelease(string feedUrl, int currentVersionCode)
-    {
-        string body = DownloadFeed(feedUrl);
-        return ParseWindowsRelease(body.Trim(), currentVersionCode);
     }
 
     private static string DownloadFeed(string feedUrl)

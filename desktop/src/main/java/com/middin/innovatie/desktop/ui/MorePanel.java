@@ -1,10 +1,10 @@
 package com.middin.innovatie.desktop.ui;
 
 import com.middin.innovatie.desktop.AppVersion;
+import com.middin.innovatie.desktop.ChangelogLoader;
 import com.middin.innovatie.desktop.DesktopAppUpdater;
 import com.middin.innovatie.desktop.DesktopAppUpdater.WindowsRelease;
 import com.middin.innovatie.desktop.DesktopPreferences;
-import com.middin.innovatie.desktop.GeminiClient;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
@@ -41,8 +41,6 @@ public final class MorePanel extends JPanel {
     private static final String INFO = "info";
     private static final String ABOUT = "about";
     private static final String CREDITS = "credits";
-    private static final String GEMINI = "gemini";
-    private static final String BLUETOOTH = "bluetooth";
 
     private final DesktopPreferences prefs;
     private final Runnable onLogoutRequest;
@@ -51,6 +49,7 @@ public final class MorePanel extends JPanel {
     private final Window owner;
     private final CardLayout cardLayout;
     private final JPanel stack;
+    private final JPanel changelogContent;
 
     public MorePanel(DesktopPreferences prefs, Runnable onLogoutRequest, Window owner, Runnable onThemeChanged, File dataDir) {
         this.prefs = prefs;
@@ -65,13 +64,21 @@ public final class MorePanel extends JPanel {
         stack.setOpaque(false);
         stack.add(buildMenu(), MENU);
         stack.add(wrapScreen("Instellingen", buildSettings()), SETTINGS);
-        stack.add(wrapScreen("Changelog", buildChangelog()), CHANGELOG);
+        changelogContent = new JPanel();
+        changelogContent.setLayout(new BoxLayout(changelogContent, BoxLayout.Y_AXIS));
+        changelogContent.setOpaque(false);
+        JScrollPane changelogScroll = new JScrollPane(changelogContent);
+        changelogScroll.setBorder(null);
+        changelogScroll.getViewport().setOpaque(false);
+        changelogScroll.setOpaque(false);
+        JPanel changelogWrap = new JPanel(new BorderLayout());
+        changelogWrap.setOpaque(false);
+        changelogWrap.add(changelogScroll, BorderLayout.CENTER);
+        stack.add(wrapScreen("Changelog", changelogWrap), CHANGELOG);
         stack.add(wrapScreen("Updates", buildUpdates()), UPDATES);
         stack.add(wrapScreen("Info", buildInfo()), INFO);
         stack.add(wrapScreen("Over ons", buildAbout()), ABOUT);
         stack.add(wrapScreen("Credits", buildCredits()), CREDITS);
-        stack.add(wrapScreen("Gemini-assistent", buildGemini()), GEMINI);
-        stack.add(wrapScreen("Bluetooth", buildBluetooth()), BLUETOOTH);
         add(MiddinTheme.contentPad(stack), BorderLayout.CENTER);
         showMenu();
     }
@@ -87,15 +94,17 @@ public final class MorePanel extends JPanel {
         menu.add(MiddinTheme.titleLabel("Meer"));
         menu.add(Box.createVerticalStrut(12));
         addMenuRow(menu, "Instellingen", SETTINGS);
-        addMenuRow(menu, "Changelog", CHANGELOG);
+        JButton changelogRow = MiddinTheme.menuRowButton("Changelog");
+        changelogRow.addActionListener(e -> {
+            refreshChangelogAsync();
+            cardLayout.show(stack, CHANGELOG);
+        });
+        menu.add(changelogRow);
+        menu.add(Box.createVerticalStrut(10));
         addMenuRow(menu, "Updates", UPDATES);
         addMenuRow(menu, "Info", INFO);
         addMenuRow(menu, "Over ons", ABOUT);
         addMenuRow(menu, "Credits", CREDITS);
-        if (prefs.canConfigureEndpoints()) {
-            addMenuRow(menu, "Gemini-assistent", GEMINI);
-        }
-        addMenuRow(menu, "Bluetooth", BLUETOOTH);
         return menu;
     }
 
@@ -146,26 +155,20 @@ public final class MorePanel extends JPanel {
             p.add(Box.createVerticalStrut(6));
         }
 
+        p.add(Box.createVerticalStrut(16));
+        p.add(sectionTitle("Knoppenlayout"));
+        p.add(muted("Waar de navigatieknoppen staan (Home, Geheugen, Chat, …)."));
         p.add(Box.createVerticalStrut(8));
-
-        if (prefs.canConfigureEndpoints()) {
-            p.add(Box.createVerticalStrut(16));
-            p.add(sectionTitle("Gemini API-sleutel"));
-            p.add(muted("Van Google AI Studio. Opgeslagen op alleen dit apparaat."));
-            JPasswordField gemini = new JPasswordField(24);
-            gemini.setText(prefs.getGeminiApiKey());
-            gemini.setMaximumSize(new Dimension(Integer.MAX_VALUE, 44));
-            p.add(gemini);
-            JButton saveGemini = MiddinTheme.primaryButton("Sleutel opslaan");
-            saveGemini.setAlignmentX(0f);
-            saveGemini.setMaximumSize(new Dimension(220, 44));
-            saveGemini.addActionListener(e -> {
-                prefs.setGeminiApiKey(new String(gemini.getPassword()));
+        ButtonLayoutId activeLayout = ButtonLayoutId.fromId(prefs.getButtonLayout());
+        for (ButtonLayoutId layout : ButtonLayoutId.values()) {
+            JButton layoutBtn = MiddinTheme.layoutPickButton(layout, layout == activeLayout);
+            layoutBtn.addActionListener(e -> {
+                prefs.setButtonLayout(layout.id());
                 savePrefs();
-                JOptionPane.showMessageDialog(owner, "Gemini API-sleutel opgeslagen.");
+                if (onThemeChanged != null) onThemeChanged.run();
             });
-            p.add(Box.createVerticalStrut(8));
-            p.add(saveGemini);
+            p.add(layoutBtn);
+            p.add(Box.createVerticalStrut(6));
         }
 
         p.add(Box.createVerticalStrut(16));
@@ -291,33 +294,69 @@ public final class MorePanel extends JPanel {
         return p;
     }
 
-    private JPanel buildChangelog() {
-        JPanel p = new JPanel();
-        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.setOpaque(false);
-        addChangelogCard(p, "8 · 2026-05-08", "Changelog: de \"deze APK\"-kaart gebruikte alleen versionName; versionCode bleef in Gradle voor update-volgorde.");
-        addChangelogCard(p, "7 · 2026-05-07", "Locale: MainActivity extends AppCompatActivity zodat EN/NL uit instellingen geldt voor Compose stringResource.");
-        addChangelogCard(p, "6 · 2026-05-06", "Taal EN/NL app-breed; layout: adaptieve padding; Gradle checkAppLinks voor RSS-URL's.");
-        addChangelogCard(p, "5 · 2026-04-22", "Welkomstscherm bij uitloggen; offline productassistent «wie ben je»-vragen; CIV-demo account.");
-        addChangelogCard(p, "4 · 2026-04-22", "Collectief geheugen bewerken; Qtronix Libra 90; private updates; targetSdk 36.");
-        addChangelogCard(p, "3 · 2026-03-26", "Muse product; credits bijgewerkt; changelog build-metadata.");
-        addChangelogCard(p, "2 · 2026-03-24", "Roadmap: home, thema, producten, CameraX, Bluetooth, Gemini, updates.");
-        addChangelogCard(p, "1 · 2026-03-24", "Fase 1: collectief geheugen, EN/NL, Ktor API login + chat, DataStore sessie.");
-        return p;
+    private void refreshChangelogAsync() {
+        changelogContent.removeAll();
+        changelogContent.add(MiddinTheme.mutedLabel("Laden…"));
+        changelogContent.revalidate();
+        changelogContent.repaint();
+        new SwingWorker<List<ChangelogLoader.Entry>, Void>() {
+            @Override
+            protected List<ChangelogLoader.Entry> doInBackground() {
+                return ChangelogLoader.load(prefs);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    populateChangelog(get());
+                } catch (Exception ex) {
+                    changelogContent.removeAll();
+                    changelogContent.add(MiddinTheme.bodyLabel("Changelog laden mislukt: " + ex.getMessage()));
+                    changelogContent.revalidate();
+                    changelogContent.repaint();
+                }
+            }
+        }.execute();
     }
 
-    private void addChangelogCard(JPanel parent, String header, String bullet) {
+    private void populateChangelog(List<ChangelogLoader.Entry> entries) {
+        changelogContent.removeAll();
+        if (entries.isEmpty()) {
+            changelogContent.add(MiddinTheme.mutedLabel("Geen changelog beschikbaar."));
+        } else {
+            if (AppVersion.CODE > ChangelogLoader.newestVersionCode(entries)) {
+                addChangelogCard(
+                        changelogContent,
+                        AppVersion.NAME + " (" + AppVersion.CODE + ") · vandaag",
+                        "Je draait een nieuwere build dan de laatste release in de feed.");
+            }
+            for (ChangelogLoader.Entry entry : entries) {
+                addChangelogCard(changelogContent, entry.displayLabel() + " · " + entry.dateIso, entry.bullets);
+            }
+        }
+        changelogContent.revalidate();
+        changelogContent.repaint();
+    }
+
+    private void addChangelogCard(JPanel parent, String header, List<String> bullets) {
         JPanel card = MiddinTheme.cardPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setAlignmentX(0f);
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 400));
         JLabel h = MiddinTheme.bodyLabel(header);
         h.setFont(MiddinTheme.FONT_BODY.deriveFont(java.awt.Font.BOLD));
         card.add(h);
         card.add(Box.createVerticalStrut(6));
-        card.add(MiddinTheme.bodyLabel("• " + bullet));
+        for (String bullet : bullets) {
+            card.add(MiddinTheme.bodyLabel("• " + bullet));
+            card.add(Box.createVerticalStrut(4));
+        }
         parent.add(card);
         parent.add(Box.createVerticalStrut(10));
+    }
+
+    private void addChangelogCard(JPanel parent, String header, String bullet) {
+        addChangelogCard(parent, header, List.of(bullet));
     }
 
     private JPanel buildUpdates() {
@@ -336,8 +375,8 @@ public final class MorePanel extends JPanel {
         JTextArea area = MiddinTheme.bodyArea();
         area.setText(
             "Deze app verbindt met jullie eigen backend voor login en chat.\n\n"
-                + "Beveiliging: gebruik HTTPS in productie. Gemini API-sleutels staan op het apparaat voor gemak—gebruik liever server-side AI voor vertrouwelijke data.\n\n"
-                + "Functies: collectief geheugen (lokale database), REST-chat, producten met CameraX, ML Kit-labels als hint, gekoppelde Bluetooth-apparaten, Google Gemini (optioneel), testmeldingen, EN/NL UI."
+                + "Beveiliging: gebruik HTTPS in productie.\n\n"
+                + "Functies: collectief geheugen (lokale database), REST-chat, producten, productassistent, testmeldingen, EN/NL UI."
         );
         area.setEditable(false);
         JPanel p = new JPanel(new BorderLayout());
@@ -353,7 +392,7 @@ public final class MorePanel extends JPanel {
         JTextArea area = MiddinTheme.bodyArea();
         area.setText(
             "Middin Innovatie is gevestigd in Den Haag. We werken aan innovatie, digitale producten en samenwerking met partners en collega’s.\n\n"
-                + "Deze applicatie bundelt interne tools: gedeeld geheugen, communicatie, productvastlegging en koppelingen (API, Gemini, Bluetooth) op één plek.\n\n"
+                + "Deze applicatie bundelt interne tools: gedeeld geheugen, communicatie, productvastlegging en API-koppelingen op één plek.\n\n"
                 + "Voor huisstijl, logo’s en officiële teksten: volg jullie interne brandrichtlijnen."
         );
         area.setEditable(false);
@@ -387,80 +426,6 @@ public final class MorePanel extends JPanel {
         card.add(MiddinTheme.bodyLabel(role.replace("\n", " · ")));
         parent.add(card);
         parent.add(Box.createVerticalStrut(10));
-    }
-
-    private JPanel buildGemini() {
-        JPanel p = new JPanel();
-        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.setOpaque(false);
-        p.add(MiddinTheme.bodyLabel("Gebruikt Google Gemini (gemini-1.5-flash). Plak een API-sleutel van Google AI Studio onder Meer → Instellingen. Sleutels blijven op dit apparaat."));
-        JTextArea prompt = MiddinTheme.bodyArea();
-        prompt.setRows(4);
-        p.add(Box.createVerticalStrut(12));
-        p.add(MiddinTheme.mutedLabel("Prompt"));
-        p.add(prompt);
-        JTextArea output = MiddinTheme.bodyArea();
-        output.setEditable(false);
-        JLabel status = muted("");
-        JButton run = MiddinTheme.primaryButton("Uitvoeren");
-        run.setAlignmentX(0f);
-        run.setMaximumSize(new Dimension(200, 44));
-        run.addActionListener(e -> {
-            String text = prompt.getText().trim();
-            if (text.isEmpty()) return;
-            run.setEnabled(false);
-            status.setText("Bezig…");
-            new SwingWorker<String, Void>() {
-                @Override
-                protected String doInBackground() throws Exception {
-                    return GeminiClient.generate(prefs.getGeminiApiKey(), text);
-                }
-
-                @Override
-                protected void done() {
-                    run.setEnabled(true);
-                    try {
-                        output.setText(get());
-                        status.setText("");
-                    } catch (Exception ex) {
-                        status.setText(ex.getMessage());
-                    }
-                }
-            }.execute();
-        });
-        p.add(Box.createVerticalStrut(12));
-        p.add(run);
-        p.add(status);
-        p.add(Box.createVerticalStrut(12));
-        p.add(MiddinTheme.scroll(output));
-        return p;
-    }
-
-    private JPanel buildBluetooth() {
-        JPanel p = new JPanel();
-        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
-        p.setOpaque(false);
-        p.add(MiddinTheme.bodyLabel(
-            "Gekoppelde Bluetooth-apparaten op deze computer (zoals in de Android-app)."));
-        p.add(Box.createVerticalStrut(12));
-        p.add(MiddinTheme.mutedLabel("Gekoppeld"));
-        List<com.middin.innovatie.desktop.BluetoothDeviceInfo> devices = com.middin.innovatie.desktop.BluetoothHelper.listPairedDevices();
-        if (devices.isEmpty()) {
-            p.add(MiddinTheme.bodyLabel("Geen gekoppelde apparaten gevonden."));
-        } else {
-            for (var d : devices) {
-                JPanel card = MiddinTheme.cardPanel();
-                card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-                card.setAlignmentX(0f);
-                card.add(MiddinTheme.bodyLabel(d.name()));
-                if (d.address() != null && !d.address().isBlank()) {
-                    card.add(MiddinTheme.mutedLabel(d.address()));
-                }
-                p.add(card);
-                p.add(Box.createVerticalStrut(8));
-            }
-        }
-        return p;
     }
 
     private JLabel sectionTitle(String text) {

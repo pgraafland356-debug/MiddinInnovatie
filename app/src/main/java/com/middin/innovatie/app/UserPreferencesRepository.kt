@@ -28,7 +28,6 @@ class UserPreferencesRepository(
         val updateFeedUrlOverride = stringPreferencesKey("update_feed_url_override")
         val updateNoticeDismissedCode = intPreferencesKey("update_notice_dismissed_code")
         val themeMode = stringPreferencesKey("theme_preference")
-        val geminiApiKey = stringPreferencesKey("gemini_api_key")
         /** Debug only: prefer offline/local login. Ignored in release builds. */
         val useLocalSignIn = booleanPreferencesKey("use_local_sign_in")
     }
@@ -41,10 +40,6 @@ class UserPreferencesRepository(
 
     val themePreference: Flow<ThemePreference> = context.dataStore.data.map { prefs ->
         ThemePreference.fromStorage(prefs[Keys.themeMode])
-    }
-
-    val geminiApiKey: Flow<String?> = context.dataStore.data.map { prefs ->
-        if (!canConfigureEndpoints(prefs[Keys.username])) null else prefs[Keys.geminiApiKey]
     }
 
     /**
@@ -181,15 +176,8 @@ class UserPreferencesRepository(
         context.dataStore.edit { it[Keys.themeMode] = preference.name.lowercase() }
     }
 
-    suspend fun setGeminiApiKey(key: String?) {
-        context.dataStore.edit { prefs ->
-            val t = key?.trim().orEmpty()
-            if (t.isEmpty()) prefs.remove(Keys.geminiApiKey) else prefs[Keys.geminiApiKey] = t
-        }
-    }
-
     companion object {
-        /** Username that may configure Gemini, API base URL, and update feed (Settings + runtime). */
+        /** Username that may configure API base URL and update feed (Settings + runtime). */
         const val ENDPOINT_SETTINGS_USERNAME = "pieter-bas"
 
         fun canConfigureEndpoints(username: String?): Boolean =

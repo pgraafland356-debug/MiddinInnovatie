@@ -1,0 +1,93 @@
+{
+  "entries": [
+    {
+      "versionCode": 15,
+      "versionName": "0.9.6",
+      "dateIso": "2026-07-09",
+      "bullets": [
+        "Dev-accounts voor collega's (Priscilla, Andre, Silvia, Martien)",
+        "ASCII-thema verwijderd (Windows)",
+        "Bijgewerkte installer, updater en uninstaller"
+      ]
+    },
+    {
+      "versionCode": 8,
+      "versionName": "0.8",
+      "dateIso": "2026-05-08",
+      "bullets": [
+        "Changelog: the \"this APK\" card used versionName only; versionCode stayed in Gradle for update ordering."
+      ]
+    },
+    {
+      "versionCode": 7,
+      "versionName": "0.7",
+      "dateIso": "2026-05-07",
+      "bullets": [
+        "Locale: MainActivity extends AppCompatActivity so per-app English/Dutch from settings applies to Compose stringResource (not stuck on system locale)."
+      ]
+    },
+    {
+      "versionCode": 6,
+      "versionName": "0.6",
+      "dateIso": "2026-05-06",
+      "bullets": [
+        "Language: English/Dutch applies app-wide from welcome, login, settings (stored preference + AppCompat locales); home news dates refresh when locale changes.",
+        "Layout: adaptive padding (MiddinDimens), top app bar title ellipsizing + smaller logo on narrow screens, optional icon-only bottom nav on small width / large font scale.",
+        "Gradle task checkAppLinks verifies RSS/fallback HTTPS URLs; build-config API/update URLs are warning-only."
+      ]
+    },
+    {
+      "versionCode": 5,
+      "versionName": "0.5",
+      "dateIso": "2026-04-22",
+      "bullets": [
+        "Welcome: brand screen appears whenever you open the app while signed out (including returning from the background) and after sign-out — not only the first time.",
+        "Login & welcome (edge-to-edge): DayNight activity theme, full-screen theme background, and status/navigation bar contrast that follows light vs dark — fixes dark mode on the sign-in screen.",
+        "Offline product assistant: \"who are you\" style questions in Dutch and English now return the Productassistent self-description instead of a generic product miss.",
+        "Local debug sign-in: added account CIV-demo (password demo) next to existing demo users."
+      ]
+    },
+    {
+      "versionCode": 4,
+      "versionName": "0.4",
+      "dateIso": "2026-04-22",
+      "bullets": [
+        "Collective memory: edit an existing note (dialog + save); entries still support delete.",
+        "Product catalog: Qtronix Libra 90 USB trackball description; obsolete seed names cleaned up.",
+        "Private updates: unknown-sources install flow simplified (minSdk 26+); Settings uses locale-aware strings for update status.",
+        "Targets compileSdk / targetSdk 36; dependencies aligned on the version catalog.",
+        "Debug builds no longer ship preset sign-in credentials (empty by default).",
+        "Launcher: adaptive icon wired via vector foreground/background under mipmap-anydpi.",
+        "Gradle: lower default heap / single worker for tighter machines; KSP incremental disabled as a workaround for a rare Windows classpath-snapshot crash."
+      ]
+    },
+    {
+      "versionCode": 3,
+      "versionName": "0.3",
+      "dateIso": "2026-03-26",
+      "bullets": [
+        "Muse (EEG headband) product description in catalog.",
+        "Credits: Pieter - Bas Graafland, André de Winter, Safeer Khan (You).",
+        "Changelog: top card shows this APK's version and exact build time from Gradle."
+      ]
+    },
+    {
+      "versionCode": 2,
+      "versionName": "0.2",
+      "dateIso": "2026-03-24",
+      "bullets": [
+        "Roadmap: home & branding, theme (system/light/dark), products + top 3, CameraX + ML Kit, Bluetooth list, updates/info/about/credits, notifications + test.",
+        "Debug local vs server sign-in toggle; mock API in local-api/; product catalog seed + Dutch descriptions; Sign out in app bar; delete product.",
+        "Room migrations, stability tests, GitHub Actions workflow."
+      ]
+    },
+    {
+      "versionCode": 1,
+      "versionName": "0.1",
+      "dateIso": "2026-03-24",
+      "bullets": [
+        "Phase 1: collective memory, EN/NL, Ktor API login + chat, DataStore session, network security baseline."
+      ]
+    }
+  ]
+}

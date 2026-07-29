@@ -43,9 +43,6 @@ private fun shouldPreserveMessage(msg: String): Boolean {
     if (msg.contains("Login succeeded but", ignoreCase = true)) return true
     if (msg.contains("Empty message", ignoreCase = true)) return true
     if (msg.contains("Not signed in", ignoreCase = true)) return true
-    if (msg.contains("Add your Gemini API key", ignoreCase = true)) return true
-    if (msg.contains("Enter a prompt", ignoreCase = true)) return true
-    if (msg.contains("Empty model response", ignoreCase = true)) return true
     return false
 }
 

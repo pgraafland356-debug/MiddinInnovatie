@@ -1,5 +1,6 @@
 package com.middin.innovatie.desktop;
 
+import com.middin.innovatie.desktop.ui.ButtonLayoutId;
 import com.middin.innovatie.desktop.ui.ChatPanel;
 import com.middin.innovatie.desktop.ui.HomePanel;
 import com.middin.innovatie.desktop.ui.MemoryPanel;
@@ -293,9 +294,28 @@ public final class DesktopApp {
         contentCards.add(morePanel, CARD_MORE);
 
         frame.getContentPane().setLayout(new BorderLayout());
-        frame.add(buildTopBar(), BorderLayout.NORTH);
-        frame.add(contentCards, BorderLayout.CENTER);
-        frame.add(buildBottomNav(), BorderLayout.SOUTH);
+        ButtonLayoutId buttonLayout = ButtonLayoutId.fromId(prefs.getButtonLayout());
+        JPanel nav = buildNav(buttonLayout);
+        switch (buttonLayout) {
+            case LEFT -> {
+                frame.add(buildTopBar(), BorderLayout.NORTH);
+                frame.add(nav, BorderLayout.WEST);
+                frame.add(contentCards, BorderLayout.CENTER);
+            }
+            case TOP -> {
+                JPanel north = new JPanel(new BorderLayout());
+                north.setOpaque(false);
+                north.add(buildTopBar(), BorderLayout.NORTH);
+                north.add(nav, BorderLayout.SOUTH);
+                frame.add(north, BorderLayout.NORTH);
+                frame.add(contentCards, BorderLayout.CENTER);
+            }
+            default -> {
+                frame.add(buildTopBar(), BorderLayout.NORTH);
+                frame.add(contentCards, BorderLayout.CENTER);
+                frame.add(nav, BorderLayout.SOUTH);
+            }
+        }
         showCard(currentCard);
         frame.setVisible(true);
         frame.toFront();
@@ -358,16 +378,12 @@ public final class DesktopApp {
         return top;
     }
 
-    private JPanel buildBottomNav() {
-        JPanel bar = new JPanel(new GridBagLayout());
-        bar.setBackground(MiddinTheme.BACKGROUND);
-        bar.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, MiddinTheme.BORDER));
-
-        navHome = MiddinTheme.navButton("Home", true);
-        navMemory = MiddinTheme.navButton("Geheugen", false);
-        navChat = MiddinTheme.navButton("Chat", false);
-        navProducts = MiddinTheme.navButton("Producten", false);
-        navMore = MiddinTheme.navButton("Meer", false);
+    private JPanel buildNav(ButtonLayoutId layout) {
+        navHome = MiddinTheme.navButton("Home", true, layout);
+        navMemory = MiddinTheme.navButton("Geheugen", false, layout);
+        navChat = MiddinTheme.navButton("Chat", false, layout);
+        navProducts = MiddinTheme.navButton("Producten", false, layout);
+        navMore = MiddinTheme.navButton("Meer", false, layout);
 
         navHome.addActionListener(e -> navigateToHome());
         navMemory.addActionListener(e -> showCard(CARD_MEMORY));
@@ -375,20 +391,40 @@ public final class DesktopApp {
         navProducts.addActionListener(e -> showCard(CARD_PRODUCTS));
         navMore.addActionListener(e -> showCard(CARD_MORE));
 
+        if (layout == ButtonLayoutId.LEFT) {
+            JPanel bar = new JPanel();
+            bar.setLayout(new BoxLayout(bar, BoxLayout.Y_AXIS));
+            bar.setBackground(MiddinTheme.BACKGROUND);
+            bar.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 0, 1, MiddinTheme.BORDER),
+                new EmptyBorder(8, 8, 8, 8)
+            ));
+            bar.setPreferredSize(new Dimension(156, 0));
+            for (JButton b : new JButton[]{navHome, navMemory, navChat, navProducts, navMore}) {
+                b.setAlignmentX(0f);
+                bar.add(b);
+                bar.add(Box.createVerticalStrut(6));
+            }
+            bar.add(Box.createVerticalGlue());
+            return bar;
+        }
+
+        JPanel bar = new JPanel(new GridBagLayout());
+        bar.setBackground(MiddinTheme.BACKGROUND);
+        if (layout == ButtonLayoutId.TOP) {
+            bar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, MiddinTheme.BORDER));
+        } else {
+            bar.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, MiddinTheme.BORDER));
+        }
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1;
         gbc.gridy = 0;
-        gbc.gridx = 0;
-        bar.add(navHome, gbc);
-        gbc.gridx = 1;
-        bar.add(navMemory, gbc);
-        gbc.gridx = 2;
-        bar.add(navChat, gbc);
-        gbc.gridx = 3;
-        bar.add(navProducts, gbc);
-        gbc.gridx = 4;
-        bar.add(navMore, gbc);
+        JButton[] buttons = {navHome, navMemory, navChat, navProducts, navMore};
+        for (int i = 0; i < buttons.length; i++) {
+            gbc.gridx = i;
+            bar.add(buttons[i], gbc);
+        }
         return bar;
     }
 

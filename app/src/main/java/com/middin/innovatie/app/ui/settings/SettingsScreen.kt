@@ -68,7 +68,6 @@ fun SettingsScreen(
     val effectiveUrl by container.userPreferences.effectiveApiBaseUrl.collectAsStateWithLifecycle(
         initialValue = BuildConfig.API_BASE_URL.trimEnd('/'),
     )
-    val geminiStored by container.userPreferences.geminiApiKey.collectAsStateWithLifecycle(initialValue = null)
     val updateFeedRaw by container.userPreferences.updateFeedUrlOverride.collectAsStateWithLifecycle(initialValue = null)
     val effectiveUpdateFeed by container.userPreferences.effectiveUpdateFeedUrl.collectAsStateWithLifecycle(initialValue = BuildConfig.UPDATE_FEED_URL)
     val useLocalSignIn by container.userPreferences.useLocalSignIn.collectAsStateWithLifecycle(
@@ -78,7 +77,6 @@ fun SettingsScreen(
     val showEndpointSettings = UserPreferencesRepository.canConfigureEndpoints(username)
 
     var serverDraft by remember(overrideRaw) { mutableStateOf(overrideRaw.orEmpty()) }
-    var geminiDraft by remember(geminiStored) { mutableStateOf(geminiStored.orEmpty()) }
     var updateFeedDraft by remember(updateFeedRaw) { mutableStateOf(updateFeedRaw.orEmpty()) }
     var updateStatus by remember { mutableStateOf("") }
     var pendingRelease by remember { mutableStateOf<MinimalRelease?>(null) }
@@ -171,38 +169,6 @@ fun SettingsScreen(
                     label = stringResource(R.string.settings_theme_dark),
                     onSelect = { viewModel.setTheme(ThemePreference.DARK) },
                 )
-            }
-        }
-        if (showEndpointSettings) {
-            item {
-                Text(
-                    stringResource(R.string.settings_gemini_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(top = 12.dp),
-                )
-                Text(
-                    stringResource(R.string.settings_gemini_hint),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                OutlinedTextField(
-                    value = geminiDraft,
-                    onValueChange = { geminiDraft = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    label = { Text(stringResource(R.string.settings_gemini_key_label)) },
-                    singleLine = false,
-                    minLines = 2,
-                )
-                Button(
-                    onClick = { viewModel.saveGeminiApiKey(geminiDraft) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                ) {
-                    Text(stringResource(R.string.settings_gemini_save))
-                }
             }
         }
         item {
